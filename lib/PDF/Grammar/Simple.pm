@@ -10,7 +10,7 @@ grammar PDF::Grammar::Simple {
     # - token level parsing only, no attempt to interpret high level
     #   objects (e.g. Fonts, Pages)
     # - limited to non-existant stream parsing
-    # - no attempt to capture content
+    # - no attempt yet to capture content
     #
     rule TOP {<pdf>}
     rule pdf {^<header><eol>(<content>+)'%%EOF'<eol>?$}
@@ -55,7 +55,7 @@ grammar PDF::Grammar::Simple {
     # hex strings
 
     token hex_char {<xdigit>**1..2}
-    token hex_string { \<<hex_char>+\> }
+    token hex_string { \<<hex_char>(<hex_char>|<eol>)*\> }
 
     rule string {<hex_string>|<literal_string>}
 
@@ -64,9 +64,9 @@ grammar PDF::Grammar::Simple {
     token name_char_escaped { \#(<xdigit>**2) }
     # all printable but '#', '/', '[', ']',
 ##  not having any luck with the following regex; me? rakudo-star? (2012.11)
-##   token name_char_printable { <[\!..\~] - [\[\#\]\//]> }
+##   token name_char_printable { <[\!..\~] - [\[\#\]\//\(\)\<\>]> }
 ##  .. rather more ungainly...
-    token name_char_printable { <[a..z A..Z 0..9 \! \" \$..\. \:..\@ _ \^ \' \{ \| \} \~]> }
+    token name_char_printable { <[a..z A..Z 0..9 \! \" \$..\' \*..\. \: \; \= \? \@ _ \^ \' \{ \| \} \~]> }
 
     rule name { '/'(<name_char_printable>|<name_char_escaped>|<name_char_number_symbol>)* }
 

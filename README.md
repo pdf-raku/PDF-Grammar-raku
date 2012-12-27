@@ -1,18 +1,16 @@
 PDF-Grammar-Simple
 ==================
 
-Sample PDF Grammar for parsing non-linearized PDF's (perl6)
+PDF::Grammar::PDF is an experimental perl6 Grammar for parsing
+non-linearized PDF documents.
 
-This is under construction as an example perl Grammar for tokenizing
-simple PDF documents.
+This is a proof of concept to see if a grammer can be reasonbly constructed
+to tokenize real-world PDF documents. It has so far been tested against a
+limited sample of PDF documents. Further more it has so far been built and
+tested against Rakudo Star 2012-11.
 
-This has been thrown together over the last few days using Rakudo Star
-2012-11. The tokens and capturing rules that comprise the grammar will
-most likely change.
-
-So far it has only been tested a against a very limited number of PDF
-documents. It starts to creak and groan when processing PDFs over about
-200K in size.
+If this gammar survives at all; the tokens and capturing rules that
+comprise it will most likely change significantly.
 
 Works best with PDFs up to 1.5. May work for high versions if they haven't
 been linearized (Web Optimized).

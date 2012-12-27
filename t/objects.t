@@ -37,6 +37,9 @@ ok('<901FA>'     ~~ /^<PDF::Grammar::Simple::hex_string>$/, 'hex: example 2b (90
 # - hex strings - counter examples
 ok('< ABC123>'         !~~ /^<PDF::Grammar::Simple::hex_string>$/, 'not hex whitespace lhs');
 ok('<ABC123 >'         !~~ /^<PDF::Grammar::Simple::hex_string>$/, 'not hex whitespace rhs');
+# - multiline hex strings - found in the field
+ok('<304B66CBD3DCBEC4CA8EA2B66D8DACF1F6FBC1D2E2A4B2C052708FE9EBED4F62
+77BFD5EB7A99B8A4BBD26A7B8DDEE9F5B6CEE744586E8AA7C5C4D7EC97B4D2FF>'  ~~ /^<PDF::Grammar::Simple::hex_string>$/, 'hex: multiline');
 ok('<>'         !~~ /^<PDF::Grammar::Simple::hex_string>$/, 'not hex empty');
 ok('<x>'        !~~ /^<PDF::Grammar::Simple::hex_string>$/, 'not hex illegal char');
 
@@ -103,7 +106,9 @@ for (
 
 # name strings
 
-for ('/Name1',
+for (
+    # examples from PDF Reference
+    '/Name1',
      '/ASomewhatLongerName',
      '/A;Name_With-Various***Characters?',
      '/1.2',
@@ -113,7 +118,10 @@ for ('/Name1',
      '/lime#20Green',
      '/paired#28#29parentheses',
      '/The_Key_of_F#23_Minor',
-     '/A#42') {
+     '/A#42',
+      # a few picked up in the field
+     '/Times-Roman',
+    ) {
     ok($_ ~~ /^<PDF::Grammar::Simple::name>$/, "name: $_");
 }
 
@@ -150,9 +158,17 @@ my $dict_example2 =
                  >>
 >>";
 
-for ('<<>>', '<< >>', '<</id 42>>', '<</a 1 /b (2)>>', $dict_example, $dict_example2) {
+my $dict_example3 =
+'<</BaseFont/Times-Roman/Type/Font
+/Subtype /Type1>>';
+
+for ('<<>>', '<< >>', '<</id 42>>', '<</a 1 /b (2)>>', $dict_example, $dict_example2, $dict_example3) {
     ok($_ ~~ /^<PDF::Grammar::Simple::dict>$/, "dict")
     or diag $_;
+}
+
+for ('/BaseFont/Times-Roman', '/Producer(AFPL Ghostscript 8.51)', '/X<</Y(42)>>') {
+    ok($_ ~~ /^<PDF::Grammar::Simple::name><PDF::Grammar::Simple::object>$/, "name adjacency: $_");
 }
 
 my $stream0 = "<< /Length 0 >>
@@ -217,6 +233,7 @@ for ($stream0, $stream1, $stream2, $stream3, $stream4, $stream5) {
     or diag $_;
 }
 
+
 my $ind_obj1 = "10 0 obj
 (Brillig) % blah blah blah
 endobj";
@@ -224,14 +241,19 @@ my $ind_ref1 = '10 0 R';
 
 my $ind_obj2 = '20 1 obj endobj';
 my $ind_ref2 = '20 1 R';
-my $ind_ref3 = '8 0 R';
+
+my $ind_obj3 = '13 0 obj
+<</BaseFont/Times-Roman/Type/Font
+/Subtype/Type1>>
+endobj';
+my $ind_ref3 = '13 0 R';
 
 for ($ind_ref1, $ind_ref2, $ind_ref3) {
     ok($_ ~~ /^<PDF::Grammar::Simple::indirect_reference>$/, "indirect_reference: $_");
     ok($_ ~~ /^<PDF::Grammar::Simple::object>$/, "object: $_");
 }
 
-my $ind_obj3 = "7 0 obj
+my $ind_obj4 = "7 0 obj
 << /Length 8 0 R >>% An indirect reference to object 8
 stream
 BT
@@ -242,14 +264,14 @@ ET
 endstream
 endobj";
 
-my $ind_obj4 = '8 0 obj
+my $ind_obj5 = '8 0 obj
 77% The length of the preceding stream
 endobj';
 
-for ($ind_obj1, $ind_obj2, $ind_obj3, $ind_obj4) {
+for ($ind_obj1, $ind_obj2, $ind_obj3, $ind_obj4, $ind_obj5) {
     ok($_ ~~ /^<PDF::Grammar::Simple::indirect_object>$/, "indirect_object")
         or diag $_;
-    ok($_ ~~ /^<PDF::Grammar::Simple::object>$/, "object:")
+    ok($_ ~~ /^<PDF::Grammar::Simple::object>$/, "object")
         or diag $_;
 }
 
