@@ -15,9 +15,9 @@ comprise it will most likely change significantly.
 Works best with PDFs up to 1.5. May work for high versions if they haven't
 been linearized (Web Optimized).
 
-The only dependency is Rakudo Star. It use perl6, plus ufo to create the
-Makefile. So to run the tests, following on from a build of rakudo star
-(don't forget to complete the Rakudo build with 'make install':
+The only dependency is Rakudo Star. It runs on `perl6`. `ufo` is also to
+locally create the Makefile. To run the tests, after building rakudo star
+(https://github.com/rakudo/rakudo - don't forget the final `make install`):
 
     % git co git@github.com:dwarring/PDF-Grammar-Simple.git
     % cd /PDF-Grammar-Simple
@@ -25,7 +25,7 @@ Makefile. So to run the tests, following on from a build of rakudo star
     % export PATH=~/src/rakudo-star-2012.11/install/bin:$PATH
     % ufo # Build Makefile
     % make
+    % make test
     %
-    % make Test
     % # ... alternatively...
     % PERL6LIB=lib prove -v -e 'perl6' t

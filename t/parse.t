@@ -89,11 +89,17 @@ startxref
 ok($trailer ~~ /^<PDF::Grammar::Simple::trailer>$/, "trailer")
     or diag $trailer;
 
-my $pdf = "$header
+my $simple_pdf = "$header
 $body
 $xref$trailer%\%EOF";
 
-for ($pdf) {
+my $edited_pdf = "$header
+$body
+$xref$trailer
+$body
+$xref$trailer%\%EOF";
+
+for ($simple_pdf, $edited_pdf) {
     ok($_ ~~ /^<PDF::Grammar::Simple::pdf>$/, "pdf")
        or diag $_;
 }

@@ -34,12 +34,13 @@ ok('<Af309>'     ~~ /^<PDF::Grammar::Simple::object>$/, 'hex object: basic');
 ok('<4E6F762073686D6F7A206B6120706F702E>'     ~~ /^<PDF::Grammar::Simple::hex_string>$/, 'hex: example ');
 ok('<901FA3>'     ~~ /^<PDF::Grammar::Simple::hex_string>$/, 'hex: example 2a (90, 1F, A3)');
 ok('<901FA>'     ~~ /^<PDF::Grammar::Simple::hex_string>$/, 'hex: example 2b (90, 1F, A0)');
-# - hex strings - counter examples
-ok('< ABC123>'         !~~ /^<PDF::Grammar::Simple::hex_string>$/, 'not hex whitespace lhs');
-ok('<ABC123 >'         !~~ /^<PDF::Grammar::Simple::hex_string>$/, 'not hex whitespace rhs');
 # - multiline hex strings - found in the field
 ok('<304B66CBD3DCBEC4CA8EA2B66D8DACF1F6FBC1D2E2A4B2C052708FE9EBED4F62
 77BFD5EB7A99B8A4BBD26A7B8DDEE9F5B6CEE744586E8AA7C5C4D7EC97B4D2FF>'  ~~ /^<PDF::Grammar::Simple::hex_string>$/, 'hex: multiline');
+
+# - hex strings - counter examples
+ok('< ABC123>'         !~~ /^<PDF::Grammar::Simple::hex_string>$/, 'not hex whitespace lhs');
+ok('<ABC123 >'         !~~ /^<PDF::Grammar::Simple::hex_string>$/, 'not hex whitespace rhs');
 ok('<>'         !~~ /^<PDF::Grammar::Simple::hex_string>$/, 'not hex empty');
 ok('<x>'        !~~ /^<PDF::Grammar::Simple::hex_string>$/, 'not hex illegal char');
 
@@ -167,8 +168,8 @@ for ('<<>>', '<< >>', '<</id 42>>', '<</a 1 /b (2)>>', $dict_example, $dict_exam
     or diag $_;
 }
 
-for ('/BaseFont/Times-Roman', '/Producer(AFPL Ghostscript 8.51)', '/X<</Y(42)>>') {
-    ok($_ ~~ /^<PDF::Grammar::Simple::name><PDF::Grammar::Simple::object>$/, "name adjacency: $_");
+for ('/BaseFont/Times-Roman', '/Producer(AFPL Ghostscript 8.51)', '/X<</Y(42)>>', '/Z#20[[1]]', '/a/b%comment') {
+    ok($_ ~~ /^<PDF::Grammar::Simple::name><PDF::Grammar::Simple::object>$/, "name + object: $_");
 }
 
 my $stream0 = "<< /Length 0 >>
@@ -233,7 +234,6 @@ for ($stream0, $stream1, $stream2, $stream3, $stream4, $stream5) {
     or diag $_;
 }
 
-
 my $ind_obj1 = "10 0 obj
 (Brillig) % blah blah blah
 endobj";
@@ -242,10 +242,8 @@ my $ind_ref1 = '10 0 R';
 my $ind_obj2 = '20 1 obj endobj';
 my $ind_ref2 = '20 1 R';
 
-my $ind_obj3 = '13 0 obj
-<</BaseFont/Times-Roman/Type/Font
-/Subtype/Type1>>
-endobj';
+my $ind_obj3 = '13 0 obj<</BaseFont/Times-Roman/Type/Font
+/Subtype/Type1>>endobj';
 my $ind_ref3 = '13 0 R';
 
 for ($ind_ref1, $ind_ref2, $ind_ref3) {
