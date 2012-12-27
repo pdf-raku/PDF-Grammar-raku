@@ -27,9 +27,10 @@ grammar PDF::Grammar::Simple {
     # [PDF 1.7] 7.2.2 Character Set + 7.2.3 Comment characters
     # ---------------
     # This <ws> rule treats % as "comment to eol".
+    token ws_char {['%' \N* \n? | "\n" | "\t" | "\o12" | "\f" | "\r" | " "]}
     token ws {
         <!ww>
-        [ '%' \N* \n? | "\n" | "\t" | "\o12" | "\f" | "\r" | " " ]*
+        <ws_char>*
     }
 
     # [PDF 1.7] 7.3.2  Boolean Objects
@@ -76,7 +77,9 @@ grammar PDF::Grammar::Simple {
 
     # stream parsing - efficiency matters here
     token stream_marker {stream<eol>}
-    token endstream_marker {<eol>?endstream<eol>}
+    # the spec says that a newline should procede 'endstream'. In practice the
+    # only common factor seems to be the trailing 'endobj'.
+    token endstream_marker {<eol>?endstream<ws_char>+<?before 'endobj'>}
     rule stream {<dict> <stream_marker>.*?<endstream_marker>}
 
     token null { 'null' }

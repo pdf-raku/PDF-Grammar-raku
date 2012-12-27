@@ -242,7 +242,7 @@ endstream
 };
 
 for ($stream0, $stream1, $stream2, $stream3, $stream4, $stream5, $stream6) {
-    ok($_ ~~ /^<PDF::Grammar::Simple::stream>$/, "stream")
+    ok("$_ endobj" ~~ /^<PDF::Grammar::Simple::stream>'endobj'$/, "stream")
     or diag $_;
 }
 
