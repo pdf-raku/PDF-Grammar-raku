@@ -76,7 +76,7 @@ grammar PDF::Grammar::Simple {
 
     # stream parsing - efficiency matters here
     token stream_marker {stream<eol>}
-    token endstream_marker {<eol>?endstream}
+    token endstream_marker {<eol>?endstream<eol>}
     rule stream {<dict> <stream_marker>.*?<endstream_marker>}
 
     token null { 'null' }

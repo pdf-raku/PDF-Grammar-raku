@@ -175,17 +175,20 @@ for ('/BaseFont/Times-Roman', '/Producer(AFPL Ghostscript 8.51)', '/X<</Y(42)>>'
 my $stream0 = "<< /Length 0 >>
 stream
 
-endstream";
+endstream
+";
 
 # hopefully always at least two newlines shouldn't have to handle this
 my $stream_bad_I_think = "<< /Length 0 >>
 stream
-endstream";
+endstream
+";
 
 my $stream1 = "<< /Length 4 >>
 stream
 TEST
-endstream";
+endstream
+";
 
 my $stream2 = "<< /Length 44 >>
 stream
@@ -193,18 +196,21 @@ BT
 /F1 24 Tf
 100 100 Td (Hello, world!) Tj
 ET
-endstream";
+endstream
+";
 
 my $content3 = "abc123\n"~chr(255)~chr(0)~'z endstream - not';
 
 my $stream3 = sprintf "<< /Length %d >>
 stream
 %s
-endstream", $content3.chars, $content3;
+endstream
+", $content3.chars, $content3;
 
 my $stream4 = sprintf "<< /Length %d >>
 stream
-%sendstream", $content3.chars, $content3;
+%sendstream
+", $content3.chars, $content3;
 
 my $stream5 = '<< /Length 8 0 R >>% An indirect reference to object 8
 stream
@@ -213,7 +219,8 @@ BT
 72 712 Td
 (A stream with an indirect length) Tj
 ET
-endstream';
+endstream
+';
 
 my $stream6 = q{<< /Length 534
 /Filter [/ASCII85Decode /LZWDecode]
@@ -231,7 +238,8 @@ S]hQ;Rj@!ND)bD_q&C\g:inYC%)&u#:u,M6Bm%IY!Kb1+
 al>iG1p&i;eVoK&juJHs9%;Xomop"5KatWRT"JQ#qYuL,
 JD?M$0QP)lKn06l1apKDC@\qJ4B!!(5m+j.7F790m(Vj8
 8l8Q:_CZ(Gm1%X\N1&u!FKHMB~>
-endstream};
+endstream
+};
 
 for ($stream0, $stream1, $stream2, $stream3, $stream4, $stream5, $stream6) {
     ok($_ ~~ /^<PDF::Grammar::Simple::stream>$/, "stream")
