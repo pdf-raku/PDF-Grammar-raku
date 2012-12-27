@@ -1,0 +1,7 @@
+{
+    "name"        : "PDF-Grammar-Simple",
+    "version"     : "*",
+    "description" : "A Pilot Perl 6 module that implements a grammar for parsing PDF files",
+    "depends"     : [  ],
+    "source-url"  : "git://github.com/dwarring/PDF-Grammar-Simple.git"
+}
