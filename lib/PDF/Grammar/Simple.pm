@@ -74,8 +74,10 @@ grammar PDF::Grammar::Simple {
 
     rule dict {'<<' (<name> <object>)* '>>'}
 
-    # stream parsing - more than a bit rudimentry
-    rule stream {<dict> stream<eol>(.)*?<eol>endstream}
+    # stream parsing - efficiency matters here
+    token stream_marker {stream<eol>}
+    token endstream_marker {<eol>?endstream}
+    rule stream {<dict> <stream_marker>.*?<endstream_marker>}
 
     token null { 'null' }
 

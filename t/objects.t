@@ -202,7 +202,11 @@ stream
 %s
 endstream", $content3.chars, $content3;
 
-my $stream4 = '<< /Length 8 0 R >>% An indirect reference to object 8
+my $stream4 = sprintf "<< /Length %d >>
+stream
+%sendstream", $content3.chars, $content3;
+
+my $stream5 = '<< /Length 8 0 R >>% An indirect reference to object 8
 stream
 BT
 /F1 12 Tf
@@ -211,7 +215,7 @@ BT
 ET
 endstream';
 
-my $stream5 = q{<< /Length 534
+my $stream6 = q{<< /Length 534
 /Filter [/ASCII85Decode /LZWDecode]
 >>
 stream
@@ -229,7 +233,7 @@ JD?M$0QP)lKn06l1apKDC@\qJ4B!!(5m+j.7F790m(Vj8
 8l8Q:_CZ(Gm1%X\N1&u!FKHMB~>
 endstream};
 
-for ($stream0, $stream1, $stream2, $stream3, $stream4, $stream5) {
+for ($stream0, $stream1, $stream2, $stream3, $stream4, $stream5, $stream6) {
     ok($_ ~~ /^<PDF::Grammar::Simple::stream>$/, "stream")
     or diag $_;
 }

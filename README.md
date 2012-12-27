@@ -6,8 +6,8 @@ non-linearized PDF documents.
 
 This is a proof of concept to see if a grammer can be reasonbly constructed
 to tokenize real-world PDF documents. It has so far been tested against a
-limited sample of PDF documents. Further more it has so far been built and
-tested against Rakudo Star 2012-11.
+limited sample of PDF documents. Further more, it has so far only been built
+and tested against Rakudo Star 2012-11.
 
 If this gammar survives at all; the tokens and capturing rules that
 comprise it will most likely change significantly.
