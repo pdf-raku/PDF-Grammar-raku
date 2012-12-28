@@ -20,7 +20,7 @@ The only dependency is Rakudo Star. It runs on `perl6`. `ufo` is also to
 locally create the Makefile. To run the tests, after building rakudo star
 (https://github.com/rakudo/rakudo - don't forget the final `make install`):
 
-    % git co git@github.com:dwarring/PDF-Grammar-Simple.git
+    % git co git@github.com:dwarring/PDF-Grammar.git
     % cd PDF-Grammar
     % # to get perl6 and ufo
     % export PATH=~/src/rakudo-star-2012.11/install/bin:$PATH
