@@ -8,7 +8,8 @@ grammar PDF::Grammar {
     # an early draft
     # - memory hungry/slow - don't try on documents > ~ 500K
     # - token/block-structure  level parsing only, no attempt to interpret
-    #   overall structure or high level objects (e.g. Fonts, Pages)
+    #   overall structure, character escapes  or high level objects (e.g.
+    #   Fonts, Pages)
     # - limited to non-existant stream parsing
     # - no attempt yet to capture content
     # - no error handling or diagnostics
@@ -32,7 +33,7 @@ grammar PDF::Grammar {
     # [PDF 1.7] 7.2.2 Character Set + 7.2.3 Comment characters
     # ---------------
     # This <ws> rule treats % as "comment to eol".
-    token ws_char {['%' \N* \n? | "\n" | "\t" | "\o12" | "\f" | "\r" | " "]}
+    token ws_char {['%' <- eol>* <eol>? | "\n" | "\t" | "\o12" | "\f" | "\r" | " "]}
     token ws {
         <!ww>
         <ws_char>*

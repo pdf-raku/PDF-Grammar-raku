@@ -44,7 +44,7 @@ endobj
 << /Length 44 >>
 stream
 BT
-/F1 24 Tf
+/F1 24 Tf % this is a comment
 100 100 Td (Hello, world!) Tj
 ET
 endstream
