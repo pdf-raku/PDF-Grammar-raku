@@ -1,8 +1,8 @@
 PDF-Grammar
 ===========
 
-PDF-Grammar is an experimental set of perl6 grammars for basic parsing
-of block structure and tokens that comprise PDF documents.
+PDF::Grammar is an experimental perl6 grammar for basic tokenization
+and block structure parsing of PDF documents.
 
 This is a proof of concept to see if grammars can be reasonably constructed
 to tokenize and validate real-world PDF documents. It has so far been tested
