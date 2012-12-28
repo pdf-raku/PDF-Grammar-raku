@@ -6,7 +6,7 @@ grammar PDF::Grammar::Simple {
     #
     # A Simple theoretical PDF grammar, first draft
     # - doesn't handle PDFs that are linearized PDFs or encrypted
-    # - eats memory/slow - don't try on documents > ~ 200K
+    # - eats memory/slow - don't try on documents > ~ 500K
     # - token level parsing only, no attempt to interpret high level
     #   objects (e.g. Fonts, Pages)
     # - limited to non-existant stream parsing
@@ -21,7 +21,7 @@ grammar PDF::Grammar::Simple {
     token header {'%PDF-1.'\d}
     token eol {"\r\n"  # ms/dos
                | "\n"  #'nix
-               | "\r"} # macosx
+               | "\r"} # mac-osx
     rule body {<object>*}
 
     rule xref {<PDF::Grammar::Simple::Xref::xref>}
@@ -79,9 +79,10 @@ grammar PDF::Grammar::Simple {
 
     # stream parsing - efficiency matters here
     token stream_marker {stream<eol>}
-    # the spec says that a newline should procede 'endstream'. In practice the
-    # only common factor seems to be the trailing 'endobj'.
-    token endstream_marker {<eol>?endstream<ws_char>+<?before 'endobj'>}
+    # Hmmm allow endstream .. anywhere?
+    # Seems to be some chance of streams appearing where they're not
+    # supposed to, e.g. nested in a subdictionary
+    token endstream_marker {<eol>?endstream<ws_char>+}
     rule stream {<dict> <stream_marker>.*?<endstream_marker>}
 
     token null { 'null' }

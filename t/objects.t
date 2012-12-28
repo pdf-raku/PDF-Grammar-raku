@@ -163,7 +163,18 @@ my $dict_example3 =
 '<</BaseFont/Times-Roman/Type/Font
 /Subtype /Type1>>';
 
-for ('<<>>', '<< >>', '<</id 42>>', '<</a 1 /b (2)>>', $dict_example, $dict_example2, $dict_example3) {
+# nested stream - seems that this can happen in practice
+my $dict_example4 =
+"<</Type /Example
+  /Subtype /NestedStreamTest
+  /StreamDict << /Length 22 >>
+  stream
+Nested stream - yikes!
+  endstream
+  /NowWhereWasI (?)
+>>";
+
+for ('<<>>', '<< >>', '<</id 42>>', '<</a 1 /b (2)>>', $dict_example, $dict_example2, $dict_example3, $dict_example4) {
     ok($_ ~~ /^<PDF::Grammar::Simple::dict>$/, "dict")
     or diag $_;
 }
@@ -179,7 +190,7 @@ endstream
 ";
 
 # hopefully always at least two newlines shouldn't have to handle this
-my $stream_bad_I_think = "<< /Length 0 >>
+my $this_stream_is_invalid_I_think = "<< /Length 0 >>
 stream
 endstream
 ";

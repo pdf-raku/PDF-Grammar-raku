@@ -89,7 +89,7 @@ startxref
 ok($trailer ~~ /^<PDF::Grammar::Simple::trailer>$/, "trailer")
     or diag $trailer;
 
-my $simple_pdf = "$header
+my $nix_pdf = "$header
 $body
 $xref$trailer%\%EOF";
 
@@ -99,9 +99,10 @@ $xref$trailer
 $body
 $xref$trailer%\%EOF";
 
-(my $mac_osx_pdf = $simple_pdf)  ~~ s:g/\n/\r/;
+(my $mac_osx_pdf = $nix_pdf)  ~~ s:g/\n/\r/;
+(my $ms_dos_pdf = $nix_pdf)  ~~ s:g/\n/\r\n/;
 
-for ($simple_pdf, $edited_pdf, $mac_osx_pdf) {
+for ($nix_pdf, $edited_pdf, $mac_osx_pdf, $ms_dos_pdf) {
     ok($_ ~~ /^<PDF::Grammar::Simple::pdf>$/, "pdf")
        or diag $_;
 }
