@@ -1,11 +1,10 @@
 PDF-Grammar
 ===========
 
-PDF-Grammar is an experimental set of perl6 Grammars for parsing/validating
-PDF documents. It currently implements PDF::Grammar::Simple which is limited
-to handleding non-linearized (Web Optimized) documents.
+PDF-Grammar is an experimental set of perl6 grammars for basic parsing
+of block structure and tokens that comprise PDF documents.
 
-This is a proof of concept to see if a grammer can be reasonably constructed
+This is a proof of concept to see if grammars can be reasonably constructed
 to tokenize and validate real-world PDF documents. It has so far been tested
 against a limited sample of PDF documents. Furthermore, it has so far only
 been built and tested against Rakudo Star 2012-11.

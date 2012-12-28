@@ -1,4 +1,4 @@
-grammar PDF::Grammar::Simple::Xref {
+grammar PDF::Grammar::Xref {
 
     token ws {
        # Turn off white-space handling

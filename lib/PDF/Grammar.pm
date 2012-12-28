@@ -1,20 +1,23 @@
 use v6;
 
-use PDF::Grammar::Simple::Xref;
+use PDF::Grammar::Xref;
 
-grammar PDF::Grammar::Simple {
+grammar PDF::Grammar {
     #
-    # A Simple theoretical PDF grammar, first draft
-    # - doesn't handle PDFs that are linearized PDFs or encrypted
-    # - eats memory/slow - don't try on documents > ~ 500K
-    # - token level parsing only, no attempt to interpret high level
-    #   objects (e.g. Fonts, Pages)
+    # A Simple PDF grammar for basic block structure and token parsing;
+    # an early draft
+    # - memory hungry/slow - don't try on documents > ~ 500K
+    # - token/block-structure  level parsing only, no attempt to interpret
+    #   overall structure or high level objects (e.g. Fonts, Pages)
     # - limited to non-existant stream parsing
     # - no attempt yet to capture content
+    # - no error handling or diagnostics
     #
     rule TOP {<pdf>}
     rule pdf {^<header><eol>(<content>+)'%%EOF'<eol>?$}
-    rule content {<body><xref><trailer>} 
+    # xref section is optional - document could have a cross reference stream
+    # quite likley if linearized [PDF 1.7] 7.5.8 & Annex F (Linearized PDF)
+    rule content {<body><xref>?<trailer>} 
 
     # [PDF 1.7] 7.5.2 File Header
     # ---------------
@@ -22,9 +25,9 @@ grammar PDF::Grammar::Simple {
     token eol {"\r\n"  # ms/dos
                | "\n"  #'nix
                | "\r"} # mac-osx
-    rule body {<object>*}
+    rule body {<object>+}
 
-    rule xref {<PDF::Grammar::Simple::Xref::xref>}
+    rule xref {<PDF::Grammar::Xref::xref>}
 
     # [PDF 1.7] 7.2.2 Character Set + 7.2.3 Comment characters
     # ---------------

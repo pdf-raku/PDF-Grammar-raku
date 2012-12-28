@@ -1,14 +1,14 @@
 #!/usr/bin/env perl6
 
 use Test;
-use PDF::Grammar::Simple;
+use PDF::Grammar;
 
 for ('%PDF-1.0', '%PDF-1.7') {
-    ok($_ ~~ /^<PDF::Grammar::Simple::header>$/, "header: $_");
+    ok($_ ~~ /^<PDF::Grammar::header>$/, "header: $_");
 }
 
 my $header = '%PDF-1.0';
-ok($header ~~ /^<PDF::Grammar::Simple::header>$/, "header: $header");
+ok($header ~~ /^<PDF::Grammar::header>$/, "header: $header");
 
 my $body = '1 0 obj
 <<
@@ -61,7 +61,7 @@ endobj
 /Encoding /MacRomanEncoding
 >>
 endobj';
-ok($body ~~ /^<PDF::Grammar::Simple::body>$/, "body")
+ok($body ~~ /^<PDF::Grammar::body>$/, "body")
     or diag $body;
 
 my $xref = "xref
@@ -75,7 +75,7 @@ my $xref = "xref
 0000000415 00000 n
 0000000445 00000 n
 ";
-ok($xref ~~ /^<PDF::Grammar::Simple::xref>$/, "xref")
+ok($xref ~~ /^<PDF::Grammar::xref>$/, "xref")
     or diag $xref;
 
 my $trailer = 'trailer
@@ -86,7 +86,7 @@ my $trailer = 'trailer
 startxref
 553
 ';
-ok($trailer ~~ /^<PDF::Grammar::Simple::trailer>$/, "trailer")
+ok($trailer ~~ /^<PDF::Grammar::trailer>$/, "trailer")
     or diag $trailer;
 
 my $nix_pdf = "$header
@@ -103,7 +103,7 @@ $xref$trailer%\%EOF";
 (my $ms_dos_pdf = $nix_pdf)  ~~ s:g/\n/\r\n/;
 
 for ($nix_pdf, $edited_pdf, $mac_osx_pdf, $ms_dos_pdf) {
-    ok($_ ~~ /^<PDF::Grammar::Simple::pdf>$/, "pdf")
+    ok($_ ~~ /^<PDF::Grammar::pdf>$/, "pdf")
        or diag $_;
 }
 
