@@ -1,9 +1,9 @@
-PDF-Grammar-Simple
-==================
+PDF-Grammar
+===========
 
-PDF::Grammar::PDF is an experimental perl6 Grammar for parsing/validating
-PDF documents. It currently only handles non-linearized (Web Optimized)
-documents.
+PDF-Grammar is an experimental set of perl6 Grammars for parsing/validating
+PDF documents. It currently implements PDF::Grammar::Simple which is limited
+to handleding non-linearized (Web Optimized) documents.
 
 This is a proof of concept to see if a grammer can be reasonably constructed
 to tokenize and validate real-world PDF documents. It has so far been tested
@@ -21,7 +21,7 @@ locally create the Makefile. To run the tests, after building rakudo star
 (https://github.com/rakudo/rakudo - don't forget the final `make install`):
 
     % git co git@github.com:dwarring/PDF-Grammar-Simple.git
-    % cd PDF-Grammar-Simple
+    % cd PDF-Grammar
     % # to get perl6 and ufo
     % export PATH=~/src/rakudo-star-2012.11/install/bin:$PATH
     % ufo # Build Makefile

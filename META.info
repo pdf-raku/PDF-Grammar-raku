@@ -1,7 +1,7 @@
 {
-    "name"        : "PDF-Grammar-Simple",
+    "name"        : "PDF-Grammar",
     "version"     : "*",
-    "description" : "A Pilot Perl 6 module that implements a grammar for parsing PDF files",
+    "description" : "Pilot Perl 6 grammars for parsing PDF files",
     "depends"     : [  ],
-    "source-url"  : "git://github.com/dwarring/PDF-Grammar-Simple.git"
+    "source-url"  : "git://github.com/dwarring/PDF-Grammar.git"
 }
