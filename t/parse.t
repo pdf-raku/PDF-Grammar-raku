@@ -99,7 +99,9 @@ $xref$trailer
 $body
 $xref$trailer%\%EOF";
 
-for ($simple_pdf, $edited_pdf) {
+(my $mac_osx_pdf = $simple_pdf)  ~~ s:g/\n/\r/;
+
+for ($simple_pdf, $edited_pdf, $mac_osx_pdf) {
     ok($_ ~~ /^<PDF::Grammar::Simple::pdf>$/, "pdf")
        or diag $_;
 }

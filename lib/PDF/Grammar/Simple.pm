@@ -19,7 +19,9 @@ grammar PDF::Grammar::Simple {
     # [PDF 1.7] 7.5.2 File Header
     # ---------------
     token header {'%PDF-1.'\d}
-    token eol {"\r\n" | "\n" | "\r"}
+    token eol {"\r\n"  # ms/dos
+               | "\n"  #'nix
+               | "\r"} # macosx
     rule body {<object>*}
 
     rule xref {<PDF::Grammar::Simple::Xref::xref>}
