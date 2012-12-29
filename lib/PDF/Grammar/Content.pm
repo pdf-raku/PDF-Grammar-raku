@@ -6,8 +6,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     #
     # A Simple PDF grammar for parsing PDF content, i.e. Graphics and
     # Text operations as describe in sections 8 and 9 of [PDF 1.7].
-    rule TOP {<content>}
-    rule content {^ <op>* $}
+    rule TOP {<op>*}
 
     # arguments
     rule obj {<indirect_reference> | <indirect_object> | <null> | <name>}
@@ -18,7 +17,9 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule any {<object>*}
 
     # op names and definitions shamelessly lifted from xpdf/Gfx.cc 
-    rule op {<opMoveSetShowText>|<opMoveShowText>|<opFillStroke>|<opShowText>}
+    rule textBlock {<opBeginText> <op>* <opEndText>}
+    rule markedContentBlock {(<opBeginMarkedContent>|<opBeginOptionalContent>) <op>* <opEndMarkedContent>}
+    rule op {<markedContentBlock>|<textBlock>|<opMoveSetShowText>|<opMoveShowText>|<opFillStroke>|<opEOFFillStroke>|<opShowText>}
 ##  {"\"",  3, {tchkNum,    tchkNum,    tchkString},
 ##          &Gfx::opMoveSetShowText},
     rule opMoveSetShowText{<num> <num> <str> \"} 
@@ -30,14 +31,19 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule opFillStroke{B}
 ##  {"B*",  0, {tchkNone},
 ##          &Gfx::opEOFillStroke},
+    rule opEOFFillStroke{B\*}
 ##  {"BDC", 2, {tchkName,   tchkProps},
 ##          &Gfx::opBeginMarkedContent},
+    # todo: check argument types
+    rule opBeginOptionalContent{<obj> <obj> BDC}
 ##  {"BI",  0, {tchkNone},
 ##          &Gfx::opBeginImage},
 ##  {"BMC", 1, {tchkName},
 ##          &Gfx::opBeginMarkedContent},
+    rule opBeginMarkedContent{<obj> BMC}
 ##  {"BT",  0, {tchkNone},
 ##          &Gfx::opBeginText},
+    rule opBeginText{BT}
 ##  {"BX",  0, {tchkNone},
 ##          &Gfx::opBeginIgnoreUndef},
 ##  {"CS",  1, {tchkName},
@@ -50,8 +56,10 @@ grammar PDF::Grammar::Content is PDF::Grammar {
 ##          &Gfx::opEndImage},
 ##  {"EMC", 0, {tchkNone},
 ##          &Gfx::opEndMarkedContent},
+    rule opEndMarkedContent{EMC}
 ##  {"ET",  0, {tchkNone},
 ##          &Gfx::opEndText},
+    rule opEndText{ET}
 ##  {"EX",  0, {tchkNone},
 ##          &Gfx::opEndIgnoreUndef},
 ##  {"F",   0, {tchkNone},
