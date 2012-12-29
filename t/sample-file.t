@@ -2,7 +2,7 @@
 use v6;
 use Test;
 
-use PDF::Grammar;
+use PDF::Grammar::Body;
 
 my $test_pdf = %*ENV<TEST_PDF>;
 if ($test_pdf) {
@@ -19,7 +19,7 @@ my $fh = open $test_pdf, :bin
 my $pdf_content = join("\n", $fh.lines);
 $fh.close;
 
-my $p = PDF::Grammar.parse($pdf_content);
+my $p = PDF::Grammar::Body.parse($pdf_content);
 
 ok($p, "parsed pdf content ($test_pdf)");
 

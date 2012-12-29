@@ -1,14 +1,14 @@
 #!/usr/bin/env perl6
 
 use Test;
-use PDF::Grammar;
+use PDF::Grammar::Body;
 
 for ('%PDF-1.0', '%PDF-1.7') {
-    ok($_ ~~ /^<PDF::Grammar::header>$/, "header: $_");
+    ok($_ ~~ /^<PDF::Grammar::Body::header>$/, "header: $_");
 }
 
 my $header = '%PDF-1.0';
-ok($header ~~ /^<PDF::Grammar::header>$/, "header: $header");
+ok($header ~~ /^<PDF::Grammar::Body::header>$/, "header: $header");
 
 my $body = '1 0 obj
 <<
@@ -44,7 +44,7 @@ endobj
 << /Length 44 >>
 stream
 BT
-/F1 24 Tf % this is a comment
+/F1 24 Tf
 100 100 Td (Hello, world!) Tj
 ET
 endstream
@@ -61,7 +61,7 @@ endobj
 /Encoding /MacRomanEncoding
 >>
 endobj';
-ok($body ~~ /^<PDF::Grammar::body>$/, "body")
+ok($body ~~ /^<PDF::Grammar::Body::body>$/, "body")
     or diag $body;
 
 my $xref = "xref
@@ -75,7 +75,7 @@ my $xref = "xref
 0000000415 00000 n
 0000000445 00000 n
 ";
-ok($xref ~~ /^<PDF::Grammar::xref>$/, "xref")
+ok($xref ~~ /^<PDF::Grammar::Body::xref>$/, "xref")
     or diag $xref;
 
 my $trailer = 'trailer
@@ -86,7 +86,7 @@ my $trailer = 'trailer
 startxref
 553
 ';
-ok($trailer ~~ /^<PDF::Grammar::trailer>$/, "trailer")
+ok($trailer ~~ /^<PDF::Grammar::Body::trailer>$/, "trailer")
     or diag $trailer;
 
 my $nix_pdf = "$header
@@ -100,10 +100,12 @@ $body
 $xref$trailer%\%EOF";
 
 (my $mac_osx_pdf = $nix_pdf)  ~~ s:g/\n/\r/;
+# nb although the document remains parsable, converting to ms-dos line-endings
+# changes byte offsets and corrupts the xref table
 (my $ms_dos_pdf = $nix_pdf)  ~~ s:g/\n/\r\n/;
 
 for ($nix_pdf, $edited_pdf, $mac_osx_pdf, $ms_dos_pdf) {
-    ok($_ ~~ /^<PDF::Grammar::pdf>$/, "pdf")
+    ok($_ ~~ /^<PDF::Grammar::Body::pdf>$/, "pdf")
        or diag $_;
 }
 

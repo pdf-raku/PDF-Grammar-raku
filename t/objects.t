@@ -1,89 +1,89 @@
 #!/usr/bin/env perl6
 
 use Test;
-use PDF::Grammar;
+use PDF::Grammar::Body;
 
 # ints
 for ('123', '43445', '+17', '-98', '0') {
-    ok($_ ~~ /^<PDF::Grammar::int>$/, "int: $_");
-    ok($_ ~~ /^<PDF::Grammar::real>$/, "real: $_");
-    ok($_ ~~ /^<PDF::Grammar::object>$/, "object: $_");
+    ok($_ ~~ /^<PDF::Grammar::Body::int>$/, "int: $_");
+    ok($_ ~~ /^<PDF::Grammar::Body::real>$/, "real: $_");
+    ok($_ ~~ /^<PDF::Grammar::Body::object>$/, "object: $_");
 }
 for ('1234567890.', '.0', '34.5', '-3.62', '+123.6', '4.', '-.002', '0.0') {
-    ok($_ !~~ /^<PDF::Grammar::int>$/, "not int: $_");
-    ok($_  ~~ /^<PDF::Grammar::real>$/, "real: $_");
-    ok($_ ~~ /^<PDF::Grammar::object>$/, "object: $_");
+    ok($_ !~~ /^<PDF::Grammar::Body::int>$/, "not int: $_");
+    ok($_  ~~ /^<PDF::Grammar::Body::real>$/, "real: $_");
+    ok($_ ~~ /^<PDF::Grammar::Body::object>$/, "object: $_");
 }
 # some invalid cases (exponential format not allowed)
 for ('', '123A', '.', '. 42', '16#FFFE', '6.02E23') {
-    ok($_ !~~ /^<PDF::Grammar::int>$/, "not int: $_");
-    ok($_ !~~ /^<PDF::Grammar::real>$/, "not real: $_");
-    ok($_ !~~ /^<PDF::Grammar::object>$/, "not object: $_");
+    ok($_ !~~ /^<PDF::Grammar::Body::int>$/, "not int: $_");
+    ok($_ !~~ /^<PDF::Grammar::Body::real>$/, "not real: $_");
+    ok($_ !~~ /^<PDF::Grammar::Body::object>$/, "not object: $_");
 }
 
 # bool
 for ('true', 'false') {
-    ok($_ ~~ /^<PDF::Grammar::bool>$/, "bool: $_");
-    ok($_ ~~ /^<PDF::Grammar::object>$/, "object: $_");
+    ok($_ ~~ /^<PDF::Grammar::Body::bool>$/, "bool: $_");
+    ok($_ ~~ /^<PDF::Grammar::Body::object>$/, "object: $_");
 }
-ok(''           !~~ /^<PDF::Grammar::bool>$/, 'not bool: blank');
+ok(''           !~~ /^<PDF::Grammar::Body::bool>$/, 'not bool: blank');
 
 # hex strings
-ok('<Af309>'     ~~ /^<PDF::Grammar::hex_string>$/, 'hex: basic');
-ok('<Af309>'     ~~ /^<PDF::Grammar::object>$/, 'hex object: basic');
-ok('<4E6F762073686D6F7A206B6120706F702E>'     ~~ /^<PDF::Grammar::hex_string>$/, 'hex: example ');
-ok('<901FA3>'     ~~ /^<PDF::Grammar::hex_string>$/, 'hex: example 2a (90, 1F, A3)');
-ok('<901FA>'     ~~ /^<PDF::Grammar::hex_string>$/, 'hex: example 2b (90, 1F, A0)');
+ok('<Af309>'     ~~ /^<PDF::Grammar::Body::hex_string>$/, 'hex: basic');
+ok('<Af309>'     ~~ /^<PDF::Grammar::Body::object>$/, 'hex object: basic');
+ok('<4E6F762073686D6F7A206B6120706F702E>'     ~~ /^<PDF::Grammar::Body::hex_string>$/, 'hex: example ');
+ok('<901FA3>'     ~~ /^<PDF::Grammar::Body::hex_string>$/, 'hex: example 2a (90, 1F, A3)');
+ok('<901FA>'     ~~ /^<PDF::Grammar::Body::hex_string>$/, 'hex: example 2b (90, 1F, A0)');
 # - multiline hex strings - found in the field
 ok('<304B66CBD3DCBEC4CA8EA2B66D8DACF1F6FBC1D2E2A4B2C052708FE9EBED4F62
-77BFD5EB7A99B8A4BBD26A7B8DDEE9F5B6CEE744586E8AA7C5C4D7EC97B4D2FF>'  ~~ /^<PDF::Grammar::hex_string>$/, 'hex: multiline');
+77BFD5EB7A99B8A4BBD26A7B8DDEE9F5B6CEE744586E8AA7C5C4D7EC97B4D2FF>'  ~~ /^<PDF::Grammar::Body::hex_string>$/, 'hex: multiline');
 
 # - hex strings - counter examples
-ok('< ABC123>'         !~~ /^<PDF::Grammar::hex_string>$/, 'not hex whitespace lhs');
-ok('<ABC123 >'         !~~ /^<PDF::Grammar::hex_string>$/, 'not hex whitespace rhs');
-ok('<>'         !~~ /^<PDF::Grammar::hex_string>$/, 'not hex empty');
-ok('<x>'        !~~ /^<PDF::Grammar::hex_string>$/, 'not hex illegal char');
+ok('< ABC123>'         !~~ /^<PDF::Grammar::Body::hex_string>$/, 'not hex whitespace lhs');
+ok('<ABC123 >'         !~~ /^<PDF::Grammar::Body::hex_string>$/, 'not hex whitespace rhs');
+ok('<>'         !~~ /^<PDF::Grammar::Body::hex_string>$/, 'not hex empty');
+ok('<x>'        !~~ /^<PDF::Grammar::Body::hex_string>$/, 'not hex illegal char');
 
 # literal strings
 # -- escaped
 for ('\n', '\r', '\t', '\b', '\f', '\(', '\(', '\40', '\040') {
-    ok($_      ~~ /^<PDF::Grammar::literal_char_escaped>$/, "literal char escaped: $_");
-    ok($_     !~~ /^<PDF::Grammar::literal_char_regular>+$/, "not literal char regular: $_");
-    ok("($_)"  ~~ /^<PDF::Grammar::literal_string>$/, "literal string: ($_)");
+    ok($_      ~~ /^<PDF::Grammar::Body::literal_char_escaped>$/, "literal char escaped: $_");
+    ok($_     !~~ /^<PDF::Grammar::Body::literal_char_regular>+$/, "not literal char regular: $_");
+    ok("($_)"  ~~ /^<PDF::Grammar::Body::literal_string>$/, "literal string: ($_)");
 }
 # -- regular
 for ('a', '}', ' ') {
-    ok($_      ~~ /^<PDF::Grammar::literal_char_regular>$/, "literal char regular: $_");
-    ok($_     !~~ /^<PDF::Grammar::literal_char_escaped>$/, "not literal char escaped: $_");
-    ok($_     !~~ /^<PDF::Grammar::literal_line_continuation>$/, "not literal line continuation: $_");
-    ok("($_)"  ~~ /^<PDF::Grammar::literal_string>$/, "literal string: ($_)");
+    ok($_      ~~ /^<PDF::Grammar::Body::literal_char_regular>$/, "literal char regular: $_");
+    ok($_     !~~ /^<PDF::Grammar::Body::literal_char_escaped>$/, "not literal char escaped: $_");
+    ok($_     !~~ /^<PDF::Grammar::Body::literal_line_continuation>$/, "not literal line continuation: $_");
+    ok("($_)"  ~~ /^<PDF::Grammar::Body::literal_string>$/, "literal string: ($_)");
 }
 
 # [pdf 1.7] section 7.2.4.2 example 5:
 # -- '\0053' :== \005 + '3'
-ok('\0053' ~~ /^<PDF::Grammar::literal_char_escaped>3$/, "literal escaped char followed by numeric");
+ok('\0053' ~~ /^<PDF::Grammar::Body::literal_char_escaped>3$/, "literal escaped char followed by numeric");
 # -- '\005' :== '\05' :== \005
-ok('\005' ~~ /^<PDF::Grammar::literal_char_escaped>$/, "literal escaped 3 octal digits");
-ok('\05' ~~ /^<PDF::Grammar::literal_char_escaped>$/, "literal escaped 2 octal digits");
+ok('\005' ~~ /^<PDF::Grammar::Body::literal_char_escaped>$/, "literal escaped 3 octal digits");
+ok('\05' ~~ /^<PDF::Grammar::Body::literal_char_escaped>$/, "literal escaped 2 octal digits");
 
 do {
     # TODO: some octal escaping cases - not clear from spec
     # (check handling by gs, xpdf, acroreader)";
-   ok('\5' ~~ /^<PDF::Grammar::literal_char_escaped>$/, "literal escaped 1 octal digit"); 
-   ok('\059' ~~ /^<PDF::Grammar::literal_char_escaped>9$/, "literal escaped 2 octal digits - followed by non-octal/decimal digit"); 
+   ok('\5' ~~ /^<PDF::Grammar::Body::literal_char_escaped>$/, "literal escaped 1 octal digit"); 
+   ok('\059' ~~ /^<PDF::Grammar::Body::literal_char_escaped>9$/, "literal escaped 2 octal digits - followed by non-octal/decimal digit"); 
 }
 
 # -- invalid
 for ('\99', '\x', '\?', ')') {
-    ok($_     !~~ /^<PDF::Grammar::literal_char_escaped>$/, "not literal escape: $_");
-    ok($_     !~~ /^<PDF::Grammar::literal_char_regular>+$/, "not literal char regular: $_");
-    ok($_     !~~ /^<PDF::Grammar::literal_line_continuation>+$/, "not literal line_continuation: $_");
-    ok("($_)" !~~ /^<PDF::Grammar::literal_string>$/, "not literal string: $_");
+    ok($_     !~~ /^<PDF::Grammar::Body::literal_char_escaped>$/, "not literal escape: $_");
+    ok($_     !~~ /^<PDF::Grammar::Body::literal_char_regular>+$/, "not literal char regular: $_");
+    ok($_     !~~ /^<PDF::Grammar::Body::literal_line_continuation>+$/, "not literal line_continuation: $_");
+    ok("($_)" !~~ /^<PDF::Grammar::Body::literal_string>$/, "not literal string: $_");
 }
 
 # -- line continuation
 for ("\\\n") {
-    ok($_  ~~ /^<PDF::Grammar::literal_line_continuation>$/, "literal line continuation: $_");
+    ok($_  ~~ /^<PDF::Grammar::Body::literal_line_continuation>$/, "literal line continuation: $_");
 }
 
 # -- example strings from [pdf 1.7] Section 7.3.4.2
@@ -102,7 +102,7 @@ for (
     '(This string contains \245two octal characters\307.)',
 	 
     ) {
-    ok($_     ~~ /^<PDF::Grammar::literal_string>$/, "literal string: $_");
+    ok($_     ~~ /^<PDF::Grammar::Body::literal_string>$/, "literal string: $_");
 }
 
 # name strings
@@ -123,21 +123,21 @@ for (
       # a few picked up in the field
      '/Times-Roman',
     ) {
-    ok($_ ~~ /^<PDF::Grammar::name>$/, "name: $_");
+    ok($_ ~~ /^<PDF::Grammar::Body::name>$/, "name: $_");
 }
 
-ok('/Name1' ~~ /^<PDF::Grammar::object>$/, "object: /Name1");
-ok('[/Name1]' ~~ /^<PDF::Grammar::array>$/, "array: [/Name1]");
+ok('/Name1' ~~ /^<PDF::Grammar::Body::object>$/, "object: /Name1");
+ok('[/Name1]' ~~ /^<PDF::Grammar::Body::array>$/, "array: [/Name1]");
 
-ok('/a[/b]/c' ~~ /^<PDF::Grammar::name><PDF::Grammar::array><PDF::Grammar::name>$/, "parse: /a[/b]/c");
+ok('/a[/b]/c' ~~ /^<PDF::Grammar::Body::name><PDF::Grammar::Body::array><PDF::Grammar::Body::name>$/, "parse: /a[/b]/c");
 
 my $id_plus_array = '/ID[<81b14aafa313db63dbd6f981e49f94f4>
 <81b14aafa313db63dbd6f981e49f94f4>
 ]';
-ok($id_plus_array ~~ /^<PDF::Grammar::name><PDF::Grammar::array>$/, "parse: $id_plus_array");
+ok($id_plus_array ~~ /^<PDF::Grammar::Body::name><PDF::Grammar::Body::array>$/, "parse: $id_plus_array");
 
 for ('[]', '[ ]', '[42]', '[/Name]', '[42/Name]', '[49 3.14 false (Ralph) /SomeName]') {
-    ok($_ ~~ /^<PDF::Grammar::array>$/, "array: $_");
+    ok($_ ~~ /^<PDF::Grammar::Body::array>$/, "array: $_");
 }
 
 my $dict_example = "<< /Size 22
@@ -175,12 +175,12 @@ Nested stream - yikes!
 >>";
 
 for ('<<>>', '<< >>', '<</id 42>>', '<</a 1 /b (2)>>', $dict_example, $dict_example2, $dict_example3, $dict_example4) {
-    ok($_ ~~ /^<PDF::Grammar::dict>$/, "dict")
+    ok($_ ~~ /^<PDF::Grammar::Body::dict>$/, "dict")
     or diag $_;
 }
 
 for ('/BaseFont/Times-Roman', '/Producer(AFPL Ghostscript 8.51)', '/X<</Y(42)>>', '/Z#20[[1]]', '/a/b%comment') {
-    ok($_ ~~ /^<PDF::Grammar::name><PDF::Grammar::object>$/, "name + object: $_");
+    ok($_ ~~ /^<PDF::Grammar::Body::name><PDF::Grammar::Body::object>$/, "name + object: $_");
 }
 
 my $stream0 = "<< /Length 0 >>
@@ -253,7 +253,7 @@ endstream
 };
 
 for ($stream0, $stream1, $stream2, $stream3, $stream4, $stream5, $stream6) {
-    ok("$_ endobj" ~~ /^<PDF::Grammar::stream>'endobj'$/, "stream")
+    ok("$_ endobj" ~~ /^<PDF::Grammar::Body::stream>'endobj'$/, "stream")
     or diag $_;
 }
 
@@ -270,8 +270,8 @@ my $ind_obj3 = '13 0 obj<</BaseFont/Times-Roman/Type/Font
 my $ind_ref3 = '13 0 R';
 
 for ($ind_ref1, $ind_ref2, $ind_ref3) {
-    ok($_ ~~ /^<PDF::Grammar::indirect_reference>$/, "indirect_reference: $_");
-    ok($_ ~~ /^<PDF::Grammar::object>$/, "object: $_");
+    ok($_ ~~ /^<PDF::Grammar::Body::indirect_reference>$/, "indirect_reference: $_");
+    ok($_ ~~ /^<PDF::Grammar::Body::object>$/, "object: $_");
 }
 
 my $ind_obj4 = "7 0 obj
@@ -290,16 +290,16 @@ my $ind_obj5 = '8 0 obj
 endobj';
 
 for ($ind_obj1, $ind_obj2, $ind_obj3, $ind_obj4, $ind_obj5) {
-    ok($_ ~~ /^<PDF::Grammar::indirect_object>$/, "indirect_object")
+    ok($_ ~~ /^<PDF::Grammar::Body::indirect_object>$/, "indirect_object")
         or diag $_;
-    ok($_ ~~ /^<PDF::Grammar::object>$/, "object")
+    ok($_ ~~ /^<PDF::Grammar::Body::object>$/, "object")
         or diag $_;
 }
 
 # null
 for ('null') {
-    ok($_ ~~ /^<PDF::Grammar::null>$/, "null: $_");
-    ok($_ ~~ /^<PDF::Grammar::object>$/, "object: $_");
+    ok($_ ~~ /^<PDF::Grammar::Body::null>$/, "null: $_");
+    ok($_ ~~ /^<PDF::Grammar::Body::object>$/, "object: $_");
 }
 
 done;

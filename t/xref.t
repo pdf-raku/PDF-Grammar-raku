@@ -1,14 +1,14 @@
 #!/usr/bin/env perl6
 
 use Test;
-use PDF::Grammar::Xref;
+use PDF::Grammar::Body::Xref;
 
 for ("\r\n", " \n", " \r") {
-    ok($_ ~~ /^<PDF::Grammar::Xref::eol>$/, "xref_eol: $_");
+    ok($_ ~~ /^<PDF::Grammar::Body::Xref::eol>$/, "xref_eol: $_");
 }
 
 for ("0000000003 65535 f \n", "0000000409 00000 n\r\n") {
-    ok($_ ~~ /^<PDF::Grammar::Xref::entry>$/, "xref_entry: $_");
+    ok($_ ~~ /^<PDF::Grammar::Body::Xref::entry>$/, "xref_entry: $_");
 }
 
 my $xref = "xref
@@ -22,7 +22,7 @@ my $xref = "xref
 ";
 
 for ($xref) {
-    ok($_ ~~ /^<PDF::Grammar::Xref::xref>$/, "xref")
+    ok($_ ~~ /^<PDF::Grammar::Body::Xref::xref>$/, "xref")
         or diag $_;
 }
 

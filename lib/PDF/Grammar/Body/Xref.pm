@@ -1,4 +1,4 @@
-grammar PDF::Grammar::Xref {
+grammar PDF::Grammar::Body::Xref {
 
     token ws {
        # Turn off white-space handling
@@ -10,7 +10,7 @@ grammar PDF::Grammar::Xref {
                | "\n"  # 'nix
                | " \n" # 'nix - trailing blank
                | "\r"  # mac-osx
-               | " \r"  # mac-osx - trailing blank
+               | " \r" # mac-osx - trailing blank
     }
 
     rule  xref {xref<eol><subsection>+}
