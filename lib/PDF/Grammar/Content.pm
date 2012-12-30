@@ -6,7 +6,9 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     #
     # A Simple PDF grammar for parsing PDF content, i.e. Graphics and
     # Text operations as describe in sections 8 and 9 of [PDF 1.7].
-    rule TOP {<op>*}
+    rule TOP {<statement>*}
+
+    rule statement {(<op>|<textBlock>|<markedContentBlock>|<imageBlock>)*}
 
     # arguments
     rule obj {<indirect_reference> | <null> | <name>}
@@ -18,8 +20,9 @@ grammar PDF::Grammar::Content is PDF::Grammar {
 
     # op names and definitions shamelessly lifted from xpdf/Gfx.cc 
     rule textBlock {<opBeginText> <op>* <opEndText>}
-    rule markedContentBlock {(<opBeginMarkedContent>|<opBeginOptionalContent>) <op>* <opEndMarkedContent>}
-    rule op {<markedContentBlock>|<textBlock>|<opMoveSetShowText>|<opMoveShowText>|<opFillStroke>|<opEOFFillStroke>|<opShowText>}
+    rule markedContentBlock {(<opBeginMarkedContent>|<opBeginOptionalContent>) (<op>|<textBlock>)* <opEndMarkedContent>}
+    rule imageBlock {(<opBeginImage>) (<name> <object>)* <opImageData> <opEndImage>}
+    rule op {<opMoveSetShowText>|<opMoveShowText>|<opFillStroke>|<opEOFFillStroke>|<opShowText>}
 ##  {"\"",  3, {tchkNum,    tchkNum,    tchkString},
 ##          &Gfx::opMoveSetShowText},
     rule opMoveSetShowText{<num> <num> <str> \"} 
@@ -38,6 +41,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule opBeginOptionalContent{<obj> <obj> BDC}
 ##  {"BI",  0, {tchkNone},
 ##          &Gfx::opBeginImage},
+    rule opBeginImage{BI}
 ##  {"BMC", 1, {tchkName},
 ##          &Gfx::opBeginMarkedContent},
     rule opBeginMarkedContent{<obj> BMC}
@@ -54,6 +58,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
 ##          &Gfx::opXObject},
 ##  {"EI",  0, {tchkNone},
 ##          &Gfx::opEndImage},
+    rule opEndImage{EI}
 ##  {"EMC", 0, {tchkNone},
 ##          &Gfx::opEndMarkedContent},
     rule opEndMarkedContent{EMC}
@@ -68,6 +73,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
 ##          &Gfx::opSetStrokeGray},
 ##  {"ID",  0, {tchkNone},
 ##          &Gfx::opImageData},
+    rule opImageData{ID}
 ##  {"J",   1, {tchkInt},
 ##          &Gfx::opSetLineCap},
 ##  {"K",   4, {tchkNum,    tchkNum,    tchkNum,    tchkNum},

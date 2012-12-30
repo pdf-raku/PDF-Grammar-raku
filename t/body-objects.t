@@ -291,8 +291,6 @@ endobj';
 for ($ind_obj1, $ind_obj2, $ind_obj3, $ind_obj4, $ind_obj5) {
     ok($_ ~~ /^<PDF::Grammar::Body::indirect_object>$/, "indirect_object")
         or diag $_;
-    ok($_ ~~ /^<PDF::Grammar::Body::object>$/, "object")
-        or diag $_;
 }
 
 # null

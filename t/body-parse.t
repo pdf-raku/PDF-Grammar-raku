@@ -10,14 +10,17 @@ for ('%PDF-1.0', '%PDF-1.7') {
 my $header = '%PDF-1.0';
 ok($header ~~ /^<PDF::Grammar::Body::header>$/, "header: $header");
 
-my $body = '1 0 obj
+my $indirect_obj1 = '1 0 obj
 <<
 /Type /Catalog
 /Pages 3 0 R
 /Outlines 2 0 R
 >>
 endobj
-2 0 obj
+';
+
+my $body = $indirect_obj1 ~
+'2 0 obj
 <<
 /Type /Outlines
 /Count 0
@@ -61,8 +64,16 @@ endobj
 /Encoding /MacRomanEncoding
 >>
 endobj';
-ok($body ~~ /^<PDF::Grammar::Body::body>$/, "body")
-    or diag $body;
+
+for ($indirect_obj1) {
+    ok($_ ~~ /^<PDF::Grammar::Body::indirect_object>$/, "indirect obj")
+        or diag $_;
+}
+
+for ($indirect_obj1, $body) {
+    ok($_ ~~ /^<PDF::Grammar::Body::body>$/, "body")
+        or diag $_;
+}
 
 my $xref = "xref
 0 8
