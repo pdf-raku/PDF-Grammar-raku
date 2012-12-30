@@ -9,7 +9,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule TOP {<op>*}
 
     # arguments
-    rule obj {<indirect_reference> | <indirect_object> | <null> | <name>}
+    rule obj {<indirect_reference> | <null> | <name>}
     rule str {<obj> | <string>}
     rule arr {<obj> | <array>}
     rule dct {<obj> | <dict>}
@@ -199,16 +199,5 @@ grammar PDF::Grammar::Content is PDF::Grammar {
 ##          &Gfx::opCurveTo2},
 ##
 }
-
-=begin pod
-
-=head1 ACKNOWLEDGEMENTS
-
-Thaks to foolabs l<http://www.foolabs.com/xpdf/> for their beautiful clean
-xpdf codebase. I have often used as programmer friendly alternative to the
-official PDF specifications; and have again shamelessly lifted code; This
-time for building the operator table.
-
-=end pod
 
 
