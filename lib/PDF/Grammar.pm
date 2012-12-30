@@ -14,6 +14,9 @@ grammar PDF::Grammar {
         <!ww>
         <ws_char>*
     }
+    token eol {"\r\n"  # ms/dos
+               | "\n"  #'nix
+               | "\r"} # mac-osx
 
     # [PDF 1.7] 7.3.3  Numeric Objects
     # ---------------
@@ -62,9 +65,16 @@ grammar PDF::Grammar {
 
     token null { 'null' }
 
-    rule indirect_object {<int> <int> obj <object>* endobj}
     rule indirect_reference {<int> <int> R}
 
-    rule object { <stream> | <indirect_reference> | <indirect_object> | <number> | <bool> | <string> | <name> | <array> | <dict> | <null> }
+    # stream parsing - efficiency matters here
+    token stream_marker {stream<eol>}
+    # Hmmm allow endstream .. anywhere?
+    # Seems to be some chance of streams appearing where they're not
+    # supposed to, e.g. nested in a subdictionary
+    token endstream_marker {<eol>?endstream<ws_char>+}
+    rule stream {<dict> <stream_marker>.*?<endstream_marker>}
+
+    rule object { <stream> | <indirect_reference> | <number> | <bool> | <string> | <name> | <array> | <dict> | <null> }
 
 };

@@ -24,20 +24,10 @@ grammar PDF::Grammar::Body is PDF::Grammar {
     # [PDF 1.7] 7.5.2 File Header
     # ---------------
     token header {'%PDF-1.'\d}
-    token eol {"\r\n"  # ms/dos
-               | "\n"  #'nix
-               | "\r"} # mac-osx
-    rule body {<object>+}
+    rule body {<indirect_object>+}
 
     rule xref {<PDF::Grammar::Body::Xref::xref>}
-
-    # stream parsing - efficiency matters here
-    token stream_marker {stream<eol>}
-    # Hmmm allow endstream .. anywhere?
-    # Seems to be some chance of streams appearing where they're not
-    # supposed to, e.g. nested in a subdictionary
-    token endstream_marker {<eol>?endstream<ws_char>+}
-    rule stream {<dict> <stream_marker>.*?<endstream_marker>}
+    rule indirect_object { <int> <int> obj <object>* endobj }
 
     rule trailer {
         trailer<eol>
