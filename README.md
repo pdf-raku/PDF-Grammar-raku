@@ -2,7 +2,7 @@ PDF-Grammar
 ===========
 
 PDF::Grammar is under construction as an experimental suite of perl6 grammars
-for parsing PDF documents.
+for describing PDF documents.
 
 So far, I've implemented PDF::Grammar::Body, which describes the out structure
 of a PDF document; breaking it down into headers, trailers, top-level objects
@@ -24,7 +24,7 @@ locally create the Makefile. To run the tests, after building rakudo star
 (https://github.com/rakudo/star/downloads - don't forget the final
 `make install`):
 
-    % git co git@github.com:dwarring/PDF-Grammar.git
+    % git co git@github.com/dwarring/PDF-Grammar.git
     % cd PDF-Grammar
     % # to get perl6 and ufo
     % export PATH=~/src/rakudo-star-2012.11/install/bin:$PATH
