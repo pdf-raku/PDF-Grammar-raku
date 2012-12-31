@@ -8,7 +8,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     # Text operations as describe in sections 8 and 9 of [PDF 1.7].
     rule TOP {<statement>*}
 
-   rule statement {(<op>|<textBlock>|<markedContentBlock>|<imageBlock>)*}
+   rule statement {(<op>|<textBlock>|<markedContentBlock>|<imageBlock>|<ignoreBlock>)*}
 
     # arguments
     rule obj {<indirect_reference> | <null> | <name>}
@@ -29,7 +29,9 @@ grammar PDF::Grammar::Content is PDF::Grammar {
                       <opBeginImage>
                       (<name> <object>)*
                       <opImageData>.*?<eol>?<opEndImage>
-}
+    }
+
+    rule ignoreBlock {BX .*? EX}
     rule op {<opMoveSetShowText>|<opMoveShowText>|<opFillStroke>|<opEOFFillStroke>|<opShowText>}
 ##  {"\"",  3, {tchkNum,    tchkNum,    tchkString},
 ##          &Gfx::opMoveSetShowText},
@@ -39,8 +41,8 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule opMoveShowText{<str> \'}
 ##  {"B",   0, {tchkNone},
 ##          &Gfx::opFillStroke},
-    # Matching 'B' before 'BI'?
-    rule opFillStroke{B<!before I>}
+    # Matching 'B' in preference to 'BI', 'BX'?
+    rule opFillStroke{B<!before I><!before X>}
 ##  {"B*",  0, {tchkNone},
 ##          &Gfx::opEOFillStroke},
     rule opEOFFillStroke{B\*}
@@ -56,8 +58,9 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule opBeginMarkedContent{<name> BMC}
 ##  {"BT",  0, {tchkNone},
 ##          &Gfx::opBeginText},
-    rule opBeginText{BT}
+    rule opBeginText {BT}
 ##  {"BX",  0, {tchkNone},
+    rule opBeginIgnore {BX}
 ##          &Gfx::opBeginIgnoreUndef},
 ##  {"CS",  1, {tchkName},
 ##          &Gfx::opSetStrokeColorSpace},
@@ -76,6 +79,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule opEndText{ET}
 ##  {"EX",  0, {tchkNone},
 ##          &Gfx::opEndIgnoreUndef},
+    rule opEndIgnore{EX}
 ##  {"F",   0, {tchkNone},
 ##          &Gfx::opFill},
 ##  {"G",   1, {tchkNum},

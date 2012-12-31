@@ -39,6 +39,8 @@ for (
     '(hello world) Tj',   # Tj        showText
 
     $test_image_block,
+
+    'BX this stuff gets ignored EX',
     ) {
     ok($_ ~~ /^<PDF::Grammar::Content::statement>$/, "statement")
 	or do {
