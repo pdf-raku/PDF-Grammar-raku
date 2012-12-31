@@ -3,14 +3,15 @@
 use Test;
 use PDF::Grammar::Body;
 
-# ints
+# integers
 for ('123', '43445', '+17', '-98', '0') {
-    ok($_ ~~ /^<PDF::Grammar::Body::int>$/, "int: $_");
+    ok($_ ~~ /^<PDF::Grammar::Body::integer>$/, "integer: $_");
     ok($_ ~~ /^<PDF::Grammar::Body::number>$/, "number: $_");
     ok($_ ~~ /^<PDF::Grammar::Body::object>$/, "object: $_");
 }
+# reals
 for ('1234567890.', '.0', '34.5', '-3.62', '+123.6', '4.', '-.002', '0.0') {
-    ok($_ !~~ /^<PDF::Grammar::Body::int>$/, "not int: $_");
+    ok($_ !~~ /^<PDF::Grammar::Body::integer>$/, "not integer: $_");
     ok($_  ~~ /^<PDF::Grammar::Body::number>$/, "number: $_");
     ok($_ ~~ /^<PDF::Grammar::Body::object>$/, "object: $_");
 }

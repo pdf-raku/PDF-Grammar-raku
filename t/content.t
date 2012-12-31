@@ -43,9 +43,23 @@ for (
     'BX this stuff gets ignored EX',
     'BX this stuff gets BX doubly EX ignored EX',
 
-     '/RGB CS',
-     '/foo <</bar 42>> DP',
-     '/MyForm Do',
+    '/RGB CS',
+    '/foo <</bar 42>> DP',
+    '/MyForm Do',
+    'F',
+    '/gg G',
+    '2 J',
+    '.1  0.2  0.30  .400  K',
+    '0.35 M',
+    '/here MP',
+    'Q',
+    '.3 .5 .7 RG',
+    'S',
+    '.1  0.2  0.30  .400  SC',
+    '0.30 0.75 0.21 /P2 SCN',
+    'T*',
+    '200 100 TD',
+    '[(hello) (world)] TJ',
     ) {
     ok($_ ~~ /^<PDF::Grammar::Content::instruction>$/, "instruction")
 	or do {

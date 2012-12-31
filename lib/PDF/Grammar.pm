@@ -20,12 +20,12 @@ grammar PDF::Grammar {
 
     # [PDF 1.7] 7.3.3  Numeric Objects
     # ---------------
-    token int { ('+' | '-')? \d+ }
+    token integer { ('+' | '-')? \d+ }
     # reals must have at least one digit either before or after the decimal
     # point
     token real { ('+' | '-')? ((\d+\.\d*) | (\d*\.\d+)) }
 
-    rule number { <real> | <int> }
+    rule number { <real> | <integer> }
 
     token literal_char_escaped { '\n' | '\r' | '\t' | '\b' | '\f' | '\(' | '\)' | '//' | ('\\' <[0..7]> ** 1..3) }
     # literal_character - all but '(' ')' '\'

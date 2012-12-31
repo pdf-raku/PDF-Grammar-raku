@@ -12,19 +12,18 @@ grammar PDF::Grammar::Content is PDF::Grammar {
 
     # arguments
     rule obj {<null> | <name>}
-    rule str {<obj> | <string>}
-    rule arr {<obj> | <array>}
-    rule dct {<obj> | <dict>}
-    rule num {<obj> | <number>}
-    rule any {<operand>*}
+    rule str {<obj>  | <string>}
+    rule arr {<obj>  | <array>}
+    rule dct {<obj>  | <dict>}
+    rule num {<obj>  | <number>}
+    rule int {<obj>  | <integer>}
+    rule any {<operand>+}
 
     # blocks have limited nesting capability and aren't fully recursive.
     # So theretically, we only have to deal with a few combinations...
 
-    rule rBMC { <opBeginMarkedContent> | <opBeginOptionalContent> }
-    rule rEMC { <opEndMarkedContent> }
-    rule textBlock {<opBeginText> ( (<rBMC> <op>* <rEMC>) | <op>)* <opEndText>}
-    rule markedContentBlock {<rBMC> ( (<opBeginText> <op>* <opEndText>) | <op> )* <rEMC>}
+    rule textBlock {<opBeginText> ( (<opBeginMarkedContent> <op>* <opEndMarkedContent>) | <op>)* <opEndText>}
+    rule markedContentBlock {<opBeginMarkedContent> ( (<opBeginText> <op>* <opEndText>) | <op> )* <opEndMarkedContent>}
     rule imageBlock {
                       <opBeginImage>
                       (<name> <operand>)*
@@ -32,62 +31,37 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     }
 
     rule ignoreBlock {BX: (<ignoreBlock>|.)*? EX}
-    rule op {<opMoveSetShowText>|<opMoveShowText>|<opFillStroke>|<opEOFFillStroke>|<opShowText>|<opSetStrokeColorSpace>|<opMarkPoint>|<opXObject>}
+    rule op {<opMoveSetShowText>|<opMoveShowText>|<opFillStroke>|<opEOFFillStroke>|<opShowText>|<opSetStrokeColorSpace>|<opMarkPoint>|<opXObject>|<opFill>|<opSetStrokeGray>|<opSetLineCap>|<opSetStrokeCMYKColor>|<opSetMiterLimit>|<opRestore>|<opSetStrokeRGBColor>|<opStroke>|<opSetStrokeColor>|<opSetStrokeColorN>|<opTextNextLine>|<opTextMoveSet>|<opShowSpaceText>}
     rule opMoveSetShowText{<num> <num> <str> \"} 
     rule opMoveShowText{<str> \'}
+    # todo 'BI' 'BX' matches misbehaving
     rule opFillStroke{B<!before I><!before X>}
     rule opEOFFillStroke{B\*}
-    rule opBeginOptionalContent{<obj> <dict> BDC}
     rule opBeginImage{BI}
-    rule opBeginMarkedContent{<obj> BMC}
+    rule opBeginMarkedContent{(<obj> BMC) | (<obj> <dict> BDC)}
     rule opBeginText {BT}
     rule opBeginIgnore {BX}
     rule opSetStrokeColorSpace{<obj> CS}
-    rule opMarkPoint{<obj> <dct> DP}
+    rule opMarkPoint{(<obj> <dct> DP)|(<obj> MP)}
     rule opXObject{<obj> Do}
     rule opEndImage{EI}
     rule opEndMarkedContent{EMC}
     rule opEndText{ET}
     rule opEndIgnore{EX}
-##  {"F",   0, {tchkNone},
-##          &Gfx::opFill},
-##  {"G",   1, {tchkNum},
-##          &Gfx::opSetStrokeGray},
-##  {"ID",  0, {tchkNone},
-##          &Gfx::opImageData},
+    rule opFill{F}
+    rule opSetStrokeGray{<num> G}
     rule opImageData{ID}
-##  {"J",   1, {tchkInt},
-##          &Gfx::opSetLineCap},
-##  {"K",   4, {tchkNum,    tchkNum,    tchkNum,    tchkNum},
-##          &Gfx::opSetStrokeCMYKColor},
-##  {"M",   1, {tchkNum},
-##          &Gfx::opSetMiterLimit},
-##  {"MP",  1, {tchkName},
-##          &Gfx::opMarkPoint},
-##  {"Q",   0, {tchkNone},
-##          &Gfx::opRestore},
-##  {"RG",  3, {tchkNum,    tchkNum,    tchkNum},
-##          &Gfx::opSetStrokeRGBColor},
-##  {"S",   0, {tchkNone},
-##          &Gfx::opStroke},
-##  {"SC",  -4, {tchkNum,   tchkNum,    tchkNum,    tchkNum},
-##          &Gfx::opSetStrokeColor},
-##  {"SCN", -33, {tchkSCN,   tchkSCN,    tchkSCN,    tchkSCN,
-##	        tchkSCN,   tchkSCN,    tchkSCN,    tchkSCN,
-##	        tchkSCN,   tchkSCN,    tchkSCN,    tchkSCN,
-##	        tchkSCN,   tchkSCN,    tchkSCN,    tchkSCN,
-##	        tchkSCN,   tchkSCN,    tchkSCN,    tchkSCN,
-##	        tchkSCN,   tchkSCN,    tchkSCN,    tchkSCN,
-##	        tchkSCN,   tchkSCN,    tchkSCN,    tchkSCN,
-##	        tchkSCN,   tchkSCN,    tchkSCN,    tchkSCN,
-##	        tchkSCN},
-##          &Gfx::opSetStrokeColorN},
-##  {"T*",  0, {tchkNone},
-##          &Gfx::opTextNextLine},
-##  {"TD",  2, {tchkNum,    tchkNum},
-##          &Gfx::opTextMoveSet},
-##  {"TJ",  1, {tchkArray},
-##          &Gfx::opShowSpaceText},
+    rule opSetLineCap{<int> J}
+    rule opSetStrokeCMYKColor{<num> <num> <num> <num> K}
+    rule opSetMiterLimit{<num> M}
+    rule opRestore{Q}
+    rule opSetStrokeRGBColor{<num> <num> <num> RG}
+    rule opStroke{S}
+    rule opSetStrokeColor{ <num> <num> <num> <num> SC }
+    rule opSetStrokeColorN{ <any> SCN }
+    rule opTextNextLine{ T\* }
+    rule opTextMoveSet{ <num> <num> TD }
+    rule opShowSpaceText{ <arr> TJ }
 ##  {"TL",  1, {tchkNum},
 ##          &Gfx::opSetTextLeading},
 ##  {"Tc",  1, {tchkNum},

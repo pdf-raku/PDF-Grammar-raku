@@ -25,7 +25,7 @@ grammar PDF::Grammar::Body is PDF::Grammar {
     # override PDF::Grammar <array> and <dict> rules to include all objects
     rule array {\[ <object>* \]}
     rule dict {'<<' (<name> <object>)* '>>'}
-    rule indirect_reference {<int> <int> R}
+    rule indirect_reference {<integer> <integer> R}
 
     # stream parsing - efficiency matters here
     token stream_marker {stream<eol>}
@@ -41,7 +41,7 @@ grammar PDF::Grammar::Body is PDF::Grammar {
     rule body {<indirect_object>+}
 
     rule xref {<PDF::Grammar::Body::Xref::xref>}
-    rule indirect_object { <int> <int> obj <object>* endobj }
+    rule indirect_object { <integer> <integer> obj <object>* endobj }
 
     rule trailer {
         trailer<eol>
