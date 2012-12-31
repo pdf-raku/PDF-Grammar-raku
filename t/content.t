@@ -31,8 +31,8 @@ for (
     'BT ET',             # BT .. ET  Text block - empty
     'BT B* ET',          # BT .. ET  Text block - with valid content
 
-    '/foo /bar BDC BT ET EMC',     # optional content - empty
-    '/foo /bar BDC (hello) Tj EMC',     # optional content - basic
+    '/foo <</MP /yup>> BDC BT ET EMC',     # optional content - empty
+    '/foo <</MP /yup>> BDC (hello) Tj EMC',     # optional content - basic
 
     '/foo BMC BT ET EMC',     # Marked content - empty
     '/bar BMC BT B* ET EMC',  # Marked content + text block - empty
@@ -41,7 +41,7 @@ for (
     '(hello world) Tj',   # Tj        showText
     ) {
     ok($_ ~~ /^<PDF::Grammar::Content::statement>$/,
-       "op: $_");
+       "statement: $_");
 }
 
 # invalid cases
@@ -59,8 +59,8 @@ for (
     '/baz BMC (hi) EMC',        # Marked content - incomplete contents
 
     ) {
-    ok($_ !~~ /^<PDF::Grammar::Content::op>$/,
-       "not op: $_");
+    ok($_ !~~ /^<PDF::Grammar::Content::statement>$/,
+       "not statement: $_");
 }
 
 ##my $sample_content = q:to/END/;

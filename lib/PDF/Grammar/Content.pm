@@ -18,9 +18,13 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule num {<obj> | <number>}
     rule any {<object>*}
 
-    # op names and definitions shamelessly lifted from xpdf/Gfx.cc 
-    rule textBlock {<opBeginText> <op>* <opEndText>}
-    rule markedContentBlock {(<opBeginMarkedContent>|<opBeginOptionalContent>) (<op>|<textBlock>)* <opEndMarkedContent>}
+    # blocks have limited nesting capability and aren't fully recursive.
+    # So theretically, we only have to deal with a few combinations...
+
+    rule rBMC { <opBeginMarkedContent> | <opBeginOptionalContent> }
+    rule rEMC { <opEndMarkedContent> }
+    rule textBlock {<opBeginText> (( <rBMC> <op>* <rEMC> ) | <op>)* <opEndText>}
+    rule markedContentBlock {<rBMC> (( <opBeginText> <op>* <opEndText>) | <op> )* <rEMC>}
     rule imageBlock {(<opBeginImage>) (<name> <object>)* <opImageData> <opEndImage>}
     rule op {<opMoveSetShowText>|<opMoveShowText>|<opFillStroke>|<opEOFFillStroke>|<opShowText>}
 ##  {"\"",  3, {tchkNum,    tchkNum,    tchkString},
@@ -38,13 +42,13 @@ grammar PDF::Grammar::Content is PDF::Grammar {
 ##  {"BDC", 2, {tchkName,   tchkProps},
 ##          &Gfx::opBeginMarkedContent},
     # todo: check argument types
-    rule opBeginOptionalContent{<obj> <obj> BDC}
+    rule opBeginOptionalContent{<name> <dict> BDC}
 ##  {"BI",  0, {tchkNone},
 ##          &Gfx::opBeginImage},
     rule opBeginImage{BI}
 ##  {"BMC", 1, {tchkName},
 ##          &Gfx::opBeginMarkedContent},
-    rule opBeginMarkedContent{<obj> BMC}
+    rule opBeginMarkedContent{<name> BMC}
 ##  {"BT",  0, {tchkNone},
 ##          &Gfx::opBeginText},
     rule opBeginText{BT}
