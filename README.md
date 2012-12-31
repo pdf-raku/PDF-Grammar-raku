@@ -2,7 +2,7 @@ PDF-Grammar
 ===========
 
 PDF documents as whole do not lend themselves to BNF style descriptions or
-grammars. There are ares where these can be very useful including:
+grammars. There are areas where these can be very useful including:
 
 (*) The overall file structure (headers, objects, cross reference tables and
 footers.
