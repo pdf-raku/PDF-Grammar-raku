@@ -21,6 +21,20 @@ grammar PDF::Grammar::Body is PDF::Grammar {
     # quite likley if linearized [PDF 1.7] 7.5.8 & Annex F (Linearized PDF)
     rule content {<body><xref>?<trailer>} 
 
+    rule object { <stream> | <indirect_reference> | <operand> }
+    # override PDF::Grammar <array> and <dict> rules to include all objects
+    rule array {\[ <object>* \]}
+    rule dict {'<<' (<name> <object>)* '>>'}
+    rule indirect_reference {<int> <int> R}
+
+    # stream parsing - efficiency matters here
+    token stream_marker {stream<eol>}
+    # Hmmm allow endstream .. anywhere?
+    # Seems to be some chance of streams appearing where they're not
+    # supposed to, e.g. nested in a subdictionary
+    token endstream_marker {<eol>?endstream<ws_char>+}
+    rule stream {<dict> <stream_marker>.*?<endstream_marker>}
+
     # [PDF 1.7] 7.5.2 File Header
     # ---------------
     token header {'%PDF-1.'\d}

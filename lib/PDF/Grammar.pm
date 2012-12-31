@@ -59,24 +59,11 @@ grammar PDF::Grammar {
     # ---------------
     token bool { ['true' | 'false'] }
 
-    rule array {\[ <object>* \]}
-
-    rule dict {'<<' (<name> <object>)* '>>'}
-
     token null { 'null' }
-
-    rule indirect_reference {<int> <int> R}
-
-    # stream parsing - efficiency matters here
-    token stream_marker {stream<eol>}
-    # Hmmm allow endstream .. anywhere?
-    # Seems to be some chance of streams appearing where they're not
-    # supposed to, e.g. nested in a subdictionary
-    token endstream_marker {<eol>?endstream<ws_char>+}
-    rule stream {<dict> <stream_marker>.*?<endstream_marker>}
 
     # Operand - as permitted in Content streams [PDF 1.7] 7.8.2
     rule operand { <number> | <bool> | <string> | <name> | <array> | <dict> | <null> }
-    rule object { <stream> | <indirect_reference> | <operand> }
+    rule array {\[ <operand>* \]}
+    rule dict {'<<' (<name> <operand>)* '>>'}
 
 };
