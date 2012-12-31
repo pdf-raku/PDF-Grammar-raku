@@ -1,24 +1,32 @@
 PDF-Grammar
 ===========
 
-PDF::Grammar is under construction as experimental grammar parsing PDF
-documents. I'm using this to experiment with Perl6 Grammars and learn more
-about PDF internals.
+PDF documents as whole do not lend themselves to BNF style descriptions or
+grammars. There are ares where these can be very useful including:
 
-So far, I've implemented PDF::Grammar::Body, which describes the outer
-structure of a PDF document; headers, trailers, top-level objects and the
-cross reference table.
+(*) The overall file structure (headers, objects, cross reference tables and
+footers.
 
-PDF::Grammar::Content is also under construction as a description of the text
-and graphics operators that are used to produce page layout.
+(*) The operands that make up content streams. These are used to markup
+text and graphics.
 
-PDF::Grammar has so far been tested against a limited sample of PDF documents
+PDF::Grammar is under construction as experimental perl6 grammars for parsing
+and  validation of PDF compnents. It currently implements two grammars:
+
+`PDF::Grammar::Body` - this  describes the file structure of PDF documents,
+including headers, trailers, top-level objects and the cross reference table.
+
+`PDF::Grammar::Content` - is also under construction as a description of the
+text and graphics operators that are used to produce page layout.
+
+PDF-Grammar has so far been tested against a limited sample of PDF documents
 and test cases. Furthermore, it has so far only been built and tested against
 Rakudo Star 2012-11.
 
-It is not designed for reuse nor is it authoritative. If it survives at all,
-the tokens and capturing rules that comprise it will most likely change
-significantly. Having said that, I'm also open to any input or contributions.
+It has so far just been used for validation purposes and has not been put to
+use for any serious PDF processing. The grammar is still evolving and is likely
+to change at short notice.
+
 I have been working off the PDF 1.7 reference manual (http://wwwimages.adobe.com/www.adobe.com/content/dam/Adobe/en/devnet/pdf/pdfs/PDF32000_2008.pdf).
 
 The only dependency is Rakudo Star. It runs on `perl6`. `ufo` is also to
