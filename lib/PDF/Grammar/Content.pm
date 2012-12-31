@@ -6,17 +6,17 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     #
     # A Simple PDF grammar for parsing PDF content, i.e. Graphics and
     # Text operations as describe in sections 8 and 9 of [PDF 1.7].
-    rule TOP {<statement>*}
+    rule TOP {<instruction>*}
 
-   rule statement {(<op>|<textBlock>|<markedContentBlock>|<imageBlock>|<ignoreBlock>)*}
+   rule instruction {(<op>|<textBlock>|<markedContentBlock>|<imageBlock>|<ignoreBlock>)*}
 
     # arguments
-    rule obj {<indirect_reference> | <null> | <name>}
+    rule obj {<null> | <name>}
     rule str {<obj> | <string>}
     rule arr {<obj> | <array>}
     rule dct {<obj> | <dict>}
     rule num {<obj> | <number>}
-    rule any {<object>*}
+    rule any {<operand>*}
 
     # blocks have limited nesting capability and aren't fully recursive.
     # So theretically, we only have to deal with a few combinations...
@@ -27,58 +27,27 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule markedContentBlock {<rBMC> ( (<opBeginText> <op>* <opEndText>) | <op> )* <rEMC>}
     rule imageBlock {
                       <opBeginImage>
-                      (<name> <object>)*
+                      (<name> <operand>)*
                       <opImageData>.*?<eol>?<opEndImage>
     }
 
-    rule ignoreBlock {BX .*? EX}
-    rule op {<opMoveSetShowText>|<opMoveShowText>|<opFillStroke>|<opEOFFillStroke>|<opShowText>}
-##  {"\"",  3, {tchkNum,    tchkNum,    tchkString},
-##          &Gfx::opMoveSetShowText},
+    rule ignoreBlock {BX: (<ignoreBlock>|.)*? EX}
+    rule op {<opMoveSetShowText>|<opMoveShowText>|<opFillStroke>|<opEOFFillStroke>|<opShowText>|<opSetStrokeColorSpace>|<opMarkPoint>|<opXObject>}
     rule opMoveSetShowText{<num> <num> <str> \"} 
-##  {"'",   1, {tchkString},
-##          &Gfx::opMoveShowText},
     rule opMoveShowText{<str> \'}
-##  {"B",   0, {tchkNone},
-##          &Gfx::opFillStroke},
-    # Matching 'B' in preference to 'BI', 'BX'?
     rule opFillStroke{B<!before I><!before X>}
-##  {"B*",  0, {tchkNone},
-##          &Gfx::opEOFillStroke},
     rule opEOFFillStroke{B\*}
-##  {"BDC", 2, {tchkName,   tchkProps},
-##          &Gfx::opBeginMarkedContent},
-    # todo: check argument types
-    rule opBeginOptionalContent{<name> <dict> BDC}
-##  {"BI",  0, {tchkNone},
-##          &Gfx::opBeginImage},
+    rule opBeginOptionalContent{<obj> <dict> BDC}
     rule opBeginImage{BI}
-##  {"BMC", 1, {tchkName},
-##          &Gfx::opBeginMarkedContent},
-    rule opBeginMarkedContent{<name> BMC}
-##  {"BT",  0, {tchkNone},
-##          &Gfx::opBeginText},
+    rule opBeginMarkedContent{<obj> BMC}
     rule opBeginText {BT}
-##  {"BX",  0, {tchkNone},
     rule opBeginIgnore {BX}
-##          &Gfx::opBeginIgnoreUndef},
-##  {"CS",  1, {tchkName},
-##          &Gfx::opSetStrokeColorSpace},
-##  {"DP",  2, {tchkName,   tchkProps},
-##          &Gfx::opMarkPoint},
-##  {"Do",  1, {tchkName},
-##          &Gfx::opXObject},
-##  {"EI",  0, {tchkNone},
-##          &Gfx::opEndImage},
+    rule opSetStrokeColorSpace{<obj> CS}
+    rule opMarkPoint{<obj> <dct> DP}
+    rule opXObject{<obj> Do}
     rule opEndImage{EI}
-##  {"EMC", 0, {tchkNone},
-##          &Gfx::opEndMarkedContent},
     rule opEndMarkedContent{EMC}
-##  {"ET",  0, {tchkNone},
-##          &Gfx::opEndText},
     rule opEndText{ET}
-##  {"EX",  0, {tchkNone},
-##          &Gfx::opEndIgnoreUndef},
     rule opEndIgnore{EX}
 ##  {"F",   0, {tchkNone},
 ##          &Gfx::opFill},

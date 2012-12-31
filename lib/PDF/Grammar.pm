@@ -75,6 +75,8 @@ grammar PDF::Grammar {
     token endstream_marker {<eol>?endstream<ws_char>+}
     rule stream {<dict> <stream_marker>.*?<endstream_marker>}
 
-    rule object { <stream> | <indirect_reference> | <number> | <bool> | <string> | <name> | <array> | <dict> | <null> }
+    # Operand - as permitted in Content streams [PDF 1.7] 7.8.2
+    rule operand { <number> | <bool> | <string> | <name> | <array> | <dict> | <null> }
+    rule object { <stream> | <indirect_reference> | <operand> }
 
 };

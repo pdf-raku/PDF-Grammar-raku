@@ -41,11 +41,16 @@ for (
     $test_image_block,
 
     'BX this stuff gets ignored EX',
+    'BX this stuff gets BX doubly EX ignored EX',
+
+     '/RGB CS',
+     '/foo <</bar 42>> DP',
+     '/MyForm Do',
     ) {
-    ok($_ ~~ /^<PDF::Grammar::Content::statement>$/, "statement")
+    ok($_ ~~ /^<PDF::Grammar::Content::instruction>$/, "instruction")
 	or do {
-	    diag "failed statement: $_";
-	    if ($_ ~~ /^(.*?)(<PDF::Grammar::Content::statement>)(.*?)$/) {
+	    diag "failed instruction: $_";
+	    if ($_ ~~ /^(.*?)(<PDF::Grammar::Content::instruction>)(.*?)$/) {
 
 		my $p = $0 && $0.join(',');
 		note "(preceeding: $p)" if $p;
@@ -72,10 +77,11 @@ for (
     '/foo BMC BT ET EMC EMC',   # Marked content - closed out of order
     '/BMC BT B* ET EMC',        # Marked content mising arg
     '/baz BMC (hi) EMC',        # Marked content - incomplete contents
-
+##todo    'BX BX EX',                 # BX ... EX incorrect nesting (extra BX)
+    'BX EX EX',                 # BX ... EX incorrect nesting (extra EX)
     ) {
-    ok($_ !~~ /^<PDF::Grammar::Content::statement>$/,
-       "not statement: $_");
+    ok($_ !~~ /^<PDF::Grammar::Content::instruction>$/,
+       "invalid instruction: $_");
 }
 
 ##my $sample_content = q:to/END/;
