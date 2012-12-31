@@ -8,7 +8,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     # Text operations as describe in sections 8 and 9 of [PDF 1.7].
     rule TOP {<statement>*}
 
-    rule statement {(<op>|<textBlock>|<markedContentBlock>|<imageBlock>)*}
+   rule statement {(<op>|<textBlock>|<markedContentBlock>|<imageBlock>)*}
 
     # arguments
     rule obj {<indirect_reference> | <null> | <name>}
@@ -23,9 +23,13 @@ grammar PDF::Grammar::Content is PDF::Grammar {
 
     rule rBMC { <opBeginMarkedContent> | <opBeginOptionalContent> }
     rule rEMC { <opEndMarkedContent> }
-    rule textBlock {<opBeginText> (( <rBMC> <op>* <rEMC> ) | <op>)* <opEndText>}
-    rule markedContentBlock {<rBMC> (( <opBeginText> <op>* <opEndText>) | <op> )* <rEMC>}
-    rule imageBlock {(<opBeginImage>) (<name> <object>)* <opImageData> <opEndImage>}
+    rule textBlock {<opBeginText> ( (<rBMC> <op>* <rEMC>) | <op>)* <opEndText>}
+    rule markedContentBlock {<rBMC> ( (<opBeginText> <op>* <opEndText>) | <op> )* <rEMC>}
+    rule imageBlock {
+                      <opBeginImage>
+                      (<name> <object>)*
+                      <opImageData>.*?<eol>?<opEndImage>
+}
     rule op {<opMoveSetShowText>|<opMoveShowText>|<opFillStroke>|<opEOFFillStroke>|<opShowText>}
 ##  {"\"",  3, {tchkNum,    tchkNum,    tchkString},
 ##          &Gfx::opMoveSetShowText},
@@ -35,7 +39,8 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule opMoveShowText{<str> \'}
 ##  {"B",   0, {tchkNone},
 ##          &Gfx::opFillStroke},
-    rule opFillStroke{B}
+    # Matching 'B' before 'BI'?
+    rule opFillStroke{B<!before I>}
 ##  {"B*",  0, {tchkNone},
 ##          &Gfx::opEOFillStroke},
     rule opEOFFillStroke{B\*}
