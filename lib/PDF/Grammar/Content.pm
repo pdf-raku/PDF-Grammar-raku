@@ -8,7 +8,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     # Text operations as describe in sections 8 and 9 of [PDF 1.7].
     rule TOP {<instruction>*}
 
-   rule instruction {(<op>|<textBlock>|<markedContentBlock>|<imageBlock>|<ignoreBlock>)*}
+   rule instruction {(<textBlock>|<markedContentBlock>|<imageBlock>|<ignoreBlock>|<op>)*}
 
     # arguments
     rule obj {<null> | <name>}
@@ -31,122 +31,78 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     }
 
     rule ignoreBlock {BX: (<ignoreBlock>|.)*? EX}
-    rule op {<opMoveSetShowText>|<opMoveShowText>|<opFillStroke>|<opEOFFillStroke>|<opShowText>|<opSetStrokeColorSpace>|<opMarkPoint>|<opXObject>|<opFill>|<opSetStrokeGray>|<opSetLineCap>|<opSetStrokeCMYKColor>|<opSetMiterLimit>|<opRestore>|<opSetStrokeRGBColor>|<opStroke>|<opSetStrokeColor>|<opSetStrokeColorN>|<opTextNextLine>|<opTextMoveSet>|<opShowSpaceText>|<opSetTextLeading>|<opSetCharSpacing>|<opTextMove>|<opSetFont>|<opSetTextMatrix>|<opSetTextRender>|<opSetTextRise>|<opSetWordSpacing>|<opSetHorizScaling>|<opEOClip>|<opClip>}
-    # operator names borrowed from xpdf / Gfx.cc
-    rule opMoveSetShowText{<num> <num> <str> \"} 
-    rule opMoveShowText{<str> \'}
-    # todo 'BI' 'BX' matches misbehaving (not BT!??)
-    rule opFillStroke{B<!before I><!before X>}
-    rule opEOFFillStroke{B\*}
-    rule opBeginImage{BI}
-    rule opBeginMarkedContent{(<obj> BMC) | (<obj> <dict> BDC)}
-    rule opBeginText {BT}
-    rule opBeginIgnore {BX}
-    rule opSetStrokeColorSpace{<obj> CS}
-    rule opMarkPoint{(<obj> <dct> DP)|(<obj> MP)}
-    rule opXObject{<obj> Do}
-    rule opEndImage{EI}
-    rule opEndMarkedContent{EMC}
-    rule opEndText{ET}
-    rule opEndIgnore{EX}
-    rule opFill{F}
-    rule opSetStrokeGray{<num> G}
-    rule opImageData{ID}
-    rule opSetLineCap{<int> J}
-    rule opSetStrokeCMYKColor{<num> <num> <num> <num> K}
-    rule opSetMiterLimit{<num> M}
-    rule opRestore{Q}
-    rule opSetStrokeRGBColor{<num> <num> <num> RG}
-    rule opStroke{S}
-    rule opSetStrokeColor{ <num> <num> <num> <num> SC }
-    rule opSetStrokeColorN{ <any> SCN }
-    rule opTextNextLine{ T\* }
-    rule opTextMoveSet{ <num> <num> TD }
-    rule opShowSpaceText{ <arr> TJ }
-    rule opSetTextLeading{ <num> TL }
-    rule opSetCharSpacing{ <num> Tc }
-    rule opTextMove{ <num> <num> Td }
-    rule opSetFont{ <obj> <num> Tf }
-    rule opShowText{<str> Tj}
-    rule opSetTextMatrix{ <num> <num> <num> <num> <num> <num> Tm }
-    rule opSetTextRender{ <int> Tr }
-    rule opSetTextRise { <num> Ts }
-    rule opSetWordSpacing { <num> Tw }
-    rule opSetHorizScaling{ <num> Tz }
-    rule opEOClip{ 'W*' }
-    rule opClip{ W } 
-##  {"b",   0, {tchkNone},
-##          &Gfx::opCloseFillStroke},
-##  {"b*",  0, {tchkNone},
-##          &Gfx::opCloseEOFillStroke},
-##  {"c",   6, {tchkNum,    tchkNum,    tchkNum,    tchkNum,
-##	      tchkNum,    tchkNum},
-##          &Gfx::opCurveTo},
-##  {"cm",  6, {tchkNum,    tchkNum,    tchkNum,    tchkNum,
-##	      tchkNum,    tchkNum},
-##          &Gfx::opConcat},
-##  {"cs",  1, {tchkName},
-##          &Gfx::opSetFillColorSpace},
-##  {"d",   2, {tchkArray,  tchkNum},
-##          &Gfx::opSetDash},
-##  {"d0",  2, {tchkNum,    tchkNum},
-##          &Gfx::opSetCharWidth},
-##  {"d1",  6, {tchkNum,    tchkNum,    tchkNum,    tchkNum,
-##	      tchkNum,    tchkNum},
-##          &Gfx::opSetCacheDevice},
-##  {"f",   0, {tchkNone},
-##          &Gfx::opFill},
-##  {"f*",  0, {tchkNone},
-##          &Gfx::opEOFill},
-##  {"g",   1, {tchkNum},
-##          &Gfx::opSetFillGray},
-##  {"gs",  1, {tchkName},
-##          &Gfx::opSetExtGState},
-##  {"h",   0, {tchkNone},
-##          &Gfx::opClosePath},
-##  {"i",   1, {tchkNum},
-##          &Gfx::opSetFlat},
-##  {"j",   1, {tchkInt},
-##          &Gfx::opSetLineJoin},
-##  {"k",   4, {tchkNum,    tchkNum,    tchkNum,    tchkNum},
-##          &Gfx::opSetFillCMYKColor},
-##  {"l",   2, {tchkNum,    tchkNum},
-##          &Gfx::opLineTo},
-##  {"m",   2, {tchkNum,    tchkNum},
-##          &Gfx::opMoveTo},
-##  {"n",   0, {tchkNone},
-##          &Gfx::opEndPath},
-##  {"q",   0, {tchkNone},
-##          &Gfx::opSave},
-##  {"re",  4, {tchkNum,    tchkNum,    tchkNum,    tchkNum},
-##          &Gfx::opRectangle},
-##  {"rg",  3, {tchkNum,    tchkNum,    tchkNum},
-##          &Gfx::opSetFillRGBColor},
-##  {"ri",  1, {tchkName},
-##          &Gfx::opSetRenderingIntent},
-##  {"s",   0, {tchkNone},
-##          &Gfx::opCloseStroke},
-##  {"sc",  -4, {tchkNum,   tchkNum,    tchkNum,    tchkNum},
-##          &Gfx::opSetFillColor},
-##  {"scn", -33, {tchkSCN,   tchkSCN,    tchkSCN,    tchkSCN,
-##	        tchkSCN,   tchkSCN,    tchkSCN,    tchkSCN,
-##	        tchkSCN,   tchkSCN,    tchkSCN,    tchkSCN,
-##	        tchkSCN,   tchkSCN,    tchkSCN,    tchkSCN,
-##	        tchkSCN,   tchkSCN,    tchkSCN,    tchkSCN,
-##	        tchkSCN,   tchkSCN,    tchkSCN,    tchkSCN,
-##	        tchkSCN,   tchkSCN,    tchkSCN,    tchkSCN,
-##	        tchkSCN,   tchkSCN,    tchkSCN,    tchkSCN,
-##	        tchkSCN},
-##          &Gfx::opSetFillColorN},
-##  {"sh",  1, {tchkName},
-##          &Gfx::opShFill},
-##  {"v",   4, {tchkNum,    tchkNum,    tchkNum,    tchkNum},
-##          &Gfx::opCurveTo1},
-##  {"w",   1, {tchkNum},
-##          &Gfx::opSetLineWidth},
-##  {"y",   4, {tchkNum,    tchkNum,    tchkNum,    tchkNum},
-##          &Gfx::opCurveTo2},
-##
+    rule op {<opMoveSetShowText>|<opMoveShowText>|<opEOFillStroke>|<opFillStroke>|<opShowText>|<opSetStrokeColorSpace>|<opMarkPoint>|<opXObject>|<opEOFill>|<opFill>|<opSetStrokeGray>|<opSetLineCap>|<opSetStrokeCMYKColor>|<opSetMiterLimit>|<opRestore>|<opSetStrokeRGBColor>|<opStroke>|<opSetStrokeColor>|<opSetStrokeColorN>|<opTextNextLine>|<opTextMoveSet>|<opShowSpaceText>|<opSetTextLeading>|<opSetCharSpacing>|<opTextMove>|<opSetFont>|<opSetTextMatrix>|<opSetTextRender>|<opSetTextRise>|<opSetWordSpacing>|<opSetHorizScaling>|<opEOClip>|<opClip>|<opCloseEOFillStroke>|<opCloseFillStroke>|<opCurveTo>|<opConcat>|<opSetFillColorSpace>|<opSetDash>|<opSetCharWidth>|<opSetCacheDevice>|<opSetFillGray>|<opSetExtGState>|<opClosePath>|<opSetFlat>|<opSetLineJoin>|<opSetFillCMYKColor>|<opLineTo>|<opMoveTo>|<opEndPath>|<opSave>|<opRectangle>|<opSetFillRGBColor>|<opSetRenderingIntent>|<opCloseStroke>|<opSetFillColor>|<opSetFillColorN>|<opShFill>|<opCurverTo1>|<opSetLineWidth>|<opCurveTo2>}
+    # operator names courtery of xpdf / Gfx.cc (http://foolabs.com/xdf/)
+    rule opMoveSetShowText     {<num> <num> <str> \"} 
+    rule opMoveShowText        {<str> \'}
+    rule opEOFillStroke        { B\* }
+    rule opFillStroke          { B }
+    rule opBeginImage          { BI }
+    rule opBeginMarkedContent  {(<obj> BMC) | (<obj> <dict> BDC)}
+    rule opBeginText           { BT }
+    rule opBeginIgnore         { BX }
+    rule opSetStrokeColorSpace { <obj> CS }
+    rule opMarkPoint           { (<obj> <dct> DP)|(<obj> MP) }
+    rule opXObject             { <obj> Do }
+    rule opEndImage            { EI }
+    rule opEndMarkedContent    { EMC }
+    rule opEndText             { ET }
+    rule opEndIgnore           { EX }
+    rule opEOFill              { f\* }
+    rule opFill                { (F|f) }
+    rule opSetStrokeGray       { <num> G }
+    rule opImageData           { ID }
+    rule opSetLineCap          { <int> J }
+    rule opSetStrokeCMYKColor  { <num>**4 K }
+    rule opSetMiterLimit       { <num> M }
+    rule opRestore             { Q }
+    rule opSetStrokeRGBColor   { <num>**3 RG }
+    rule opStroke              { S }
+    rule opSetStrokeColor      { <num>**4 SC }
+    rule opSetStrokeColorN     { <any> SCN }
+    rule opTextNextLine        { T\* }
+    rule opTextMoveSet         { <num> <num> TD }
+    rule opShowSpaceText       { <arr> TJ }
+    rule opSetTextLeading      { <num> TL }
+    rule opSetCharSpacing      { <num> Tc }
+    rule opTextMove            { <num> <num> Td }
+    rule opSetFont             { <obj> <num> Tf }
+    rule opShowText            { <str> Tj }
+    rule opSetTextMatrix       { <num>**6 Tm }
+    rule opSetTextRender       { <int> Tr }
+    rule opSetTextRise         { <num> Ts }
+    rule opSetWordSpacing      { <num> Tw }
+    rule opSetHorizScaling     { <num> Tz }
+    rule opEOClip              { 'W*' }
+    rule opClip                { W } 
+    rule opCloseEOFillStroke   { b\* }
+    rule opCloseFillStroke     { b } 
+    rule opCurveTo             { <num>**6 c }
+    rule opConcat              { <num>**6 cm }
+    rule opSetFillColorSpace   { <obj> cs }
+    rule opSetDash             { <arr> <num> d }
+    rule opSetCharWidth        { <num> <num> d0 }
+    rule opSetCacheDevice      { <num>**6 d1 }
+    rule opSetFillGray         { <num> g }
+    rule opSetExtGState        { <obj> gs }
+    rule opClosePath           { h }
+    rule opSetFlat             { <num> i }
+    rule opSetLineJoin         { <int> j }
+    rule opSetFillCMYKColor    { <num>**4 k }
+    rule opLineTo              { <num> <num> l }
+    rule opMoveTo              { <num> <num> m }
+    rule opEndPath             { n }
+    rule opSave                { q }
+    rule opRectangle           { <num>**4 re }
+    rule opSetFillRGBColor     { <num>**3 rg }
+    rule opSetRenderingIntent  { <obj> ri }
+    rule opCloseStroke         { s }
+    rule opSetFillColor        { <num>**4 sc }
+    rule opSetFillColorN       { <any> scn }
+    rule opShFill              { <name> sh }
+    rule opCurverTo1           { <num>**4 v }
+    rule opSetLineWidth        { <num> w }
+    rule opCurveTo2            { <num>**4 y }
 }
 
 
