@@ -31,10 +31,11 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     }
 
     rule ignoreBlock {BX: (<ignoreBlock>|.)*? EX}
-    rule op {<opMoveSetShowText>|<opMoveShowText>|<opFillStroke>|<opEOFFillStroke>|<opShowText>|<opSetStrokeColorSpace>|<opMarkPoint>|<opXObject>|<opFill>|<opSetStrokeGray>|<opSetLineCap>|<opSetStrokeCMYKColor>|<opSetMiterLimit>|<opRestore>|<opSetStrokeRGBColor>|<opStroke>|<opSetStrokeColor>|<opSetStrokeColorN>|<opTextNextLine>|<opTextMoveSet>|<opShowSpaceText>}
+    rule op {<opMoveSetShowText>|<opMoveShowText>|<opFillStroke>|<opEOFFillStroke>|<opShowText>|<opSetStrokeColorSpace>|<opMarkPoint>|<opXObject>|<opFill>|<opSetStrokeGray>|<opSetLineCap>|<opSetStrokeCMYKColor>|<opSetMiterLimit>|<opRestore>|<opSetStrokeRGBColor>|<opStroke>|<opSetStrokeColor>|<opSetStrokeColorN>|<opTextNextLine>|<opTextMoveSet>|<opShowSpaceText>|<opSetTextLeading>|<opSetCharSpacing>|<opTextMove>|<opSetFont>|<opSetTextMatrix>|<opSetTextRender>|<opSetTextRise>|<opSetWordSpacing>|<opSetHorizScaling>|<opEOClip>|<opClip>}
+    # operator names borrowed from xpdf / Gfx.cc
     rule opMoveSetShowText{<num> <num> <str> \"} 
     rule opMoveShowText{<str> \'}
-    # todo 'BI' 'BX' matches misbehaving
+    # todo 'BI' 'BX' matches misbehaving (not BT!??)
     rule opFillStroke{B<!before I><!before X>}
     rule opEOFFillStroke{B\*}
     rule opBeginImage{BI}
@@ -62,32 +63,18 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule opTextNextLine{ T\* }
     rule opTextMoveSet{ <num> <num> TD }
     rule opShowSpaceText{ <arr> TJ }
-##  {"TL",  1, {tchkNum},
-##          &Gfx::opSetTextLeading},
-##  {"Tc",  1, {tchkNum},
-##          &Gfx::opSetCharSpacing},
-##  {"Td",  2, {tchkNum,    tchkNum},
-##          &Gfx::opTextMove},
-##  {"Tf",  2, {tchkName,   tchkNum},
-##          &Gfx::opSetFont},
-##  {"Tj",  1, {tchkString},
-##          &Gfx::opShowText},
+    rule opSetTextLeading{ <num> TL }
+    rule opSetCharSpacing{ <num> Tc }
+    rule opTextMove{ <num> <num> Td }
+    rule opSetFont{ <obj> <num> Tf }
     rule opShowText{<str> Tj}
-##  {"Tm",  6, {tchkNum,    tchkNum,    tchkNum,    tchkNum,
-##	      tchkNum,    tchkNum},
-##          &Gfx::opSetTextMatrix},
-##  {"Tr",  1, {tchkInt},
-##          &Gfx::opSetTextRender},
-##  {"Ts",  1, {tchkNum},
-##          &Gfx::opSetTextRise},
-##  {"Tw",  1, {tchkNum},
-##          &Gfx::opSetWordSpacing},
-##  {"Tz",  1, {tchkNum},
-##          &Gfx::opSetHorizScaling},
-##  {"W",   0, {tchkNone},
-##          &Gfx::opClip},
-##  {"W*",  0, {tchkNone},
-##          &Gfx::opEOClip},
+    rule opSetTextMatrix{ <num> <num> <num> <num> <num> <num> Tm }
+    rule opSetTextRender{ <int> Tr }
+    rule opSetTextRise { <num> Ts }
+    rule opSetWordSpacing { <num> Tw }
+    rule opSetHorizScaling{ <num> Tz }
+    rule opEOClip{ 'W*' }
+    rule opClip{ W } 
 ##  {"b",   0, {tchkNone},
 ##          &Gfx::opCloseFillStroke},
 ##  {"b*",  0, {tchkNone},

@@ -60,6 +60,17 @@ for (
     'T*',
     '200 100 TD',
     '[(hello) (world)] TJ',
+    '13 TL',
+    '4.5 Tc',
+    '20 15 Td',
+    '/TimesRoman 12 Tf',
+    '9 0 0 9 476.48 750 Tm',
+    '2 Tr',
+    '1.7 Ts',
+    '2.5 Tw',
+    '0.7 Tz',
+    'W',
+    'W*',
     ) {
     ok($_ ~~ /^<PDF::Grammar::Content::instruction>$/, "instruction")
 	or do {
