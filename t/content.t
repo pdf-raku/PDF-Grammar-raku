@@ -31,7 +31,7 @@ for (
 
     '/foo <</MP /yup>> BDC BT ET EMC',     # optional content - empty
     '/foo <</MP /yup>> BDC (hello) Tj EMC',     # optional content - basic
-
+    '/EmbeddedDocument /MC3 BDC q EMC',      # optional content - named dict
     '/foo BMC BT ET EMC',     # Marked content - empty
     '/bar BMC BT B* ET EMC',  # Marked content + text block - empty
     '/baz BMC B* EMC',        # BT .. ET  Text block - with valid content
@@ -43,7 +43,7 @@ for (
     'BX this stuff gets ignored EX',
     'BX this stuff gets BX doubly EX ignored EX',
 
-    '/RGB CS',
+    '/RGB gs',
     '/foo <</bar 42>> DP',
     '/MyForm Do',
     'F',
@@ -139,10 +139,61 @@ for (
        "invalid instruction: $_");
 }
 
-##my $sample_content = q:to/END/;
-##END
+my $sample_content1 = '/RGB CS';
 
-##my $p = PDF::Grammar::Content.parse($sample_content);
-##ok($p, "parsed pdf content");
+my $sample_content2 = '9 0 0 9 476.48 750 Tm';
+
+my $sample_content3 = '[(Using this Guide)-13.5( . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .)-257.1( xiii)]TJ';
+
+my $sample_content4 = q:to/END/;
+/GS1 gs
+BT
+  /TT6 1 Tf
+  9 0 0 9 476.48 750 Tm
+  0 g
+  0 Tc
+  0 Tw
+  (Some random test opcodes)Tj
+  1.6111 -1.2222 TD
+  (version 10.0)Tj
+  -42.5533 -77.3778 TD
+  (Doc. Revision 1.0)Tj
+  45.04 0 TD
+  (Page i)Tj
+ET
+.25 .085 0 .25 K
+2 J 0 j .51 w 3.86 M [] 0 d
+1 i 
+q 1 0 0 1 540 54 cm 0 0 m
+-432 0 l
+S
+Q
+/EmbeddedDocument /MC3 BDC
+  q
+  66.184 0 0 29 474.55 705.39 cm
+  /Im3 Do
+  Q
+EMC
+BT
+  /TT2 1 Tf
+  22 0 0 22 108 676.53 Tm
+  -.01 Tc
+  (Contents)Tj
+  12 0 0 12 108 641.2 Tm
+  0 Tc
+  [(Using this Guide)-13.5( . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .)-257.1( xiii)]TJ
+  /TT8 1 Tf
+  .0909 Tw
+  [( ...almost there)]TJ
+  -37.9318 -1.2727 TD
+  0 Tw
+ET
+END
+
+for ($sample_content1, $sample_content2, $sample_content3, $sample_content4) {
+    my $p = PDF::Grammar::Content.parse($_);
+    ok($p, "parsed pdf content")
+       or diag ("unable to parse: $_");
+}
 
 done;

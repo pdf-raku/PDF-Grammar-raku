@@ -6,9 +6,9 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     #
     # A Simple PDF grammar for parsing PDF content, i.e. Graphics and
     # Text operations as describe in sections 8 and 9 of [PDF 1.7].
-    rule TOP {<instruction>*}
+    rule TOP {^ <instruction>* $}
 
-   rule instruction {(<textBlock>|<markedContentBlock>|<imageBlock>|<ignoreBlock>|<op>)*}
+   rule instruction {<textBlock>|<markedContentBlock>|<imageBlock>|<ignoreBlock>|<op>}
 
     # arguments
     rule obj {<null> | <name>}
@@ -38,7 +38,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule opEOFillStroke        { B\* }
     rule opFillStroke          { B }
     rule opBeginImage          { BI }
-    rule opBeginMarkedContent  {(<obj> BMC) | (<obj> <dict> BDC)}
+    rule opBeginMarkedContent  {(<obj> BMC) | (<obj> <dct> BDC)}
     rule opBeginText           { BT }
     rule opBeginIgnore         { BX }
     rule opSetStrokeColorSpace { <obj> CS }
