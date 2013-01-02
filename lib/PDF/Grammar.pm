@@ -24,7 +24,7 @@ grammar PDF::Grammar {
 
     rule number { <real> | <integer> }
 
-    token literal_char_escaped { '\n' | '\r' | '\t' | '\b' | '\f' | '\(' | '\)' | '//' | ('\\' <[0..7]> ** 1..3) }
+    token literal_char_escaped { '\n' | '\r' | '\t' | '\b' | '\f' | '\(' | '\)' | '//' | ['\\' <[0..7]> ** 1..3] }
     # literal_character - all but '(' ')' '\'
     token literal_chars_regular { <-[\(\)\\]>+ }
     token literal_line_continuation {"\\"<eol>}

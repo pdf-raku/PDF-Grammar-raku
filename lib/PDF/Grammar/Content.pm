@@ -6,7 +6,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     #
     # A Simple PDF grammar for parsing PDF content, i.e. Graphics and
     # Text operations as describe in sections 8 and 9 of [PDF 1.7].
-    rule TOP {^ <instruction>* $}
+    rule TOP {^ [<instruction>|<opUnknown>]* $}
 
    rule instruction {<textBlock>|<markedContentBlock>|<imageBlock>|<ignoreBlock>|<op>}
 
@@ -49,7 +49,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule opEndText             { ET }
     rule opEndIgnore           { EX }
     rule opEOFill              { f\* }
-    rule opFill                { (F|f) }
+    rule opFill                { [F|f] }
     rule opSetStrokeGray       { <num> G }
     rule opImageData           { ID }
     rule opSetLineCap          { <int> J }
@@ -103,6 +103,9 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule opCurverTo1           { <num>**4 v }
     rule opSetLineWidth        { <num> w }
     rule opCurveTo2            { <num>**4 y }
+    # catchall for unknown opcodes and arguments
+    token id { <[a..zA..Z\*\"\']>\w* }
+    rule opUnknown               { [<any>|<id>]+? } 
 }
 
 
