@@ -48,12 +48,12 @@ ok('<x>'        !~~ /^<PDF::Grammar::Body::hex_string>$/, 'not hex illegal char'
 # -- escaped
 for ('\n', '\r', '\t', '\b', '\f', '\(', '\(', '\40', '\040') {
     ok($_      ~~ /^<PDF::Grammar::Body::literal_char_escaped>$/, "literal char escaped: $_");
-    ok($_     !~~ /^<PDF::Grammar::Body::literal_char_regular>+$/, "not literal char regular: $_");
+    ok($_     !~~ /^<PDF::Grammar::Body::literal_chars_regular>+$/, "not literal char regular: $_");
     ok("($_)"  ~~ /^<PDF::Grammar::Body::literal_string>$/, "literal string: ($_)");
 }
 # -- regular
 for ('a', '}', ' ') {
-    ok($_      ~~ /^<PDF::Grammar::Body::literal_char_regular>$/, "literal char regular: $_");
+    ok($_      ~~ /^<PDF::Grammar::Body::literal_chars_regular>$/, "literal char regular: $_");
     ok($_     !~~ /^<PDF::Grammar::Body::literal_char_escaped>$/, "not literal char escaped: $_");
     ok($_     !~~ /^<PDF::Grammar::Body::literal_line_continuation>$/, "not literal line continuation: $_");
     ok("($_)"  ~~ /^<PDF::Grammar::Body::literal_string>$/, "literal string: ($_)");
@@ -76,7 +76,7 @@ do {
 # -- invalid
 for ('\99', '\x', '\?', ')') {
     ok($_     !~~ /^<PDF::Grammar::Body::literal_char_escaped>$/, "not literal escape: $_");
-    ok($_     !~~ /^<PDF::Grammar::Body::literal_char_regular>+$/, "not literal char regular: $_");
+    ok($_     !~~ /^<PDF::Grammar::Body::literal_chars_regular>+$/, "not literal char regular: $_");
     ok($_     !~~ /^<PDF::Grammar::Body::literal_line_continuation>+$/, "not literal line_continuation: $_");
     ok("($_)" !~~ /^<PDF::Grammar::Body::literal_string>$/, "not literal string: $_");
 }

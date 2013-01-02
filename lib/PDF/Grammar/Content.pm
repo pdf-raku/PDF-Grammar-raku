@@ -22,11 +22,11 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     # blocks have limited nesting capability and aren't fully recursive.
     # So theretically, we only have to deal with a few combinations...
 
-    rule textBlock {<opBeginText> ( (<opBeginMarkedContent> <op>* <opEndMarkedContent>) | <op>)* <opEndText>}
-    rule markedContentBlock {<opBeginMarkedContent> ( (<opBeginText> <op>* <opEndText>) | <op> )* <opEndMarkedContent>}
+    rule textBlock {<opBeginText> [ [<opBeginMarkedContent> <op>* <opEndMarkedContent>] | <op>]* <opEndText>}
+    rule markedContentBlock {<opBeginMarkedContent> [ [<opBeginText> <op>* <opEndText>] | <op> ]* <opEndMarkedContent>}
     rule imageBlock {
                       <opBeginImage>
-                      (<name> <operand>)*
+                      [<name> <operand>]*
                       <opImageData>.*?<eol>?<opEndImage>
     }
 
@@ -38,11 +38,11 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule opEOFillStroke        { B\* }
     rule opFillStroke          { B }
     rule opBeginImage          { BI }
-    rule opBeginMarkedContent  {(<obj> BMC) | (<obj> <dct> BDC)}
+    rule opBeginMarkedContent  { [<obj> BMC] | [<obj> <dct> BDC] }
     rule opBeginText           { BT }
     rule opBeginIgnore         { BX }
     rule opSetStrokeColorSpace { <obj> CS }
-    rule opMarkPoint           { (<obj> <dct> DP)|(<obj> MP) }
+    rule opMarkPoint           { [<obj> <dct> DP] | [<obj> MP] }
     rule opXObject             { <obj> Do }
     rule opEndImage            { EI }
     rule opEndMarkedContent    { EMC }

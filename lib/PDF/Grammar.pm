@@ -20,15 +20,15 @@ grammar PDF::Grammar {
     token integer { ('+' | '-')? \d+ }
     # reals must have at least one digit either before or after the decimal
     # point
-    token real { ('+' | '-')? ((\d+\.\d*) | (\d*\.\d+)) }
+    token real { ['+' | '-']? [[\d+\.\d*] | [\d*\.\d+]] }
 
     rule number { <real> | <integer> }
 
     token literal_char_escaped { '\n' | '\r' | '\t' | '\b' | '\f' | '\(' | '\)' | '//' | ('\\' <[0..7]> ** 1..3) }
     # literal_character - all but '(' ')' '\'
-    token literal_char_regular { <-[\(\)\\]> }
+    token literal_chars_regular { <-[\(\)\\]>+ }
     token literal_line_continuation {"\\"<eol>}
-    rule literal_substring { '('(<literal_char_escaped>|<literal_char_regular>|<literal_substring>|<literal_line_continuation>)*')' }
+    rule literal_substring { '('(<literal_char_escaped>|<literal_chars_regular>|<literal_substring>|<literal_line_continuation>)*')' }
 
     # nb
     # -- new-lines are acceptable within strings
@@ -37,7 +37,7 @@ grammar PDF::Grammar {
     # hex strings
 
     token hex_char {<xdigit>**1..2}
-    token hex_string { \<<hex_char>(<hex_char>|<eol>)*\> }
+    token hex_string { \<<hex_char>[<hex_char>|<eol>]*\> }
 
     rule string {<hex_string>|<literal_string>}
 
@@ -48,9 +48,9 @@ grammar PDF::Grammar {
 ##  not having any luck with the following regex; me? rakudo-star? (2012.11)
 ##   token name_char_printable { <[\!..\~] - [\[\#\]\//\(\)\<\>]> }
 ##  .. rather more ungainly...
-    token name_char_printable { <[a..z A..Z 0..9 \! \" \$..\' \*..\. \: \; \= \? \@ _ \^ \' \{ \| \} \~]> }
+    token name_chars_printable { <[a..z A..Z 0..9 \! \" \$..\' \*..\. \: \; \= \? \@ _ \^ \' \{ \| \} \~]>+ }
 
-    rule name { '/'(<name_char_printable>|<name_char_escaped>|<name_char_number_symbol>)+ }
+    rule name { '/'[<name_chars_printable>|<name_char_escaped>|<name_char_number_symbol>]+ }
 
     # [PDF 1.7] 7.3.2  Boolean Objects
     # ---------------
@@ -61,6 +61,6 @@ grammar PDF::Grammar {
     # Operand - as permitted in Content streams [PDF 1.7] 7.8.2
     rule operand { <number> | <bool> | <string> | <name> | <array> | <dict> | <null> }
     rule array {\[ <operand>* \]}
-    rule dict {'<<' (<name> <operand>)* '>>'}
+    rule dict {'<<' [<name> <operand>]* '>>'}
 
 };
