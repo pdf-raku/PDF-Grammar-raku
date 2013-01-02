@@ -29,8 +29,11 @@ to change at short notice.
 
 I have been working off the PDF 1.7 reference manual (http://wwwimages.adobe.com/www.adobe.com/content/dam/Adobe/en/devnet/pdf/pdfs/PDF32000_2008.pdf).
 
-The only dependency is Rakudo Star. It runs on `perl6`. `ufo` is also to
-locally create the Makefile. To run the tests, after building rakudo star
+Rakudo Star
+===========
+The test suite currently only runs on the Rakudo Star Perl6 interpretor.
+
+To run the tests; first, you'll need a built Rakduo Star 2012.11, or better
 (https://github.com/rakudo/star/downloads - don't forget the final
 `make install`):
 
@@ -44,3 +47,10 @@ locally create the Makefile. To run the tests, after building rakudo star
     %
     % # ... alternatively...
     % PERL6LIB=lib prove -v -e 'perl6' t
+
+Niecza
+======
+I haven't tested this throughly, but the grammars do seem to run under Niecza,
+e.g.:
+
+    % ~/src/niecza-24/run/Niecza.exe -Ilib -e'use PDF::Grammar::Content; say PDF::Grammar::Content.parse("/F1 24 Tf 2 J 0 j .51 w 3.86 M [] 0 d");'

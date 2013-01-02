@@ -31,10 +31,10 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     }
 
     rule ignoreBlock {BX: (<ignoreBlock>|.)*? EX}
-    rule op {<opMoveSetShowText>|<opMoveShowText>|<opEOFillStroke>|<opFillStroke>|<opShowText>|<opSetStrokeColorSpace>|<opMarkPoint>|<opXObject>|<opEOFill>|<opFill>|<opSetStrokeGray>|<opSetLineCap>|<opSetStrokeCMYKColor>|<opSetMiterLimit>|<opRestore>|<opSetStrokeRGBColor>|<opStroke>|<opSetStrokeColor>|<opSetStrokeColorN>|<opTextNextLine>|<opTextMoveSet>|<opShowSpaceText>|<opSetTextLeading>|<opSetCharSpacing>|<opTextMove>|<opSetFont>|<opSetTextMatrix>|<opSetTextRender>|<opSetTextRise>|<opSetWordSpacing>|<opSetHorizScaling>|<opEOClip>|<opClip>|<opCloseEOFillStroke>|<opCloseFillStroke>|<opCurveTo>|<opConcat>|<opSetFillColorSpace>|<opSetDash>|<opSetCharWidth>|<opSetCacheDevice>|<opSetFillGray>|<opSetExtGState>|<opClosePath>|<opSetFlat>|<opSetLineJoin>|<opSetFillCMYKColor>|<opLineTo>|<opMoveTo>|<opEndPath>|<opSave>|<opRectangle>|<opSetFillRGBColor>|<opSetRenderingIntent>|<opCloseStroke>|<opSetFillColor>|<opSetFillColorN>|<opShFill>|<opCurverTo1>|<opSetLineWidth>|<opCurveTo2>}
+    rule op {<opMoveSetShowText>|<opMoveShowText>|<opEOFillStroke>|<opFillStroke>|<opShowText>|<opSetStrokeColorSpace>|<opMarkPoint>|<opXObject>|<opEOFill>|<opFill>|<opSetStrokeGray>|<opSetLineCap>|<opSetStrokeCMYKColor>|<opSetMiterLimit>|<opRestore>|<opSetStrokeRGBColor>|<opStroke>|<opSetStrokeColorN>|<opSetStrokeColor>|<opTextNextLine>|<opTextMoveSet>|<opShowSpaceText>|<opSetTextLeading>|<opSetCharSpacing>|<opTextMove>|<opSetFont>|<opSetTextMatrix>|<opSetTextRender>|<opSetTextRise>|<opSetWordSpacing>|<opSetHorizScaling>|<opEOClip>|<opClip>|<opCloseEOFillStroke>|<opCloseFillStroke>|<opConcat>|<opCurveTo>|<opSetFillColorSpace>|<opSetDash>|<opSetCharWidth>|<opSetCacheDevice>|<opSetExtGState>|<opSetFillGray>|<opClosePath>|<opSetFlat>|<opSetLineJoin>|<opSetFillCMYKColor>|<opLineTo>|<opMoveTo>|<opEndPath>|<opSave>|<opRectangle>|<opSetFillRGBColor>|<opSetRenderingIntent>|<opCloseStroke>|<opSetFillColorN>|<opSetFillColor>|<opShFill>|<opCurverTo1>|<opSetLineWidth>|<opCurveTo2>}
     # operator names courtery of xpdf / Gfx.cc (http://foolabs.com/xdf/)
-    rule opMoveSetShowText     {<num> <num> <str> \"} 
-    rule opMoveShowText        {<str> \'}
+    rule opMoveSetShowText     {<num> <num> <str> '"'} 
+    rule opMoveShowText        {<str> "'"}
     rule opEOFillStroke        { B\* }
     rule opFillStroke          { B }
     rule opBeginImage          { BI }
@@ -58,8 +58,8 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule opRestore             { Q }
     rule opSetStrokeRGBColor   { <num>**3 RG }
     rule opStroke              { S }
-    rule opSetStrokeColor      { <num>**4 SC }
     rule opSetStrokeColorN     { <any> SCN }
+    rule opSetStrokeColor      { <num>**4 SC }
     rule opTextNextLine        { T\* }
     rule opTextMoveSet         { <num> <num> TD }
     rule opShowSpaceText       { <arr> TJ }
@@ -77,14 +77,14 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule opClip                { W } 
     rule opCloseEOFillStroke   { b\* }
     rule opCloseFillStroke     { b } 
-    rule opCurveTo             { <num>**6 c }
     rule opConcat              { <num>**6 cm }
+    rule opCurveTo             { <num>**6 c }
     rule opSetFillColorSpace   { <obj> cs }
     rule opSetDash             { <arr> <num> d }
     rule opSetCharWidth        { <num> <num> d0 }
     rule opSetCacheDevice      { <num>**6 d1 }
-    rule opSetFillGray         { <num> g }
     rule opSetExtGState        { <obj> gs }
+    rule opSetFillGray         { <num> g }
     rule opClosePath           { h }
     rule opSetFlat             { <num> i }
     rule opSetLineJoin         { <int> j }
@@ -97,8 +97,8 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule opSetFillRGBColor     { <num>**3 rg }
     rule opSetRenderingIntent  { <obj> ri }
     rule opCloseStroke         { s }
-    rule opSetFillColor        { <num>**4 sc }
     rule opSetFillColorN       { <any> scn }
+    rule opSetFillColor        { <num>**4 sc }
     rule opShFill              { <name> sh }
     rule opCurverTo1           { <num>**4 v }
     rule opSetLineWidth        { <num> w }

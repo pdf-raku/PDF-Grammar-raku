@@ -10,10 +10,7 @@ grammar PDF::Grammar {
     # ---------------
     # This <ws> rule treats % as "comment to eol".
     token ws_char {['%' <- eol>* <eol>? | "\n" | "\t" | "\o12" | "\f" | "\r" | " "]}
-    token ws {
-        <!ww>
-        <ws_char>*
-    }
+    token ws {<ws_char>*}
     token eol {"\r\n"  # ms/dos
                | "\n"  #'nix
                | "\r"} # mac-osx
@@ -46,14 +43,14 @@ grammar PDF::Grammar {
 
     token name_char_number_symbol { '##' }
     # name escapes are strictly two hex characters
-    token name_char_escaped { \#(<xdigit>**2) }
+    token name_char_escaped { '#'(<xdigit>**2) }
     # all printable but '#', '/', '[', ']',
 ##  not having any luck with the following regex; me? rakudo-star? (2012.11)
 ##   token name_char_printable { <[\!..\~] - [\[\#\]\//\(\)\<\>]> }
 ##  .. rather more ungainly...
     token name_char_printable { <[a..z A..Z 0..9 \! \" \$..\' \*..\. \: \; \= \? \@ _ \^ \' \{ \| \} \~]> }
 
-    rule name { '/'(<name_char_printable>|<name_char_escaped>|<name_char_number_symbol>)* }
+    rule name { '/'(<name_char_printable>|<name_char_escaped>|<name_char_number_symbol>)+ }
 
     # [PDF 1.7] 7.3.2  Boolean Objects
     # ---------------
