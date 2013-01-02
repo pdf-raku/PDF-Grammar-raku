@@ -11,13 +11,12 @@ footers.
 text and graphics.
 
 PDF::Grammar is under construction as experimental perl6 grammars for parsing
-and  validation of PDF compnents. It currently implements two grammars:
+and  validation of PDF components. It currently implements two grammars:
 
 `PDF::Grammar::Body` - this  describes the file structure of PDF documents,
 including headers, trailers, top-level objects and the cross reference table.
 
-`PDF::Grammar::Content` - is also under construction as a description of the
-text and graphics operators that are used to produce page layout.
+`PDF::Grammar::Content` - is a description of the text and graphics operators that are used to produce page layout.
 
 PDF-Grammar has so far been tested against a limited sample of PDF documents
 and test cases. Furthermore, it has so far only been built and tested against
@@ -31,9 +30,9 @@ I have been working off the PDF 1.7 reference manual (http://wwwimages.adobe.com
 
 Rakudo Star
 ===========
-The test suite currently only runs on the Rakudo Star Perl6 interpretor.
+The test suite currently only runs on the Rakudo Star.
 
-To run the tests; first, you'll need a built Rakduo Star 2012.11, or better
+To run the tests; first, you'll need a built Rakudo Star 2012.11, or better
 (https://github.com/rakudo/star/downloads - don't forget the final
 `make install`):
 
@@ -47,6 +46,10 @@ To run the tests; first, you'll need a built Rakduo Star 2012.11, or better
     %
     % # ... alternatively...
     % PERL6LIB=lib prove -v -e 'perl6' t
+
+To try the parser:
+
+    %  perl6 -Ilib -MPDF::Grammar::Content -e"say PDF::Grammar::Content.parse('(Hello, world) Tj')"
 
 Niecza
 ======
