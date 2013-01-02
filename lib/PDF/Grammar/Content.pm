@@ -6,7 +6,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     #
     # A Simple PDF grammar for parsing PDF content, i.e. Graphics and
     # Text operations as describe in sections 8 and 9 of [PDF 1.7].
-    rule TOP {^ [<instruction>|<opUnknown>]* $}
+    rule TOP {^ [<instruction>|<unknown>]* $}
 
    rule instruction {<textBlock>|<markedContentBlock>|<imageBlock>|<ignoreBlock>|<op>}
 
@@ -32,9 +32,9 @@ grammar PDF::Grammar::Content is PDF::Grammar {
 
     rule ignoreBlock {BX: (<ignoreBlock>|.)*? EX}
     rule op {<opMoveSetShowText>|<opMoveShowText>|<opEOFillStroke>|<opFillStroke>|<opShowText>|<opSetStrokeColorSpace>|<opMarkPoint>|<opXObject>|<opEOFill>|<opFill>|<opSetStrokeGray>|<opSetLineCap>|<opSetStrokeCMYKColor>|<opSetMiterLimit>|<opRestore>|<opSetStrokeRGBColor>|<opStroke>|<opSetStrokeColorN>|<opSetStrokeColor>|<opTextNextLine>|<opTextMoveSet>|<opShowSpaceText>|<opSetTextLeading>|<opSetCharSpacing>|<opTextMove>|<opSetFont>|<opSetTextMatrix>|<opSetTextRender>|<opSetTextRise>|<opSetWordSpacing>|<opSetHorizScaling>|<opEOClip>|<opClip>|<opCloseEOFillStroke>|<opCloseFillStroke>|<opConcat>|<opCurveTo>|<opSetFillColorSpace>|<opSetDash>|<opSetCharWidth>|<opSetCacheDevice>|<opSetExtGState>|<opSetFillGray>|<opClosePath>|<opSetFlat>|<opSetLineJoin>|<opSetFillCMYKColor>|<opLineTo>|<opMoveTo>|<opEndPath>|<opSave>|<opRectangle>|<opSetFillRGBColor>|<opSetRenderingIntent>|<opCloseStroke>|<opSetFillColorN>|<opSetFillColor>|<opShFill>|<opCurverTo1>|<opSetLineWidth>|<opCurveTo2>}
-    # operator names courtery of xpdf / Gfx.cc (http://foolabs.com/xdf/)
-    rule opMoveSetShowText     {<num> <num> <str> '"'} 
-    rule opMoveShowText        {<str> "'"}
+    # operator names courtersy of xpdf / Gfx.cc (http://foolabs.com/xdf/)
+    rule opMoveSetShowText     { <num> <num> <str> '"' } 
+    rule opMoveShowText        { <str> "'" }
     rule opEOFillStroke        { B\* }
     rule opFillStroke          { B }
     rule opBeginImage          { BI }
@@ -73,7 +73,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule opSetTextRise         { <num> Ts }
     rule opSetWordSpacing      { <num> Tw }
     rule opSetHorizScaling     { <num> Tz }
-    rule opEOClip              { 'W*' }
+    rule opEOClip              { W\* }
     rule opClip                { W } 
     rule opCloseEOFillStroke   { b\* }
     rule opCloseFillStroke     { b } 
@@ -104,8 +104,8 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule opSetLineWidth        { <num> w }
     rule opCurveTo2            { <num>**4 y }
     # catchall for unknown opcodes and arguments
-    token id { <[a..zA..Z\*\"\']>\w* }
-    rule opUnknown               { [<any>|<id>]+? } 
+    token id { <[a..zA..Z\*\"\']><[\w\*\"\']>* }
+    rule unknown               { [<any>|<id>]+? } 
 }
 
 

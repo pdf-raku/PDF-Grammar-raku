@@ -135,8 +135,11 @@ for (
 ##todo    'BX BX EX',                 # BX ... EX incorrect nesting (extra BX)
     'BX EX EX',                 # BX ... EX incorrect nesting (extra EX)
     ) {
+    # test our parser's resilience
     ok($_ !~~ /^<PDF::Grammar::Content::instruction>$/,
        "invalid instruction: $_");
+    ok($_ ~~ /<PDF::Grammar::Content::unknown>/,
+       "unknown operator(s)");
 }
 
 my $sample_content1 = '/RGB CS';
