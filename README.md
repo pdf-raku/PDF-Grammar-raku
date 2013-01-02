@@ -1,15 +1,14 @@
 PDF-Grammar
 ===========
 
-Although PDF documents as do not lend themselves to an overall BNF style
-grammar description; there are areas which these can be put to use,
-including:
+Although PDF documents do not lend themselves to an overall BNF style grammar
+description; there are areas which these can be put to use, including:
 
 - The overall file structure (headers, objects, cross reference tables and footers.
 
-- The operands that make up content streams and are used to markup text and graphics.
+- The operands that make up content streams and are used to markup text, forms and graphics.
 
-PDF::Grammar is an experimental example Perl6 grammar for parsing
+PDF::Grammar is an experimental/example Perl6 grammar for parsing
 and validation of PDF components. It currently implements two grammars:
 
 `PDF::Grammar::Body` - this  describes the file structure of PDF documents,
@@ -18,7 +17,7 @@ including headers, trailers, top-level objects and the cross reference table.
 `PDF::Grammar::Content` - is a description of the text and graphics operators that are used to produce page layout.
 
 PDF-Grammar has so far been tested against a limited sample of PDF documents
-and test cases and has not yet been put to use for any serious PDF processing. The grammar is still evolving and is likely to change at short notice.
+and has not yet been put to use for any serious PDF processing. The grammar is still evolving and is likely to change.
 
 I have been working off the PDF 1.7 reference manual (http://wwwimages.adobe.com/www.adobe.com/content/dam/Adobe/en/devnet/pdf/pdfs/PDF32000_2008.pdf).
 
