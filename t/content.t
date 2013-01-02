@@ -127,9 +127,9 @@ for (
     'BT B ET ET',     # unbalanced text block
     'BT 42 ET',       # Text block incomplete content
     'BT BT ET ET',    # Text block nested
-    '/foo BMC BT EMC ET',     # Marked content - empty
+    '/foo BMC BT EMC ET',     # Marked content - incorrect text nesting
     '/bar BMC /baz BMC B* EMC EMC',  # Marked content - nested
-    '/foo BMC BT ET EMC EMC',   # Marked content - closed out of order
+    '/foo BMC BT ET EMC EMC',   # Marked content - extra end
     '/BMC BT B* ET EMC',        # Marked content mising arg
     '/baz BMC (hi) EMC',        # Marked content - incomplete contents
 ##todo    'BX BX EX',                 # BX ... EX incorrect nesting (extra BX)

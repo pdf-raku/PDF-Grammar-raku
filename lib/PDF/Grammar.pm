@@ -17,7 +17,7 @@ grammar PDF::Grammar {
 
     # [PDF 1.7] 7.3.3  Numeric Objects
     # ---------------
-    token integer { ('+' | '-')? \d+ }
+    token integer { ['+' | '-']? \d+ }
     # reals must have at least one digit either before or after the decimal
     # point
     token real { ['+' | '-']? [[\d+\.\d*] | [\d*\.\d+]] }
@@ -28,7 +28,7 @@ grammar PDF::Grammar {
     # literal_character - all but '(' ')' '\'
     token literal_chars_regular { <-[\(\)\\]>+ }
     token literal_line_continuation {"\\"<eol>}
-    rule literal_substring { '('(<literal_char_escaped>|<literal_chars_regular>|<literal_substring>|<literal_line_continuation>)*')' }
+    rule literal_substring { '('[<literal_char_escaped>|<literal_chars_regular>|<literal_substring>|<literal_line_continuation>]*')' }
 
     # nb
     # -- new-lines are acceptable within strings

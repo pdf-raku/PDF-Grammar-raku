@@ -8,9 +8,7 @@ grammar PDF::Grammar::Body is PDF::Grammar {
     # A Simple PDF grammar for parsing the basic block structure of a
     # PDF document.
     # - memory hungry/slow - don't try on documents > ~ 500K
-    # - token/block-structure  level parsing only, no attempt to interpret
-    #   overall structure, character escapes  or high level objects (e.g.
-    #   Fonts, Pages)
+    # - token/block-structure  level parsing only,
     # - limited to non-existant stream parsing
     # - no attempt yet to capture content
     # - no error handling or diagnostics
