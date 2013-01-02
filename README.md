@@ -44,9 +44,3 @@ To try the parser:
 
     %  perl6 -Ilib -MPDF::Grammar::Content -e"say PDF::Grammar::Content.parse('(Hello, world\041) Tj')"
 
-Niecza
-------
-I haven't tested this throughly, but the grammars do seem to run under Niecza,
-e.g.:
-
-    % ~/src/niecza-24/run/Niecza.exe -Ilib -e'use PDF::Grammar::Content; say PDF::Grammar::Content.parse("/F1 24 Tf 2 J 0 j .51 w 3.86 M [] 0 d");'

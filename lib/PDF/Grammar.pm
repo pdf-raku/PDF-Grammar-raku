@@ -10,7 +10,11 @@ grammar PDF::Grammar {
     # ---------------
     # This <ws> rule treats % as "comment to eol".
     token ws_char {['%' <- eol>* <eol>? | "\n" | "\t" | "\o12" | "\f" | "\r" | " "]}
-    token ws {<ws_char>*}
+
+    token ws {
+	<!ww>
+	<ws_char>*}
+
     token eol {"\r\n"  # ms/dos
                | "\n"  #'nix
                | "\r"} # mac-osx
