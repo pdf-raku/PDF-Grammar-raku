@@ -28,12 +28,11 @@ grammar PDF::Grammar {
     # literal_character - all but '(' ')' '\'
     token literal_chars_regular { <-[\(\)\\]>+ }
     token literal_line_continuation {"\\"<eol>}
-    rule literal_substring { '('[<literal_char_escaped>|<literal_chars_regular>|<literal_substring>|<literal_line_continuation>]*')' }
-
     # nb
     # -- new-lines are acceptable within strings
     # -- nested parenthesis are acceptable - allow recursive substrings
-    rule literal_string {<literal_substring>}
+    rule literal_string { '('[<literal_char_escaped>|<literal_chars_regular>|<literal_string>|<literal_line_continuation>]*')' }
+
     # hex strings
 
     token hex_char {<xdigit>**1..2}
