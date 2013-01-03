@@ -47,47 +47,48 @@ ok('<x>'        !~~ /^<PDF::Grammar::Body::hex_string>$/, 'not hex illegal char'
 # literal strings
 # -- escaped
 for ('\n', '\r', '\t', '\b', '\f', '\(', '\(', '\40', '\040') {
-    ok($_      ~~ /^<PDF::Grammar::Body::literal_char_escaped>$/, "literal char escaped: $_");
+    ok($_      ~~ /^<PDF::Grammar::Body::escaped_char>$/, "literal char escaped: $_");
     ok($_     !~~ /^<PDF::Grammar::Body::literal_chars_regular>+$/, "not literal char regular: $_");
-    ok("($_)"  ~~ /^<PDF::Grammar::Body::literal_string>$/, "literal string: ($_)");
-}
-# -- regular
-for ('a', '}', ' ') {
-    ok($_      ~~ /^<PDF::Grammar::Body::literal_chars_regular>$/, "literal char regular: $_");
-    ok($_     !~~ /^<PDF::Grammar::Body::literal_char_escaped>$/, "not literal char escaped: $_");
-    ok($_     !~~ /^<PDF::Grammar::Body::literal_line_continuation>$/, "not literal line continuation: $_");
     ok("($_)"  ~~ /^<PDF::Grammar::Body::literal_string>$/, "literal string: ($_)");
 }
 
 # [pdf 1.7] section 7.2.4.2 example 5:
 # -- '\0053' :== \005 + '3'
-ok('\0053' ~~ /^<PDF::Grammar::Body::literal_char_escaped>3$/, "literal escaped char followed by numeric");
+ok('\0053' ~~ /^<PDF::Grammar::Body::escaped_char>3$/, "literal escaped char followed by numeric");
 # -- '\005' :== '\05' :== \005
-ok('\005' ~~ /^<PDF::Grammar::Body::literal_char_escaped>$/, "literal escaped 3 octal digits");
-ok('\05' ~~ /^<PDF::Grammar::Body::literal_char_escaped>$/, "literal escaped 2 octal digits");
+ok('\005' ~~ /^<PDF::Grammar::Body::escaped_char>$/, "literal escaped 3 octal digits");
+ok('\05' ~~ /^<PDF::Grammar::Body::escaped_char>$/, "literal escaped 2 octal digits");
 
 do {
     # TODO: some octal escaping cases - not clear from spec
     # (check handling by gs, xpdf, acroreader)";
-   ok('\5' ~~ /^<PDF::Grammar::Body::literal_char_escaped>$/, "literal escaped 1 octal digit"); 
-   ok('\059' ~~ /^<PDF::Grammar::Body::literal_char_escaped>9$/, "literal escaped 2 octal digits - followed by non-octal/decimal digit"); 
+   ok('\5' ~~ /^<PDF::Grammar::Body::escaped_char>$/, "literal escaped 1 octal digit"); 
+   ok('\059' ~~ /^<PDF::Grammar::Body::escaped_char>9$/, "literal escaped 2 octal digits - followed by non-octal/decimal digit"); 
+}
+
+# -- regular
+for ('a', '}', ' ') {
+    ok($_      ~~ /^<PDF::Grammar::Body::literal_chars_regular>$/, "literal char regular: $_");
+    ok($_     !~~ /^<PDF::Grammar::Body::escaped_char>$/, "not literal char escaped: $_");
+    ok($_     !~~ /^<PDF::Grammar::Body::line_continuation>$/, "not literal line continuation: $_");
+    ok("($_)"  ~~ /^<PDF::Grammar::Body::literal_string>$/, "literal string: ($_)");
 }
 
 # -- invalid
 for ('\99', '\x', '\?', ')') {
-    ok($_     !~~ /^<PDF::Grammar::Body::literal_char_escaped>$/, "not literal escape: $_");
+    ok($_     !~~ /^<PDF::Grammar::Body::escaped_char>$/, "not literal escape: $_");
     ok($_     !~~ /^<PDF::Grammar::Body::literal_chars_regular>+$/, "not literal char regular: $_");
-    ok($_     !~~ /^<PDF::Grammar::Body::literal_line_continuation>+$/, "not literal line_continuation: $_");
+    ok($_     !~~ /^<PDF::Grammar::Body::line_continuation>+$/, "not literal line_continuation: $_");
     ok("($_)" !~~ /^<PDF::Grammar::Body::literal_string>$/, "not literal string: $_");
 }
 
 # -- line continuation
 for ("\\\n") {
-    ok($_  ~~ /^<PDF::Grammar::Body::literal_line_continuation>$/, "literal line continuation: $_");
+    ok($_  ~~ /^<PDF::Grammar::Body::line_continuation>$/, "literal line continuation: $_");
 }
 
-# -- example strings from [pdf 1.7] Section 7.3.4.2
 for (
+    # -- example strings from [pdf 1.7] Section 7.3.4.2
     '(42)',
     '(This is a string)',
     "(Strings may contain newlines\nand such.)",
@@ -95,12 +96,17 @@ for (
     '(The following is an empty string.)',
     '()',
     '(It has zero (0) length.)',
-	 '(These \\' ~ "\n" ~ 'two strings \\' ~ "\n" ~ 'are the same.)',
-    '(These\ntwo strings are the same.)',
+    "(These \\\ntwo strings \\\nare the same.)",
+    '(These two strings are the same.)',
     "(This string has an end-of-line at the end of it.\n)",
     '(So does this one.\n)',
     '(This string contains \245two octal characters\307.)',
-	 
+    # -- a few extras
+    "(\n)",
+    "(\\\n)",
+    "(\\\n()\n)",
+    "(These (\\\ntwo strings) \\\nare the same.)",
+    '(These (two strings) are the same.)',	 
     ) {
     ok($_     ~~ /^<PDF::Grammar::Body::literal_string>$/, "literal string: $_");
 }

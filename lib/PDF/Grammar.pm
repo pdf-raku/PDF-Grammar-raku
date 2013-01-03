@@ -28,17 +28,17 @@ grammar PDF::Grammar {
 
     rule number { <real> | <integer> }
 
-    token literal_char_escaped { '\n' | '\r' | '\t' | '\b' | '\f' | '\(' | '\)' | '//' | ['\\' <[0..7]> ** 1..3] }
+    token octal_code { <[0..7]> ** 1..3 }
+    token escaped_char { '\\'[<[nrtbf\(\)\\]>|<octal_code>] }
+    token line_continuation {"\\"<eol>}
     # literal_character - all but '(' ')' '\'
     token literal_chars_regular { <-[\(\)\\]>+ }
-    token literal_line_continuation {"\\"<eol>}
     # nb
     # -- new-lines are acceptable within strings
     # -- nested parenthesis are acceptable - allow recursive substrings
-    rule literal_string { '('[<literal_char_escaped>|<literal_chars_regular>|<literal_string>|<literal_line_continuation>]*')' }
+    rule literal_string { '('[<escaped_char>|<literal_string>|<line_continuation>|<literal_chars_regular>]*')' }
 
     # hex strings
-
     token hex_char {<xdigit>**1..2}
     token hex_string { \<<hex_char>[<hex_char>|<eol>]*\> }
 
