@@ -1,7 +1,7 @@
 {
-    "name"        : "PDF-Grammar",
+    "name"        : "PDF::Grammar",
     "version"     : "*",
-    "description" : "Pilot Perl 6 grammars for parsing PDF files",
+    "description" : "Perl 6 grammars for parsing PDF Content Streams and File Structure",
     "depends"     : [  ],
     "source-url"  : "git://github.com/dwarring/PDF-Grammar.git"
 }
