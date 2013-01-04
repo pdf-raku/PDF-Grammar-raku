@@ -1,10 +1,10 @@
 use v6;
 
 grammar PDF::Grammar {
-   # abstract base grammar for PDF Elements, see instances:
-   # PDF::Grammar::Body     - Overall PDF Document Structure
-   # PDF::Grammar::Content  - Text and Graphics Content
-   # 
+    # abstract base grammar for PDF Elements, see instances:
+    # PDF::Grammar::Body     - Overall PDF Document Structure
+    # PDF::Grammar::Content  - Text and Graphics Content
+    # 
 
     # [PDF 1.7] 7.2.2 Character Set + 7.2.3 Comment characters
     # ---------------
@@ -56,7 +56,7 @@ grammar PDF::Grammar {
 
     rule name { '/'[<name_chars_printable>|<name_char_escaped>|<name_char_number_symbol>]+ }
 
-    # [PDF 1.7] 7.3.2  Boolean Objects
+    # [PDF 1.7] 7.3.2  Boolean objects + Null object
     # ---------------
     token bool { ['true' | 'false'] }
 
