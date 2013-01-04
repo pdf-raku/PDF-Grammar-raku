@@ -5,7 +5,6 @@ Although PDF documents do not lend themselves to an overall BNF style grammar
 description; there are areas which these can be put to use, including:
 
 - The overall file structure (headers, objects, cross reference tables and footers.
-
 - The operands that make up content streams and are used to markup text, forms and graphics.
 
 PDF::Grammar is an experimental/example Perl6 grammar for parsing
@@ -23,24 +22,16 @@ I have been working off the PDF 1.7 reference manual (http://wwwimages.adobe.com
 
 Rakudo Star
 -----------
-The test suite currently only runs on the Rakudo Star.
+You'll first need to download and build Rakudo Star 2012.11 or better (https://github.com/rakudo/star/downloads - don't forget the final `make install`):
 
-To run the tests; first, you'll need a built Rakudo Star 2012.11, or better
-(https://github.com/rakudo/star/downloads - don't forget the final
-`make install`):
+Ensure your path so that `perl6` and `panda` are available, e.g. :
 
-    % git co git@github.com/dwarring/PDF-Grammar.git
-    % cd PDF-Grammar
-    % # to get perl6 and ufo on your path
     % export PATH=~/src/rakudo-star-2012.11/install/bin:$PATH
-    % ufo # Build Makefile
-    % make
-    % make test
-    %
-    % # ... alternatively...
-    % PERL6LIB=lib prove -v -e 'perl6' t
 
-To try the parser:
+You can then use `panda` to test and install `PDF::Grammar`:
 
-    %  perl6 -Ilib -MPDF::Grammar::Content -e"say PDF::Grammar::Content.parse('(Hello, world\041) Tj')"
+    % panda install PDF::Grammar
 
+To try parsing some content:
+
+    % perl6 -MPDF::Grammar::Content -e"say PDF::Grammar::Content.parse('(Hello, world\041) Tj')"
