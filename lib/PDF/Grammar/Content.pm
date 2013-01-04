@@ -57,6 +57,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule dct {<obj>  | <dict>}
     rule num {<obj>  | <number>}
     rule int {<obj>  | <integer>}
+    rule arg {<operand>}
 
     # operations
 
@@ -78,7 +79,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule op:sym<SetMiterLimit>       { <num> (M) }
     rule op:sym<Restore>             { (Q) }
     rule op:sym<SetStrokeRGBColor>   { <num>**3 (RG) }
-    rule op:sym<SetStrokeColorN>     { <operand>+ (SCN) }
+    rule op:sym<SetStrokeColorN>     { <arg>+ (SCN) }
     rule op:sym<SetStrokeColor>      { <num>**4 (SC) }
     rule op:sym<Stroke>              { (S) }
     rule op:sym<TextNextLine>        { (T\*) }
@@ -118,7 +119,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule op:sym<SetFillRGBColor>     { <num>**3 (rg) }
     rule op:sym<SetRenderingIntent>  { <obj> (ri) }
     rule op:sym<CloseStroke>         { (s) }
-    rule op:sym<SetFillColorN>       { <operand>+ (scn) }
+    rule op:sym<SetFillColorN>       { <arg>+ (scn) }
     rule op:sym<SetFillColor>        { <num>**4 (sc) }
     rule op:sym<ShFill>              { <name> (sh) }
     rule op:sym<CurverTo1>           { <num>**4 (v) }
@@ -126,7 +127,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule op:sym<CurveTo2>            { <num>**4 (y) }
     # catchall for unknown opcodes and arguments
     token id { <[a..zA..Z\*\"\']><[\w\*\"\']>* }
-    rule unknown               { [<operand>|<id>]+? } 
+    rule unknown               { [<arg>|<id>]+? } 
 }
 
 
