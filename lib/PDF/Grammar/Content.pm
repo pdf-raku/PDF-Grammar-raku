@@ -19,7 +19,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule opEndText             { ET }
 
     # marked content blocks: BMC ... EMC   or   BDC ... EMC
-    rule opBeginMarkedContent  { [<obj> BMC] | [<obj> <dct> BDC] }
+    rule opBeginMarkedContent  { [<name> BMC] | [<name> [<name> | <dict>] BDC] }
     rule opEndMarkedContent    { EMC }
 
     # image blocks BI ... ID ... EI
@@ -50,84 +50,73 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     # Operators and Operands
     # ------------------------
 
-    # arguments
-    rule obj {<null> | <name>}
-    rule str {<obj>  | <string>}
-    rule arr {<obj>  | <array>}
-    rule dct {<obj>  | <dict>}
-    rule num {<obj>  | <number>}
-    rule int {<obj>  | <integer>}
-    rule arg {<operand>}
-
-    # operations
-
     # operator names courtersy of xpdf / Gfx.cc (http://foolabs.com/xdf/)
     proto rule op { <...> }
-    rule op:sym<MoveSetShowText>     { <num> <num> <str> ('"') } 
-    rule op:sym<MoveShowText>        { <str> ("'") }
+    rule op:sym<MoveSetShowText>     { <number> <number> <string> ('"') } 
+    rule op:sym<MoveShowText>        { <string> ("'") }
     rule op:sym<EOFillStroke>        { (B\*) }
     rule op:sym<FillStroke>          { (B) }
-    rule op:sym<SetStrokeColorSpace> { <obj> (CS) }
-    rule op:sym<MarkPoint>           { <obj> (MP) }
-    rule op:sym<MarkPoint2>          { <obj> <dct> (DP) }
-    rule op:sym<XObject>             { <obj> (Do) }
+    rule op:sym<SetStrokeColorSpace> { <name> (CS) }
+    rule op:sym<MarkPoint>           { <name> (MP) }
+    rule op:sym<MarkPoint2>          { <name> <dict> (DP) }
+    rule op:sym<XObject>             { <name> (Do) }
     rule op:sym<EOFill>              { (f\*) }
     rule op:sym<Fill>                { (F|f) }
-    rule op:sym<SetStrokeGray>       { <num> (G) }
-    rule op:sym<SetLineCap>          { <int> (J) }
-    rule op:sym<SetStrokeCMYKColor>  { <num>**4 (K) }
-    rule op:sym<SetMiterLimit>       { <num> (M) }
+    rule op:sym<SetStrokeGray>       { <number> (G) }
+    rule op:sym<SetLineCap>          { <integer> (J) }
+    rule op:sym<SetStrokeCMYKColor>  { <number>**4 (K) }
+    rule op:sym<SetMiterLimit>       { <number> (M) }
     rule op:sym<Restore>             { (Q) }
-    rule op:sym<SetStrokeRGBColor>   { <num>**3 (RG) }
-    rule op:sym<SetStrokeColorN>     { <arg>+ (SCN) }
-    rule op:sym<SetStrokeColor>      { <num>**4 (SC) }
+    rule op:sym<SetStrokeRGBColor>   { <number>**3 (RG) }
+    rule op:sym<SetStrokeColorN>     { <operand>+ (SCN) }
+    rule op:sym<SetStrokeColor>      { <number>**4 (SC) }
     rule op:sym<Stroke>              { (S) }
     rule op:sym<TextNextLine>        { (T\*) }
-    rule op:sym<TextMoveSet>         { <num> <num> (TD) }
-    rule op:sym<ShowSpaceText>       { <arr> (TJ) }
-    rule op:sym<SetTextLeading>      { <num> (TL) }
-    rule op:sym<SetCharSpacing>      { <num> (Tc) }
-    rule op:sym<TextMove>            { <num> <num> (Td) }
-    rule op:sym<SetFont>             { <obj> <num> (Tf) }
-    rule op:sym<ShowText>            { <str> (Tj) }
-    rule op:sym<SetTextMatrix>       { <num>**6 (Tm) }
-    rule op:sym<SetTextRender>       { <int> (Tr) }
-    rule op:sym<SetTextRise>         { <num> (Ts) }
-    rule op:sym<SetWordSpacing>      { <num> (Tw) }
-    rule op:sym<SetHorizScaling>     { <num> (Tz) }
+    rule op:sym<TextMoveSet>         { <number> <number> (TD) }
+    rule op:sym<ShowSpaceText>       { <array> (TJ) }
+    rule op:sym<SetTextLeading>      { <number> (TL) }
+    rule op:sym<SetCharSpacing>      { <number> (Tc) }
+    rule op:sym<TextMove>            { <number> <number> (Td) }
+    rule op:sym<SetFont>             { <name> <number> (Tf) }
+    rule op:sym<ShowText>            { <string> (Tj) }
+    rule op:sym<SetTextMatrix>       { <number>**6 (Tm) }
+    rule op:sym<SetTextRender>       { <integer> (Tr) }
+    rule op:sym<SetTextRise>         { <number> (Ts) }
+    rule op:sym<SetWordSpacing>      { <number> (Tw) }
+    rule op:sym<SetHorizScaling>     { <number> (Tz) }
     rule op:sym<EOClip>              { (W\*) }
     rule op:sym<Clip>                { (W) } 
     rule op:sym<CloseEOFillStroke>   { (b\*) }
     rule op:sym<CloseFillStroke>     { (b) } 
-    rule op:sym<Concat>              { <num>**6 (cm) }
-    rule op:sym<CurveTo>             { <num>**6 (c) }
-    rule op:sym<SetFillColorSpace>   { <obj> (cs) }
-    rule op:sym<SetDash>             { <arr> <num> (d) }
-    rule op:sym<SetCharWidth>        { <num> <num> (d0) }
-    rule op:sym<SetCacheDevice>      { <num>**6 (d1) }
-    rule op:sym<SetExtGState>        { <obj> (gs) }
-    rule op:sym<SetFillGray>         { <num> (g) }
+    rule op:sym<Concat>              { <number>**6 (cm) }
+    rule op:sym<CurveTo>             { <number>**6 (c) }
+    rule op:sym<SetFillColorSpace>   { <name> (cs) }
+    rule op:sym<SetDash>             { <array> <number> (d) }
+    rule op:sym<SetCharWidth>        { <number> <number> (d0) }
+    rule op:sym<SetCacheDevice>      { <number>**6 (d1) }
+    rule op:sym<SetExtGState>        { <name> (gs) }
+    rule op:sym<SetFillGray>         { <number> (g) }
     rule op:sym<ClosePath>           { (h) }
-    rule op:sym<SetFlat>             { <num> (i) }
-    rule op:sym<SetLineJoin>         { <int> (j) }
-    rule op:sym<SetFillCMYKColor>    { <num>**4 (k) }
-    rule op:sym<LineTo>              { <num> <num> (l) }
-    rule op:sym<MoveTo>              { <num> <num> (m) }
+    rule op:sym<SetFlat>             { <number> (i) }
+    rule op:sym<SetLineJoin>         { <integer> (j) }
+    rule op:sym<SetFillCMYKColor>    { <number>**4 (k) }
+    rule op:sym<LineTo>              { <number> <number> (l) }
+    rule op:sym<MoveTo>              { <number> <number> (m) }
     rule op:sym<EndPath>             { (n) }
     rule op:sym<Save>                { (q) }
-    rule op:sym<Rectangle>           { <num>**4 (re) }
-    rule op:sym<SetFillRGBColor>     { <num>**3 (rg) }
-    rule op:sym<SetRenderingIntent>  { <obj> (ri) }
+    rule op:sym<Rectangle>           { <number>**4 (re) }
+    rule op:sym<SetFillRGBColor>     { <number>**3 (rg) }
+    rule op:sym<SetRenderingIntent>  { <name> (ri) }
     rule op:sym<CloseStroke>         { (s) }
-    rule op:sym<SetFillColorN>       { <arg>+ (scn) }
-    rule op:sym<SetFillColor>        { <num>**4 (sc) }
+    rule op:sym<SetFillColorN>       { <operand>+ (scn) }
+    rule op:sym<SetFillColor>        { <number>**4 (sc) }
     rule op:sym<ShFill>              { <name> (sh) }
-    rule op:sym<CurverTo1>           { <num>**4 (v) }
-    rule op:sym<SetLineWidth>        { <num> (w) }
-    rule op:sym<CurveTo2>            { <num>**4 (y) }
+    rule op:sym<CurverTo1>           { <number>**4 (v) }
+    rule op:sym<SetLineWidth>        { <number> (w) }
+    rule op:sym<CurveTo2>            { <number>**4 (y) }
     # catchall for unknown opcodes and arguments
     token id { <[a..zA..Z\*\"\']><[\w\*\"\']>* }
-    rule unknown               { [<arg>|<id>]+? } 
+    rule unknown               { [<operand>|<id>]+? } 
 }
 
 
