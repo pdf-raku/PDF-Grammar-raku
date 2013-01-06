@@ -5,8 +5,6 @@ use Test;
 use PDF::Grammar;
 use PDF::Grammar::Actions;
 
-use v6;
-
 my $sample_content1 = '(Hello\nWorld\043) Tj';
 
 my %escape_char_mappings = (
@@ -20,8 +18,10 @@ my %escape_char_mappings = (
     '\10'  => "\b",
     );
 
+my $actions = PDF::Grammar::Actions.new;
+
 for %escape_char_mappings.kv -> $escape_seq, $expected_result {
-    my $p = PDF::Grammar.parse($escape_seq, :rule('escape_seq'), :actions(PDF::Grammar::Actions.new));
+    my $p = PDF::Grammar.parse($escape_seq, :rule('escape_seq'), :actions($actions));
     die ("unable to parse escape_seq: $escape_seq")
 	unless $p;
     my $result = $p.ast;
@@ -61,14 +61,14 @@ my @tests = (
     );
 
 for @tests -> $rule, $string, $expected_result {
-    my $p = PDF::Grammar.parse($string, :rule($rule), :actions(PDF::Grammar::Actions.new));
+    my $p = PDF::Grammar.parse($string, :rule($rule), :actions($actions));
     die ("unable to parse as $rule: $string")
 	unless $p;
     my $result = $p.ast;
     is($result, $expected_result, "rule $rule: $string => $expected_result");
 }
 
-my $p = PDF::Grammar.parse('<</MoL 42>>', :rule('dict'), :actions(PDF::Grammar::Actions.new));
+my $p = PDF::Grammar.parse('<</MoL 42>>', :rule('dict'), :actions($actions));
 
 my $dict = $p.ast;
 my $dict_eqv = {'MoL' => (number => 42)};
@@ -76,7 +76,7 @@ my $dict_eqv = {'MoL' => (number => 42)};
 ok($dict eqv $dict_eqv, "dict structure")
     or diag {dict => $dict, eqv => $dict_eqv}.perl;
 
-$p = PDF::Grammar.parse('[ 42 (snoopy) <</foo (bar)>>]', :rule('array'), :actions(PDF::Grammar::Actions.new));
+$p = PDF::Grammar.parse('[ 42 (snoopy) <</foo (bar)>>]', :rule('array'), :actions($actions));
 my $array = $p.ast;
 
 my $array_eqv = [
