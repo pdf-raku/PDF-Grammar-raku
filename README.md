@@ -5,7 +5,8 @@ Although PDF documents do not lend themselves to an overall BNF style grammar
 description; there are areas which these can be put to use, including:
 
 - The overall file structure (headers, objects, cross reference tables and footers.
-- The operands that make up content streams and are used to markup text, forms and graphics.
+- The operands that make up content streams and are used to markup text, forms,
+images and graphical elements.
 
 PDF::Grammar is an experimental/example Perl6 grammar for parsing
 and validation of PDF components. It currently implements two grammars:
@@ -24,7 +25,7 @@ Rakudo Star
 -----------
 You'll first need to download and build Rakudo Star 2012.11 or better (https://github.com/rakudo/star/downloads - don't forget the final `make install`):
 
-Ensure your path so that `perl6` and `panda` are available, e.g. :
+Ensure that `perl6` and `panda` are available on your path, e.g. :
 
     % export PATH=~/src/rakudo-star-2012.11/install/bin:$PATH
 

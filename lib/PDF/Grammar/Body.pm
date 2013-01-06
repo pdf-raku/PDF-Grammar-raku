@@ -5,13 +5,10 @@ use PDF::Grammar::Body::Xref;
 
 grammar PDF::Grammar::Body is PDF::Grammar {
     #
-    # A Simple PDF grammar for parsing the basic block structure of a
+    # A Simple Perl6  grammar for scanning the basic block structure of a
     # PDF document.
     # - memory hungry/slow - don't try on documents > ~ 500K
-    # - token/block-structure  level parsing only,
-    # - limited to non-existant stream parsing
-    # - no attempt yet to capture content
-    # - no error handling or diagnostics
+    # - no attempt yet to capture stream data
     #
     rule TOP {<pdf>}
     rule pdf {^<header><eol>[<content>+]'%%EOF'<eol>?$}

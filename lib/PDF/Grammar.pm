@@ -33,11 +33,11 @@ grammar PDF::Grammar {
     token char_code  {<[nrtbf\(\)\\]>}
     token escape_seq { '\\'[<octal_code>|<char_code>]? }
     # literal_character - all but '(' ')' '\'
-    token literal_chars { <-[\(\)\\]>+ }
+    token literal_chars { <-[\(\)\\\n\r]>+ }
     # nb
     # -- new-lines are acceptable within strings
     # -- nested parenthesis are acceptable - allow recursive substrings
-    rule literal_string { '('[<line_continuation>|<escape_seq>|<literal_string>|<literal_chars>]*')' }
+    rule literal_string {'('[<line_continuation>|<escape_seq>|<eol>|<literal_string>|<literal_chars>]*')'}
 
     # hex strings
     token hex_char {<xdigit>**1..2}
@@ -47,7 +47,7 @@ grammar PDF::Grammar {
 
     token name_char_number_symbol { '##' }
     # name escapes are strictly two hex characters
-    token name_char_escaped { '#'(<xdigit>**2) }
+    token name_char_escaped { '#'<hex_char> }
     # all printable but '#', '/', '[', ']',
 ##  not having any luck with the following regex; me? rakudo-star? (2012.11)
 ##   token name_char_printable { <[\!..\~] - [\[\#\]\//\(\)\<\>]> }
@@ -62,9 +62,9 @@ grammar PDF::Grammar {
 
     token null { 'null' }
 
-    # Operand - as permitted in Content streams [PDF 1.7] 7.8.2
-    rule operand { <number> | <bool> | <string> | <name> | <array> | <dict> | <null> }
     rule array {\[ <operand>* \]}
     rule dict {'<<' [<name> <operand>]* '>>'}
 
+    # Operand - as permitted in Content streams [PDF 1.7] 7.8.2
+    rule operand { <number> | <bool> | <string> | <name> | <array> | <dict> | <null> }
 };
