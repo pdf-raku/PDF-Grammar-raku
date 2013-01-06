@@ -1,7 +1,6 @@
 use v6;
 
-## UNDER CONSTUCTION ##
-# rules for constructing operand values
+# rules for constructing operand values for PDF::Grammar
 
 class PDF::Grammar::Actions {
 
@@ -11,7 +10,7 @@ class PDF::Grammar::Actions {
 
 	for $oct.split('') {
 	    die "illegal octal char: $_"
-		unless $_ >= '0' && $_ <= '7';
+		unless $_ ge '0' && $_ le '7';
 	    $result *= 8;
 	    $result += $_;
 	}
@@ -32,10 +31,10 @@ class PDF::Grammar::Actions {
 	    if ($_ ~~ /\d/) {
 		$hex_digit = $_;
 	    }
-	    elsif ($_ ~~ /<[A..F]>/) {
+	    elsif ($_ ge 'A' && $_ le 'F') {
 		$hex_digit = ord($_) - ord('A') + 10;
 	    }
-	    elsif ($_ ~~ /<[a..f]>/) {
+	    elsif ($_ ge 'a' && $_ le 'f') {
 		$hex_digit = ord($_) - ord('a') + 10;
 	    }
 	    else {
