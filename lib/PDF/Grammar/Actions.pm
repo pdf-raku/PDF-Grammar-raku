@@ -1,7 +1,7 @@
 use v6;
 
 ## UNDER CONSTUCTION ##
- # rules for constructing operand values
+# rules for constructing operand values
 
 class PDF::Grammar::Actions {
 
@@ -77,11 +77,11 @@ class PDF::Grammar::Actions {
     }
 
     method hex_string ($/) {
-	make @($/.caps).map({ $_.value.ast }).join('')
+	make @($/.caps).grep({$_.key eq 'hex_char'}).map({ $_.value.ast }).join('')
     }
 
     method literal_chars($/) {make $/}
-    method line_continuation { make '' }
+    method line_continuation($/) { make '' }
 
     method escape_seq ($/) {
        my $char;
@@ -120,5 +120,27 @@ class PDF::Grammar::Actions {
     method string ($/) {
 	my $string = $<literal_string> ?? $<literal_string>.ast !! $<hex_string>.ast;
 	make $string;
+    }
+
+    method array ($/) {
+	my @operands = @<operand>.map({ $_.ast });
+	make @operands;
+    }
+
+    method dict ($/) {
+	my @names = @<name>.map({ $_.ast });
+	my @operands = @<operand>.map({ $_.ast });
+
+	my %dict;
+	%dict{ @names } = @operands;
+
+	make %dict;
+    }
+
+    method operand($/) {
+	my ($operand) = $/.caps;
+	# return type and value
+	# e.g. (hi there): 'string' => 'hi there'
+	make $operand.key => $operand.value.ast;
     }
 }
