@@ -68,25 +68,26 @@ for @tests -> $rule, $string, $expected_result {
     is($result, $expected_result, "rule $rule: $string => $expected_result");
 }
 
-# a bit laborious - we don't have a is_deeply() yet ...
-
 my $p = PDF::Grammar.parse('<</MoL 42>>', :rule('dict'), :actions(PDF::Grammar::Actions.new));
 
 my $dict = $p.ast;
+my $dict_eqv = {'MoL' => (number => 42)};
 
-is($dict<MoL>.key, 'number', 'hash key');
-is($dict<MoL>.value, 42, 'hash value');
+ok($dict eqv $dict_eqv, "dict structure")
+    or diag {dict => $dict, eqv => $dict_eqv}.perl;
 
 $p = PDF::Grammar.parse('[ 42 (snoopy) <</foo (bar)>>]', :rule('array'), :actions(PDF::Grammar::Actions.new));
 my $array = $p.ast;
 
-is($array[0].key, 'number', 'array[0] is a number');
-is($array[0].value, 42, 'array[0].value');
+my $array_eqv = [
+    number => 42,
+    string => 'snoopy',
+    dict => {
+	foo => (string => 'bar')
+     },
+];
 
-is($array[1].key, 'string', 'array[1] is a string');
-is($array[1].value, 'snoopy', 'array[1].value');
-
-is($array[2].key, 'dict', 'array[3] is a dict');
-is($array[2].value<foo>.value, 'bar', "array[3] dict dereference");
+ok($array eqv $array_eqv, "array structure")
+    or diag {array => $array, eqv => $array_eqv}.perl;
 
 done;
