@@ -15,21 +15,22 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     # ------------------------
 
     # text blocks: BT ... ET
-    rule opBeginText           { BT }
-    rule opEndText             { ET }
+    rule opBeginText           { (BT) }
+    rule opEndText             { (ET) }
 
     # marked content blocks: BMC ... EMC   or   BDC ... EMC
-    rule opBeginMarkedContent  { [<name> BMC] | [<name> [<name> | <dict>] BDC] }
-    rule opEndMarkedContent    { EMC }
+    rule opBeginMarkedContent  { [<name> (BMC)]
+				     | [<name> [<name> | <dict>] (BDC)] }
+    rule opEndMarkedContent    { (EMC) }
 
     # image blocks BI ... ID ... EI
-    rule opBeginImage          { BI }
-    rule opImageData           { ID }
-    rule opEndImage            { EI }
+    rule opBeginImage          { (BI) }
+    rule opImageData           { (ID) }
+    rule opEndImage            { (EI) }
 
     # ignored blocks BX .. EX (nestable)
-    rule opBeginIgnore         {BX}
-    rule opEndIgnore           {EX}
+    rule opBeginIgnore         {(BX)}
+    rule opEndIgnore           {(EX)}
 
     # blocks have limited nesting capability and aren't fully recursive.
     # So theretically, we only have to deal with a few combinations...
@@ -57,8 +58,8 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule op:sym<EOFillStroke>        { (B\*) }
     rule op:sym<FillStroke>          { (B) }
     rule op:sym<SetStrokeColorSpace> { <name> (CS) }
-    rule op:sym<MarkPoint>           { <name> (MP) }
-    rule op:sym<MarkPoint2>          { <name> <dict> (DP) }
+    rule op:sym<MarkPoint>           { [<name> (MP)
+					| <name> [<name> | <dict>] (DP)] }
     rule op:sym<XObject>             { <name> (Do) }
     rule op:sym<EOFill>              { (f\*) }
     rule op:sym<Fill>                { (F|f) }
