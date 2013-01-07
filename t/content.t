@@ -45,6 +45,7 @@ for (
 
     '/RGB gs',
     '/foo <</bar 42>> DP',
+    '/foo /baz DP',
     '/MyForm Do',
     'F',
     '.7 G',
