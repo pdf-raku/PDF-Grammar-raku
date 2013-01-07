@@ -123,6 +123,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule op:sym<SetTextRise>         { <number> (Ts) }
     rule op:sym<SetWordSpacing>      { <number> (Tw) }
     rule op:sym<SetHorizScaling>     { <number> (Tz) }
+
     rule op:sym<CurverTo1>           { <number>**4 (v) }
 
     rule op:sym<EOClip>              { (W\*) }
