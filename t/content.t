@@ -18,14 +18,6 @@ EI';
 
 # test individual ops
 for (
-    '10 20 (hi) "',      # "         moveShow
-
-    "(hello) '",         # '         show
-
-    'B',                 # B         fillStroke
-
-    'B*',                # B*        EOFfillStroke
-
     'BT ET',             # BT .. ET  Text block - empty
     'BT B* ET',          # BT .. ET  Text block - with valid content
 
@@ -43,65 +35,84 @@ for (
     'BX this stuff gets ignored EX',
     'BX this stuff gets BX doubly EX ignored EX',
 
-    '/RGB gs',
+    'b', 'b*', 'B', 'B*',
+
+    '.1 .2 .3 4. 5. 6.0 c',
+    '.1 .2 .3 4. 5. 6.0 cm',
+    '/RGB cs',
+    '/CMYK CS',
+
+    '[1 2] 2 d',
+    '.67 1.2 d0',
+    '.1 .2 .3 4. 5. 6.0 d1',
+    '/MyForm Do',
     '/foo <</bar 42>> DP',
     '/foo /baz DP',
-    '/MyForm Do',
-    'F',
+
+    'F', 'f', 'f*',
+
     '.7 G',
+    '.5 g',
+    '/Gs1 gs',
+
+    'h',
+
+    '2 i',
+
+    '3 j',
     '2 J',
+
+    '.7 .3 .2 .05 k',
     '.1  0.2  0.30  .400  K',
+
+    '20 30 l',
+
+    '100 125 m',
     '0.35 M',
     '/here MP',
+
+    'n',
+
+    'q',
     'Q',
-    '.3 .5 .7 RG',
+
+    '20 50 30 60 re',
+     '.3 .5 .7 RG',
+   '.7 2. .5 rg',
+    '/foo ri',
+ 
+    's',
+    '.2 .35 .7 .9 sc',
+    '0.30 0.75 0.21 /P2 scn',
     'S',
     '.1  0.2  0.30  .400  SC',
     '0.30 0.75 0.21 /P2 SCN',
+    '/bar sh',
+
     'T*',
-    '200 100 TD',
-    '[(hello) (world)] TJ',
-    '13 TL',
     '4.5 Tc',
     '20 15 Td',
+    '200 100 TD',
     '/TimesRoman 12 Tf',
+    '[(hello) -10.5 (world)] TJ',
+    '13 TL',
     '9 0 0 9 476.48 750 Tm',
     '2 Tr',
     '1.7 Ts',
     '2.5 Tw',
     '0.7 Tz',
+
+    '.1 .2 .3 .4 v',
+
     'W',
     'W*',
-    'b',
-    'b*',
-    '.1 .2 .3 4. 5. 6.0 c',
-    '.1 .2 .3 4. 5. 6.0 cm',
-    '/RGB cs',
-    '[1 2] 2 d',
-    '.67 1.2 d0',
-    '.1 .2 .3 4. 5. 6.0 d1',
-    'f',
-    'f*',
-    '.7 g',
-    '/Gs1 gs',
-    'h',
-    '2 i',
-    '3 j',
-    '.7 .3 .2 .05 k',
-    '20 30 l',
-    '100 125 m',
-    'n',
-    'q',
-    '20 50 30 60 re',
-    '.7 2. .5 rg',
-    '/foo ri',
-    's',
-    '.2 .35 .7 .9 sc',
-    '0.30 0.75 0.21 /P2 scn',
-    '/bar sh',
-    '.1 .2 .3 .4 v',
     '1.35 w',
+
     '.1 .2 .3 .4 y',
+
+    '10 20 (hi) "',      # "         moveShow
+    "(hello) '",         # '         show
+
     ) {
     ok($_ ~~ /^<PDF::Grammar::Content::instruction>$/, "instruction")
 	or do {
