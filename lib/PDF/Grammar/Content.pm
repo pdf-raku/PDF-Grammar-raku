@@ -8,7 +8,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     # Text operations as describe in sections 8 and 9 of [PDF 1.7].
     rule TOP {^ [<instruction>|<unknown>]* $}
 
-    rule instruction {<textBlock>|<markedContentBlock>|<imageBlock>|<ignoreBlock>|<op>}
+    rule instruction {<block>|<op>}
 
     # ------------------------
     # Blocks
@@ -35,17 +35,18 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     # blocks have limited nesting capability and aren't fully recursive.
     # So theretically, we only have to deal with a few combinations...
 
-    rule innerTextBlock { <opBeginText> <op>* <opEndText> }
-    rule innerMarkedContentBlock {<opBeginMarkedContent> <op>* <opEndMarkedContent>}
-    rule textBlock {<opBeginText> [ <innerMarkedContentBlock> | <op>]* <opEndText>}
-    rule markedContentBlock {<opBeginMarkedContent> [ <innerTextBlock> | <op> ]* <opEndMarkedContent>}
-    regex imageBlock {
+    rule inner_text_block { <opBeginText> <op>* <opEndText> }
+    rule inner_marked_content_block {<opBeginMarkedContent> <op>* <opEndMarkedContent>}
+    proto rule block { <...> }
+    rule block:sym<text> {<opBeginText> [ <inner_marked_content_block> | <op>]* <opEndText>}
+    rule block:sym<markedContent> {<opBeginMarkedContent> [ <inner_text_block> | <op> ]* <opEndMarkedContent>}
+    regex block:sym<image> {
                       <opBeginImage>:
                       [<name> <operand>]*
                       <opImageData>(.*?)<eol>?<opEndImage>
     }
 
-    rule ignoreBlock {<opBeginIgnore>: (<ignoreBlock>|.)*? <opEndIgnore>}
+    rule block:sym<ignore> {<opBeginIgnore>: (<block:sym<ignore>>|.)*? <opEndIgnore>}
 
     # ------------------------
     # Operators and Operands
