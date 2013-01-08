@@ -11,7 +11,9 @@ my $sample_content2 = '100 125 m 9 0 0 9 476.48 750 Tm';
 
 my $sample_content3 = 'BT 100 350 Td [(Using this Guide)-13.5( . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .)-257.1( xiii)]TJ ET';
 
-my $sample_content4 = q:to/END4/;
+my $sample_content4 = '/foo <</MP /yup>> BDC 50 50 m BT 200 200 Td ET EMC'; 
+
+my $sample_content5 = q:to/END4/;
 /GS1 gs
 BT
   /TT6 1 Tf
@@ -56,7 +58,7 @@ BT
 ET
 END4
 
-my $sample_content5 = q:to/END5/;    # example from [PDF 1.7] Section 7.8
+my $sample_content6 = q:to/END5/;    # example from [PDF 1.7] Section 7.8
 0.0 G					% Set stroking colour to black
 1.0 1.0 0.0 rg				% Set nonstroking colour to yellow
 25 175 175 -150 re			% Construct rectangular path
@@ -90,9 +92,12 @@ B					% Fill and Stroke path
 b					% Close, fill, and stroke path
 END5
 
+my $dud_content = '10 10 Td 42 dud';
+
 my $actions = PDF::Grammar::Content::Actions.new;
 
-for ($sample_content1, $sample_content2) $sample_content3,) { # $sample_content4) {
+for ($sample_content1, $sample_content2, $sample_content3, $sample_content4,
+    $dud_content, $sample_content5, $sample_content6) {
     my $p = PDF::Grammar::Content.parse($_, :actions($actions));
     ok($p, "parsed pdf content")
        or diag ("unable to parse: $_");

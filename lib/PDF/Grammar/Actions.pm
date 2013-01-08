@@ -140,6 +140,6 @@ class PDF::Grammar::Actions {
 	my ($operand) = $/.caps;
 	# return type and value
 	# e.g. (hi there): 'string' => 'hi there'
-	make $operand.key => $operand.value.ast;
+	make $operand.value.ast;
     }
 }

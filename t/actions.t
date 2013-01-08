@@ -76,7 +76,7 @@ for @tests -> $rule, $string, $expected_result {
 my $p = PDF::Grammar.parse('<</MoL 42>>', :rule('dict'), :actions($actions));
 
 my $dict = $p.ast;
-my $dict_eqv = {'MoL' => (number => 42)};
+my $dict_eqv = {'MoL' => 42};
 
 ok($dict eqv $dict_eqv, "dict structure")
     or diag {dict => $dict, eqv => $dict_eqv}.perl;
@@ -85,10 +85,9 @@ $p = PDF::Grammar.parse('[ 42 (snoopy) <</foo (bar)>>]', :rule('array'), :action
 my $array = $p.ast;
 
 my $array_eqv = [
-    number => 42,
-    string => 'snoopy',
-    dict => {
-	foo => (string => 'bar')
+    42, 'snoopy',
+    {
+	foo => 'bar'
      },
 ];
 
