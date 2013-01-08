@@ -8,8 +8,9 @@ description; there are areas which these can be put to use, including:
 - The operands that make up content streams and are used to markup text, forms,
 images and graphical elements.
 
-PDF::Grammar is an experimental/example Perl6 grammar for parsing
-and validation of PDF components. It currently implements two grammars:
+PDF::Grammar is under construction as an experimental/example Perl6 grammar
+for parsing and validation of PDF components. It currently implements
+two grammars:
 
 `PDF::Grammar::Body` - this  describes the file structure of PDF documents,
 including headers, trailers, top-level objects and the cross reference table.
