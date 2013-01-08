@@ -30,9 +30,9 @@ for %escape_char_mappings.kv -> $escape_seq, $expected_result {
 
 my @tests = (
 #    rule                      input               result
-    'null',                    'null',             '',
-    'bool',                    'true',             1,
-    'bool',                    'false',            0,
+    'null',                    'null',             Any,
+    'bool',                    'true',             True,
+    'bool',                    'false',            False,
 
     'name_char_number_symbol', '##',               '#',
     'hex_char',                '6D',               'm',
@@ -65,7 +65,12 @@ for @tests -> $rule, $string, $expected_result {
     die ("unable to parse as $rule: $string")
 	unless $p;
     my $result = $p.ast;
-    is($result, $expected_result, "rule $rule: $string => $expected_result");
+    if ($expected_result.isa('Any')) {
+	ok($result.isa('Any'), "rule $rule: $string => (Any)");
+    }
+    else {
+	is($result, $expected_result, "rule $rule: $string => $expected_result");
+    }
 }
 
 my $p = PDF::Grammar.parse('<</MoL 42>>', :rule('dict'), :actions($actions));

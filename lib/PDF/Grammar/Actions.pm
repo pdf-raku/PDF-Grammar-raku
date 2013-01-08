@@ -47,9 +47,9 @@ class PDF::Grammar::Actions {
 	return $result;
     }
 
-    method null ($/) { make '' }
+    method null ($/) { make Any }
     method bool($/) {
-	make $/ eq 'true' ?? 1 !! 0;
+	make $/ eq 'true';
     }
     method real($/) {make $/.Num}
     method integer($/) {make $/.Int}
