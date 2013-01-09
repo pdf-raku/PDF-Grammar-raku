@@ -6,12 +6,15 @@ use PDF::Grammar::Content;
 use PDF::Grammar::Content::Actions;
 
 my $sample_content1 = '/RGB CS';
+my $expected1 = [["CS" => ["RGB"]]];
 
 my $sample_content2 = '100 125 m 9 0 0 9 476.48 750 Tm';
+my $expected2 = [["m" => [100, 125]], ["Tm" => [9, 0, 0, 9, 476.48e0, 750]]];
 
 my $sample_content3 = 'BT 100 350 Td [(Using this Guide)-13.5( . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .)-257.1( xiii)]TJ ET';
 
 my $sample_content4 = '/foo <</xKey /yVal>> BDC 50 50 m BT 200 200 Td ET EMC'; 
+my $expected4 = [["BDC" => ["foo", {"xKey" => "yVal"}], "m" => [50, 50], "BT" => [], "Td" => [200, 200], "ET" => [], "EMC" => []]];
 
 my $sample_content5 = q:to/END4/;
 /GS1 gs
@@ -93,6 +96,7 @@ b					% Close, fill, and stroke path
 END5
 
 my $dud_content = '10 10 Td 42 dud';
+my $dud_expected = [["Td" => [10, 10]], "??" => [42], "??" => ["dud"]];
 
 my $test_image_block = 'BI                  % Begin inline image object
     /W 17           % Width in samples
@@ -104,16 +108,23 @@ ID                  % Begin image data
 J1/gKA>.]AN&J?]-<HW]aRVcg*bb.\eKAdVV%/PcZ
 %R.s(4KE3&d&7hb*7[%Ct2HCqC~>
 EI';
+my $test_image_expected = [["BI" => {"W" => 17, "H" => 17, "CS" => "RGB", "BPC" => 8, "F" => ["A85", "LZW"]}, "ID" => "J1/gKA>.]AN\&J?]-<HW]aRVcg*bb.\\eKAdVV\%/PcZ\n\%R.s(4KE3\&d\&7hb*7[\%Ct2HCqC~>\n", "EI" => []]];
 
 my $actions = PDF::Grammar::Content::Actions.new;
 
-for ($sample_content1, $sample_content2, $sample_content3, $sample_content4,
-    $dud_content, $sample_content5, $sample_content6, $test_image_block) {
-    my $p = PDF::Grammar::Content.parse($_, :actions($actions));
+for ([$sample_content1, $expected1], [$sample_content2, $expected2],
+     [$sample_content3], [$sample_content4, $expected4],
+     [$dud_content, $dud_expected], [$sample_content5], [$sample_content6],
+     [$test_image_block, $test_image_expected]) {
+    my ($str, $eqv) = @$_;
+    my $p = PDF::Grammar::Content.parse($str, :actions($actions));
     ok($p, "parsed pdf content")
-       or diag ("unable to parse: $_");
-    diag "$_ ==>";
-    diag {result => $p.ast}.perl;
+       or do {diag ("unable to parse: $str"); next}
+    my $result = $p.ast; 
+    if ($eqv) {
+       ok($result eqv $eqv, "result as expected")
+           or diag {expected => $eqv, actual => $result}.perl;
+    }
 }
 
 done;

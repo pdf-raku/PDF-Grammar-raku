@@ -48,18 +48,18 @@ class PDF::Grammar::Actions {
 	return $result;
     }
 
-    method null ($/) { make Any }
+    method null($/) { make Any }
     method bool($/) {
-	make $/ eq 'true';
+	make $/.Str eq 'true';
     }
     method real($/) {make $/.Num}
     method integer($/) {make $/.Int}
     method number ($/) {
-	my $number = $<real> ?? $<real>.ast !! $<integer>.ast;
+	my $number = ($<real> || $<integer>).ast;
 	make $number;
     }
     method hex_char($/) {
-	make chr( _from_hex($/))
+	make chr( _from_hex($/.Str))
     }
 
     method name_char_number_symbol($/) {
@@ -73,11 +73,11 @@ class PDF::Grammar::Actions {
     }
 
     method name ($/) {
-	make @($/.caps).map({ $_.value.ast }).join('')
+	make $/.caps.map({ $_.value.ast }).join('')
     }
 
     method hex_string ($/) {
-	make @($/.caps).grep({$_.key eq 'hex_char'}).map({ $_.value.ast }).join('')
+	make $/.caps.grep({$_.key eq 'hex_char'}).map({ $_.value.ast }).join('')
     }
 
     method literal_chars($/) { make $/.Str }
@@ -104,7 +104,7 @@ class PDF::Grammar::Actions {
     }
 
     method literal_string ($/) {
-	make @($/.caps).map({
+	make $/.caps.map({
 
 	    my $token = $_;
 
@@ -118,7 +118,7 @@ class PDF::Grammar::Actions {
     }
 
     method string ($/) {
-	my $string = $<literal_string> ?? $<literal_string>.ast !! $<hex_string>.ast;
+	my $string = ($<literal_string> || $<hex_string>).ast;
 	make $string;
     }
 

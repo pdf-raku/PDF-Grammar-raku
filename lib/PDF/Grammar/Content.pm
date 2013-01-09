@@ -87,8 +87,8 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule op:sym<SetLineJoin>         { <integer> (j) }
     rule op:sym<SetLineCap>          { <integer> (J) }
 
-    rule op:sym<SetFillCMYKColor>    { <number>**4 (k) }
-    rule op:sym<SetStrokeCMYKColor>  { <number>**4 (K) }
+    rule op:sym<SetFillCMYK>         { <number>**4 (k) }
+    rule op:sym<SetStrokeCMYK>       { <number>**4 (K) }
 
     rule op:sym<LineTo>              { <number> <number> (l) }
 
@@ -102,8 +102,8 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule op:sym<Restore>             { (Q) }
 
     rule op:sym<Rectangle>           { <number>**4 (re) }
-    rule op:sym<SetFillRGBColor>     { <number>**3 (rg) }
-    rule op:sym<SetStrokeRGBColor>   { <number>**3 (RG) }
+    rule op:sym<SetFillRGB>          { <number>**3 (rg) }
+    rule op:sym<SetStrokeRGB>        { <number>**3 (RG) }
     rule op:sym<SetRenderingIntent>  { <name> (ri) }
 
     rule op:sym<CloseStroke>         { (s) }
@@ -128,7 +128,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule op:sym<SetWordSpacing>      { <number> (Tw) }
     rule op:sym<SetHorizScaling>     { <number> (Tz) }
 
-    rule op:sym<CurverTo1>           { <number>**4 (v) }
+    rule op:sym<CurverTo>           { <number>**4 (v) }
 
     rule op:sym<EOClip>              { (W\*) }
     rule op:sym<Clip>                { (W) } 
