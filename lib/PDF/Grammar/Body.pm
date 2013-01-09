@@ -5,10 +5,8 @@ use PDF::Grammar::Body::Xref;
 
 grammar PDF::Grammar::Body is PDF::Grammar {
     #
-    # A Simple Perl6  grammar for scanning the basic block structure of a
-    # PDF document.
-    # - memory hungry/slow - don't try on documents > ~ 500K
-    # - no attempt yet to capture stream data
+    # An experimental Perl6  grammar for scanning the basic block structure
+    # of PDF documents or FDF form data files.
     #
     rule TOP {<pdf>}
     rule pdf {^<header><eol>[<content>+]'%%EOF'<eol>?$}
@@ -32,16 +30,13 @@ grammar PDF::Grammar::Body is PDF::Grammar {
 
     # [PDF 1.7] 7.5.2 File Header
     # ---------------
-    token header {'%PDF-1.'\d}
+    token header {'%'(PDF|FDF)'-'(\d'.'\d)}
     rule body {<indirect_object>+}
 
     rule xref {<PDF::Grammar::Body::Xref::xref>}
     rule indirect_object { <integer> <integer> obj <object>* endobj }
 
     rule trailer {
-        trailer<eol>
-        <dict>
-        startxref<eol>\d+<eol>}
+        trailer<eol><dict><eol>(startxref<eol>\d+<eol>)?}
 
 }
-

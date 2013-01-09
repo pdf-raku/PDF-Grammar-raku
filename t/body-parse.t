@@ -104,6 +104,11 @@ my $nix_pdf = "$header
 $body
 $xref$trailer%\%EOF";
 
+my $bin_commented_pdf = "$header
+%âãÏÓ
+$body
+$xref$trailer%\%EOF";
+
 my $edited_pdf = "$header
 $body
 $xref$trailer
@@ -115,9 +120,13 @@ $xref$trailer%\%EOF";
 # changes byte offsets and corrupts the xref table
 (my $ms_dos_pdf = $nix_pdf)  ~~ s:g/\n/\r\n/;
 
-for ($nix_pdf, $edited_pdf, $mac_osx_pdf, $ms_dos_pdf) {
-    ok($_ ~~ /^<PDF::Grammar::Body::pdf>$/, "pdf")
-       or diag $_;
+for (unix => $nix_pdf,
+     bin_comments => $bin_commented_pdf,
+     edit_history => $edited_pdf,
+     mac_osx_formatted => $mac_osx_pdf,
+     ms_dos_formatted => $ms_dos_pdf) {
+    ok($_.value ~~ /^<PDF::Grammar::Body::pdf>$/, $_.key ~ " pdf")
+       or diag $_.value;
 }
 
 done;

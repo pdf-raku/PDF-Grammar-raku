@@ -11,7 +11,7 @@ my $sample_content2 = '100 125 m 9 0 0 9 476.48 750 Tm';
 
 my $sample_content3 = 'BT 100 350 Td [(Using this Guide)-13.5( . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .)-257.1( xiii)]TJ ET';
 
-my $sample_content4 = '/foo <</MP /yup>> BDC 50 50 m BT 200 200 Td ET EMC'; 
+my $sample_content4 = '/foo <</xKey /yVal>> BDC 50 50 m BT 200 200 Td ET EMC'; 
 
 my $sample_content5 = q:to/END4/;
 /GS1 gs
@@ -102,6 +102,7 @@ my $test_image_block = 'BI                  % Begin inline image object
     /F [/A85 /LZW]  % Filters
 ID                  % Begin image data
 J1/gKA>.]AN&J?]-<HW]aRVcg*bb.\eKAdVV%/PcZ
+%R.s(4KE3&d&7hb*7[%Ct2HCqC~>
 EI';
 
 my $actions = PDF::Grammar::Content::Actions.new;

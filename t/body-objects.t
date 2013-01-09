@@ -189,7 +189,7 @@ for ('/BaseFont/Times-Roman', '/Producer(AFPL Ghostscript 8.51)', '/X<</Y(42)>>'
     ok($_ ~~ /^<PDF::Grammar::Body::name><PDF::Grammar::Body::object>$/, "name + object: $_");
 }
 
-my $stream0 = "<< /Length 0 >>
+my $empty_stream = "<< /Length 0 >>
 stream
 
 endstream
@@ -258,7 +258,7 @@ JD?M$0QP)lKn06l1apKDC@\qJ4B!!(5m+j.7F790m(Vj8
 endstream
 };
 
-for ($stream0, $stream1, $stream2, $stream3, $stream4, $stream5, $stream6) {
+for ($empty_stream, $stream1, $stream2, $stream3, $stream4, $stream5, $stream6) {
     ok("$_ endobj" ~~ /^<PDF::Grammar::Body::stream>'endobj'$/, "stream")
     or diag $_;
 }
@@ -295,7 +295,13 @@ my $ind_obj5 = '8 0 obj
 77% The length of the preceding stream
 endobj';
 
-for ($ind_obj1, $ind_obj2, $ind_obj3, $ind_obj4, $ind_obj5) {
+my $ind_obj_fdf = '1 0 obj
+<</FDF
+    << /F (empty.pdf) /Fields [] >>
+>>
+endobj';
+
+for ($ind_obj1, $ind_obj2, $ind_obj3, $ind_obj4, $ind_obj5, $ind_obj_fdf) {
     ok($_ ~~ /^<PDF::Grammar::Body::indirect_object>$/, "indirect_object")
         or diag $_;
 }

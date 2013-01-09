@@ -1,6 +1,6 @@
 use v6;
 
-# raw stream input mode. In particular, comments are not applicable
+# raw stream parse mode. In particular, comments are not applicable
 
 grammar PDF::Grammar::Stream {
     token ws {
@@ -16,7 +16,8 @@ grammar PDF::Grammar::Stream {
                | " \r" # mac-osx - trailing blank
     }
 
-    regex anychar {.}  # take anything, including whitespace
-    regex char { . }   # omit whitespace
-    regex chars { .* }   # omit whitespace
+    regex anychar  {.}      # take anything, including whitespace
+    regex anychars {.*}     # take anything, including whitespace
+    regex char     { . }    # omit whitespace
+    regex chars    { .* }   # omit whitespace
 }
