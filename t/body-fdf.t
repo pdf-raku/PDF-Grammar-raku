@@ -4,11 +4,11 @@ use Test;
 
 use PDF::Grammar::Body;
 
-my $fdf_empty = '%FDF-1.2
+my $fdf_minimal = '%FDF-1.2
 %âãÏÓ
 1 0 obj
 <</FDF
-    << /F (empty.pdf) /Fields [] >>
+    << /F (minimal.pdf) /Fields [] >>
 >>
 endobj
 trailer
@@ -26,17 +26,10 @@ trailer
 %%EOF
 END_END_END
 
-for ($fdf_empty, $fdf_body) {
-##diag "parsing: $_";
-    my $p = PDF::Grammar::Body.parse($_);
+for (minimal => $fdf_minimal, real => $fdf_body) {
+    my $p = PDF::Grammar::Body.parse($_.value);
 
-##    $_ ~~ m/($<PDF::Grammar::Body::header><PDF::Grammar::Body::indirect_object>)/;
-##    if ($0) {
-##    diag "capt: $0";
-##    }
-##    else { die "no capt: $_";}
-
-    ok($p, "fdf parse")
+    ok($p, "fdf parse " ~ $_.key)
         or diag $_; 
 }
 

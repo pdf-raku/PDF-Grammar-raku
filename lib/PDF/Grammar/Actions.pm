@@ -38,6 +38,7 @@ class PDF::Grammar::Actions {
 		$hex_digit = ord($_) - ord('a') + 10;
 	    }
 	    else {
+		# our grammar shouldn't allow this
 		die "illegal hexidecimal digit: $_";
 	    }
 
@@ -79,7 +80,7 @@ class PDF::Grammar::Actions {
 	make @($/.caps).grep({$_.key eq 'hex_char'}).map({ $_.value.ast }).join('')
     }
 
-    method literal_chars($/) {make $/}
+    method literal_chars($/) { make $/.Str }
     method line_continuation($/) { make '' }
 
     method escape_seq ($/) {
@@ -138,8 +139,6 @@ class PDF::Grammar::Actions {
 
     method operand($/) {
 	my ($operand) = $/.caps;
-	# return type and value
-	# e.g. (hi there): 'string' => 'hi there'
 	make $operand.value.ast;
     }
 }

@@ -37,7 +37,7 @@ grammar PDF::Grammar {
     # nb
     # -- new-lines are acceptable within strings
     # -- nested parenthesis are acceptable - allow recursive substrings
-    rule literal_string {'('[<line_continuation>|<escape_seq>|<eol>|<literal_string>|<literal_chars>]*')'}
+    rule literal_string {'('[<line_continuation>|<eol>|<escape_seq>|<literal_string>|<literal_chars>]*')'}
 
     # hex strings
     token hex_char {<xdigit>**1..2}

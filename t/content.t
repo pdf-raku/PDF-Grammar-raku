@@ -18,106 +18,108 @@ EI';
 
 # test individual ops
 for (
-    'BT ET',             # BT .. ET  Text block - empty
-    'BT B* ET',          # BT .. ET  Text block - with valid content
+    text_block_empty               => 'BT ET',
+    text_block_populated           => 'BT B* ET',
 
-    '/foo <</MP /yup>> BDC BT ET EMC',     # optional content - empty
-    '/foo <</MP /yup>> BDC (hello) Tj EMC',     # optional content - basic
-    '/EmbeddedDocument /MC3 BDC q EMC',      # optional content - named dict
-    '/foo BMC BT ET EMC',     # Marked content - empty
-    '/bar BMC BT B* ET EMC',  # Marked content + text block - empty
-    '/baz BMC B* EMC',        # BT .. ET  Text block - with valid content
+    BDC_marked_content_empty_text  =>'/foo <</MP /yup>> BDC BT ET EMC',
+    BDC_marked_content_with_op     => '/foo <</MP /yup>> BDC (hello) Tj EMC',
+    BDC_content_dict_ref           => '/EmbeddedDocument /MC3 BDC q EMC',      # optional content - named dict
+    BMC_marked_content_empty_text  => '/foo BMC BT ET EMC',     # Marked content - empty
+    BMC_marked_content_with_text   => '/bar BMC BT B* ET EMC',  # Marked content + text block - empty
+    BMC_marked_content_with_op     => '/baz BMC B* EMC',        # BT .. ET  Text block - with valid content
 
-    '(hello world) Tj',   # Tj        showText
+    'BI .. ID .. EI image_block'   => $test_image_block,
 
-    $test_image_block,
+    'BX .. EX ignored text'        => 'BX this stuff gets ignored EX',
+    'BX .. BX .. EX .. EX nesting' => 'BX this stuff gets BX doubly EX ignored EX',
 
-    'BX this stuff gets ignored EX',
-    'BX this stuff gets BX doubly EX ignored EX',
+    CloseFileStroke => 'b',
+    CloseEOFillStroke => 'b*',
+    FillStroke => 'B',
+    EOFillStroke => 'B*',
 
-    'b', 'b*', 'B', 'B*',
+    CurveTo           => '.1 .2 .3 4. 5. 6.0 c',
+    'Concat (Matrix)' => '.1 .2 .3 4. 5. 6.0 cm',
+    SetFillColorSpace => '/RGB cs',
+    SetStrokeColorSpace => '/CMYK CS',
 
-    '.1 .2 .3 4. 5. 6.0 c',
-    '.1 .2 .3 4. 5. 6.0 cm',
-    '/RGB cs',
-    '/CMYK CS',
+    Dash => '[1 2] 2 d',
+    SetCharWidth => '.67 1.2 d0',
+    SetCacheDevice => '.1 .2 .3 4. 5. 6.0 d1',
+    XObject => '/MyForm Do',
+    'MarkPoint (inline dict)' => '/foo <</bar 42>> DP',
+    'MarkPoint (dict ref)' => '/foo /baz DP',
 
-    '[1 2] 2 d',
-    '.67 1.2 d0',
-    '.1 .2 .3 4. 5. 6.0 d1',
-    '/MyForm Do',
-    '/foo <</bar 42>> DP',
-    '/foo /baz DP',
+    Fill => 'F', 'Fill (Obsolete)' => 'f', 'EOFill' => 'f*',
 
-    'F', 'f', 'f*',
+    SetStrokeGray => '.7 G',
+    SetFillGray => '.5 g',
+    SetExtState => '/Gs1 gs',
 
-    '.7 G',
-    '.5 g',
-    '/Gs1 gs',
+    ClosePath => 'h',
 
-    'h',
+    SetFlat => '2 i',
 
-    '2 i',
+    SetLineJoin => '3 j',
+    SetLineCap => '2 J',
 
-    '3 j',
-    '2 J',
+    SetFillCMYK => '.7 .3 .2 .05 k',
+    SetStrokeCMYK => '.1  0.2  0.30  .400  K',
 
-    '.7 .3 .2 .05 k',
-    '.1  0.2  0.30  .400  K',
+    LineTo => '20 30 l',
 
-    '20 30 l',
+    moveTo => '100 125 m',
+    setMiterLimit => '0.35 M',
+    MarkPoint => '/here MP',
 
-    '100 125 m',
-    '0.35 M',
-    '/here MP',
+    EndPath => 'n',
 
-    'n',
+    Save => 'q',
+    Restore => 'Q',
 
-    'q',
-    'Q',
-
-    '20 50 30 60 re',
-     '.3 .5 .7 RG',
-   '.7 2. .5 rg',
-    '/foo ri',
+    Rectangle => '20 50 30 60 re',
+    SetStrokeRGB =>  '.3 .5 .7 RG',
+    SetFilLRGB => '.7 2. .5 rg',
+    SetRenderingIntent => '/foo ri',
  
-    's',
-    '.2 .35 .7 .9 sc',
-    '0.30 0.75 0.21 /P2 scn',
-    'S',
-    '.1  0.2  0.30  .400  SC',
-    '0.30 0.75 0.21 /P2 SCN',
-    '/bar sh',
+    CloseStroke => 's',
+    SetFillColor => '.2 .35 .7 .9 sc',
+    SetFillColorN => '0.30 0.75 0.21 /P2 scn',
+    Stroke => 'S',
+    SetStrokeColor => '.1  0.2  0.30  .400  SC',
+    SetStrokeColorN => '0.30 0.75 0.21 /P2 SCN',
+    shFill => '/bar sh',
 
-    'T*',
-    '4.5 Tc',
-    '20 15 Td',
-    '200 100 TD',
-    '/TimesRoman 12 Tf',
-    '[(hello) -10.5 (world)] TJ',
-    '13 TL',
-    '9 0 0 9 476.48 750 Tm',
-    '2 Tr',
-    '1.7 Ts',
-    '2.5 Tw',
-    '0.7 Tz',
+    TextNewLine => 'T*',
+    SetCharSpacing => '4.5 Tc',
+    TextMove => '20 15 Td',
+    TextMoveSet => '200 100 TD',
+    SetFont => '/TimesRoman 12 Tf',
+    ShowText => '(hello world) Tj',
+    ShowSpaceText => '[(hello) -10.5 (world)] TJ',
+    SetTextLeading => '13 TL',
+    SetTextMatrix => '9 0 0 9 476.48 750 Tm',
+    SetTextRender => '2 Tr',
+    SetTextRise => '1.7 Ts',
+    SetTextWordSpacing => '2.5 Tw',
+    SetHorizScaling => '0.7 Tz',
 
-    '.1 .2 .3 .4 v',
+    CurveTo => '.1 .2 .3 .4 v',
 
-    'W',
-    'W*',
-    '1.35 w',
+    EOClip => 'W',
+    Clip => 'W*',
+    SetLineWidth => '1.35 w',
 
-    '.1 .2 .3 .4 y',
+    CurveTo2 => '.1 .2 .3 .4 y',
 
-    '10 20 (hi) "',      # "         moveShow
-    "(hello) '",         # '         show
+    MoveSetShowText => '10 20 (hi) "',      # "         moveShow
+    MoveShowText => "(hello) '",         # '         show
 
     ) {
-    ok($_ ~~ /^<PDF::Grammar::Content::instruction>$/, "instruction")
+    ok($_.value ~~ /^<PDF::Grammar::Content::instruction>$/, "instruction " ~ $_.key)
 	or do {
-	    diag "failed instruction: $_";
-	    if ($_ ~~ /^(.*?)(<PDF::Grammar::Content::instruction>)(.*?)$/) {
+	    diag "failed instruction: " ~ $_.value;
+	    if ($_.value ~~ /^(.*?)(<PDF::Grammar::Content::instruction>)(.*?)$/) {
 
 		my $p = $0 && $0.join(',');
 		note "(preceeding: $p)" if $p;
@@ -131,27 +133,28 @@ for (
 
 # invalid cases
 for (
-    '20 (hi) "',      # too few args
-    '10 (hi) 20 "',   # type mismatch (wrong order)
-    'crud',           # unknown operator
-    'B ET',           # unbalanced text block
-    'BT B',           # unbalanced text block
-    'BT B ET ET',     # unbalanced text block
-    'BT 42 ET',       # Text block incomplete content
-    'BT BT ET ET',    # Text block nested
-    '/foo BMC BT EMC ET',     # Marked content - incorrect text nesting
-    '/bar BMC /baz BMC B* EMC EMC',  # Marked content - nested
-    '/foo BMC BT ET EMC EMC',   # Marked content - extra end
-    '/BMC BT B* ET EMC',        # Marked content mising arg
-    '/baz BMC (hi) EMC',        # Marked content - incomplete contents
+    'too few args' =>'20 (hi) "',      
+    'type mismatch (wrong order)' =>'10 (hi) 20 "',   
+    'unknown operator' =>'crud',           
+    'unbalanced text block' =>'B ET',           
+    'unbalanced text block' =>'BT B',           
+    'unbalanced text block' =>'BT B ET ET',     
+    'Text block incomplete content' =>'BT 42 ET',       
+    'Text block nested' =>'BT BT ET ET',    
+    'Marked content - incorrect text nesting' =>'/foo BMC BT EMC ET',     
+    'Marked content - nested' =>'/bar BMC /baz BMC B* EMC EMC',  
+    'Marked content - extra end' =>'/foo BMC BT ET EMC EMC',   
+    'Marked content mising arg' =>'/BMC BT B* ET EMC',        
+    'Marked content - incomplete contents' =>'/baz BMC (hi) EMC',        
 ##todo    'BX BX EX',                 # BX ... EX incorrect nesting (extra BX)
-    'BX EX EX',                 # BX ... EX incorrect nesting (extra EX)
+    'BX ... EX incorrect nesting (extra EX)' =>'BX EX EX',                 
     ) {
     # test our parser's resilience
-    ok($_ !~~ /^<PDF::Grammar::Content::instruction>$/,
-       "invalid instruction: $_");
+    ok($_.value !~~ /^<PDF::Grammar::Content::instruction>$/,
+       "invalid instruction: " ~ $_.key)
+	or diag $_.value;
     ok($_ ~~ /<PDF::Grammar::Content::unknown>/,
-       "unknown operator(s)");
+       "parsed as unknown: " ~ $_.key);
 }
 
 done;
