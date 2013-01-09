@@ -1,17 +1,8 @@
-grammar PDF::Grammar::Body::Xref {
+use v6;
 
-    token ws {
-       # Turn off white-space handling
-        <!ww>
-        [ "\t" ]*
-    }
+use PDF::Grammar::Stream;
 
-    token eol {"\r\n"  # ms/dos
-               | "\n"  # 'nix
-               | " \n" # 'nix - trailing blank
-               | "\r"  # mac-osx
-               | " \r" # mac-osx - trailing blank
-    }
+grammar PDF::Grammar::Body::Xref is PDF::Grammar::Stream {
 
     rule  xref {xref<eol><subsection>+}
     rule  subsection {\d+\x20\d+<eol><entry>+}

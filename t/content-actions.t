@@ -94,10 +94,20 @@ END5
 
 my $dud_content = '10 10 Td 42 dud';
 
+my $test_image_block = 'BI                  % Begin inline image object
+    /W 17           % Width in samples
+    /H 17           % Height in samples
+    /CS /RGB        % Colour space
+    /BPC 8          % Bits per component
+    /F [/A85 /LZW]  % Filters
+ID                  % Begin image data
+J1/gKA>.]AN&J?]-<HW]aRVcg*bb.\eKAdVV%/PcZ
+EI';
+
 my $actions = PDF::Grammar::Content::Actions.new;
 
 for ($sample_content1, $sample_content2, $sample_content3, $sample_content4,
-    $dud_content, $sample_content5, $sample_content6) {
+    $dud_content, $sample_content5, $sample_content6, $test_image_block) {
     my $p = PDF::Grammar::Content.parse($_, :actions($actions));
     ok($p, "parsed pdf content")
        or diag ("unable to parse: $_");

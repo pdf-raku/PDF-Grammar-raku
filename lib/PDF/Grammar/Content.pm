@@ -1,6 +1,7 @@
 use v6;
 
 use PDF::Grammar;
+use PDF::Grammar::Stream;
 
 grammar PDF::Grammar::Content is PDF::Grammar {
     #
@@ -40,10 +41,12 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     proto rule block { <...> }
     rule block:sym<text> {<opBeginText> [ <inner_marked_content_block> | <op>]* <opEndText>}
     rule block:sym<markedContent> {<opBeginMarkedContent> [ <inner_text_block> | <op> ]* <opEndMarkedContent>}
+    rule imageAtts { [<name> <operand>]* }
+    regex stream_chars{<PDF::Grammar::Stream::chars>}
     regex block:sym<image> {
                       <opBeginImage>:
-                      [<name> <operand>]*
-                      <opImageData>(.*?)<eol>?<opEndImage>
+                      <imageAtts>
+                      <opImageData>(<stream_chars>?)<eol>?<opEndImage>
     }
 
     rule block:sym<ignore> {<opBeginIgnore>: (<block:sym<ignore>>|.)*? <opEndIgnore>}

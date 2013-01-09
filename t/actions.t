@@ -84,12 +84,7 @@ ok($dict eqv $dict_eqv, "dict structure")
 $p = PDF::Grammar.parse('[ 42 (snoopy) <</foo (bar)>>]', :rule('array'), :actions($actions));
 my $array = $p.ast;
 
-my $array_eqv = [
-    42, 'snoopy',
-    {
-	foo => 'bar'
-     },
-];
+my $array_eqv = [42, 'snoopy', {foo => 'bar'}];
 
 ok($array eqv $array_eqv, "array structure")
     or diag {array => $array, eqv => $array_eqv}.perl;

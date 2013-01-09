@@ -2,18 +2,11 @@ use v6;
 
 use PDF::Grammar::Actions;
 
-# rules for constructing operand values for PDF::Grammar::Content
-
 class PDF::Grammar::Content::Actions is PDF::Grammar::Actions {
 
     method TOP($/) {
 	my @result = $/.caps.map({ $_.value.ast });
 	make @result;
-    }
-
-    sub _get_ast($cap) {
-       my $ast = $cap.key ~~ m/^\d$/ ?? $cap.value.Str !! $cap.value.ast; 
-       return $ast;
     }
 
     sub _op_data($op) {
@@ -32,7 +25,22 @@ class PDF::Grammar::Content::Actions is PDF::Grammar::Actions {
 	return $operator => @operands;
      }
 
+    sub _image_block_data($image_block) {
+
+	my ($bi, $image_atts, $image_data_op, $image_data) = $image_block.caps;
+
+	return (BI => $image_atts.value.ast,
+		ID => $image_data.value.Str,
+		EI => [],
+	    );
+    }
+
     sub _block_data($block) {
+
+	if ($block.caps[0].key eq 'opBeginImage') {
+	    return _image_block_data($block);
+	}
+
   	my @result = ( $block.caps.map({
 
 	    my $token = $_;
@@ -69,6 +77,18 @@ class PDF::Grammar::Content::Actions is PDF::Grammar::Actions {
     method unknown ($/) {
 	my @u =  $/.caps.map({ $_.value.ast });
 	make '??' => @u
+    }
+
+    method imageAtts ($/) {
+
+	my @names = @<name>.map({ $_.ast });
+	my @operands = @<operand>.map({ $_.ast });
+
+	my %atts;
+	%atts{ @names } = @operands;
+
+	make %atts;
+
     }
 
 }
