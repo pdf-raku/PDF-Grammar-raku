@@ -6,14 +6,14 @@ use PDF::Grammar::Body::Xref;
 grammar PDF::Grammar::Body is PDF::Grammar {
     #
     # An experimental Perl6  grammar for scanning the basic outer block
-    # structure of PDF documents or FDF form data files.
+    # structure of PDF documents.
     #
     rule TOP {<pdf>}
-    rule pdf {^<header><eol>[<content>+]'%%EOF'<eol>?$}
+    rule pdf {^<pdf_header><eol>[<content>+]'%%EOF'<eol>?$}
 
     # [PDF 1.7] 7.5.2 File Header
     # ---------------
-    token header {'%'(PDF|FDF)'-'(\d'.'\d)}
+    token pdf_header {'%PDF-'(\d'.'\d)}
 
     # xref section is optional - document could have a cross reference stream
     # quite likley if linearized [PDF 1.7] 7.5.8 & Annex F (Linearized PDF)
@@ -39,6 +39,6 @@ grammar PDF::Grammar::Body is PDF::Grammar {
     rule xref {<PDF::Grammar::Body::Xref::xref>}
 
     rule trailer {
-        trailer<eol><dict><eol>(startxref<eol>\d+<eol>)?}
+        trailer<eol><dict><eol>startxref<eol>\d+<eol>}
 
 }

@@ -4,11 +4,11 @@ use Test;
 use PDF::Grammar::Body;
 
 for ('%PDF-1.0', '%PDF-1.7') {
-    ok($_ ~~ /^<PDF::Grammar::Body::header>$/, "header: $_");
+    ok($_ ~~ /^<PDF::Grammar::Body::pdf_header>$/, "pdf_header: $_");
 }
 
 my $header = '%PDF-1.0';
-ok($header ~~ /^<PDF::Grammar::Body::header>$/, "header: $header");
+ok($header ~~ /^<PDF::Grammar::Body::pdf_header>$/, "pdf_header: $header");
 
 my $indirect_obj1 = '1 0 obj
 <<

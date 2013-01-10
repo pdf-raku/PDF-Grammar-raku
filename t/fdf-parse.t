@@ -2,7 +2,7 @@
 use v6;
 use Test;
 
-use PDF::Grammar::Body;
+use PDF::Grammar::FDF;
 
 my $fdf_minimal = '%FDF-1.2
 %âãÏÓ
@@ -27,7 +27,7 @@ trailer
 END_END_END
 
 for (minimal => $fdf_minimal, real => $fdf_body) {
-    my $p = PDF::Grammar::Body.parse($_.value);
+    my $p = PDF::Grammar::FDF.parse($_.value);
 
     ok($p, "fdf parse " ~ $_.key)
         or diag $_; 
