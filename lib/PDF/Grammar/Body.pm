@@ -17,8 +17,7 @@ grammar PDF::Grammar::Body is PDF::Grammar {
 
     # xref section is optional - document could have a cross reference stream
     # quite likley if linearized [PDF 1.7] 7.5.8 & Annex F (Linearized PDF)
-    rule content {<body><xref>?<trailer>} 
-    rule body {<indirect_object>+}
+    rule content {<indirect_object>+<xref>?<trailer>}
     rule indirect_object { <integer> <integer> obj <object>* endobj }
 
     rule object { <stream> | <indirect_reference> | <operand> }
@@ -38,7 +37,14 @@ grammar PDF::Grammar::Body is PDF::Grammar {
 
     rule xref {<PDF::Grammar::Body::Xref::xref>}
 
+    # the trailer contains the position of the cross reference
+    # table plus the file trailer dictionary
     rule trailer {
-        trailer<eol><dict><eol>startxref<eol>\d+<eol>}
+        trailer<eol><dict><eol>startxref<eol>(\d+)<eol>}
+
+    # file_trailer: special stand-alone regex for reverse matching
+    # trailer information from the end of the file. Typically used
+    # when reading last few KB of a PDF to locate trailer information
+    regex file_trailer {<trailer>'%%EOF'<eol>?$}
 
 }

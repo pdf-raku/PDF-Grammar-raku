@@ -4,6 +4,8 @@ use Test;
 
 use PDF::Grammar::FDF;
 
+# Minimal grammar for matching an FDF - Form Data Exchange file.
+
 my $fdf_minimal = '%FDF-1.2
 %âãÏÓ
 1 0 obj

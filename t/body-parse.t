@@ -71,7 +71,7 @@ for ($indirect_obj1) {
 }
 
 for ($indirect_obj1, $body) {
-    ok($_ ~~ /^<PDF::Grammar::Body::body>$/, "body")
+    ok($_ ~~ /^<PDF::Grammar::Body::indirect_object>+$/, "body")
         or diag $_;
 }
 
@@ -125,8 +125,11 @@ for (unix => $nix_pdf,
      edit_history => $edited_pdf,
      mac_osx_formatted => $mac_osx_pdf,
      ms_dos_formatted => $ms_dos_pdf) {
-    ok($_.value ~~ /^<PDF::Grammar::Body::pdf>$/, $_.key ~ " pdf")
+     ok(PDF::Grammar::Body.parse($_.value), "pdf parse - " ~ $_.key)
        or diag $_.value;
+
+    # see of we can independently locate the trailer
+    ok($_.value ~~ /<PDF::Grammar::Body::file_trailer>$/, "file_trailer match " ~ $_.key);
 }
 
 done;
