@@ -2,7 +2,7 @@ use v6;
 
 use PDF::Grammar::Stream;
 
-grammar PDF::Grammar::Body::Xref is PDF::Grammar::Stream {
+grammar PDF::Grammar::Xref is PDF::Grammar::Stream {
 
     rule  xref {xref<eol><subsection>+}
     rule  subsection {\d+\x20\d+<eol><entry>+}

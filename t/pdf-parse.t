@@ -1,14 +1,14 @@
 #!/usr/bin/env perl6
 
 use Test;
-use PDF::Grammar::Body;
+use PDF::Grammar::PDF;
 
 for ('%PDF-1.0', '%PDF-1.7') {
-    ok($_ ~~ /^<PDF::Grammar::Body::pdf_header>$/, "pdf_header: $_");
+    ok($_ ~~ /^<PDF::Grammar::PDF::pdf_header>$/, "pdf_header: $_");
 }
 
 my $header = '%PDF-1.0';
-ok($header ~~ /^<PDF::Grammar::Body::pdf_header>$/, "pdf_header: $header");
+ok($header ~~ /^<PDF::Grammar::PDF::pdf_header>$/, "pdf_header: $header");
 
 my $indirect_obj1 = '1 0 obj
 <<
@@ -66,12 +66,12 @@ endobj
 endobj';
 
 for ($indirect_obj1) {
-    ok($_ ~~ /^<PDF::Grammar::Body::indirect_object>$/, "indirect obj")
+    ok($_ ~~ /^<PDF::Grammar::PDF::indirect_object>$/, "indirect obj")
         or diag $_;
 }
 
 for ($indirect_obj1, $body) {
-    ok($_ ~~ /^<PDF::Grammar::Body::indirect_object>+$/, "body")
+    ok($_ ~~ /^<PDF::Grammar::PDF::indirect_object>+$/, "body")
         or diag $_;
 }
 
@@ -86,7 +86,7 @@ my $xref = "xref
 0000000415 00000 n
 0000000445 00000 n
 ";
-ok($xref ~~ /^<PDF::Grammar::Body::xref>$/, "xref")
+ok($xref ~~ /^<PDF::Grammar::PDF::xref>$/, "xref")
     or diag $xref;
 
 my $trailer = 'trailer
@@ -97,7 +97,7 @@ my $trailer = 'trailer
 startxref
 553
 ';
-ok($trailer ~~ /^<PDF::Grammar::Body::trailer>$/, "trailer")
+ok($trailer ~~ /^<PDF::Grammar::PDF::trailer>$/, "trailer")
     or diag $trailer;
 
 my $nix_pdf = "$header
@@ -125,11 +125,11 @@ for (unix => $nix_pdf,
      edit_history => $edited_pdf,
      mac_osx_formatted => $mac_osx_pdf,
      ms_dos_formatted => $ms_dos_pdf) {
-     ok(PDF::Grammar::Body.parse($_.value), "pdf parse - " ~ $_.key)
+     ok(PDF::Grammar::PDF.parse($_.value), "pdf parse - " ~ $_.key)
        or diag $_.value;
 
     # see of we can independently locate the trailer
-    ok($_.value ~~ /<PDF::Grammar::Body::file_trailer>$/, "file_trailer match " ~ $_.key);
+    ok($_.value ~~ /<PDF::Grammar::PDF::file_trailer>$/, "file_trailer match " ~ $_.key);
 }
 
 done;

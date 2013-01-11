@@ -1,9 +1,9 @@
 use v6;
 
 use PDF::Grammar;
-use PDF::Grammar::Body::Xref;
+use PDF::Grammar::Xref;
 
-grammar PDF::Grammar::Body is PDF::Grammar {
+grammar PDF::Grammar::PDF is PDF::Grammar {
     #
     # An experimental Perl6  grammar for scanning the basic outer block
     # structure of PDF documents.
@@ -35,7 +35,7 @@ grammar PDF::Grammar::Body is PDF::Grammar {
     token endstream_marker {<eol>?endstream<ws_char>+}
     rule stream {<dict> <stream_marker>.*?<endstream_marker>}
 
-    rule xref {<PDF::Grammar::Body::Xref::xref>}
+    rule xref {<PDF::Grammar::Xref::xref>}
 
     # the trailer contains the position of the cross reference
     # table plus the file trailer dictionary
