@@ -2,9 +2,9 @@ use v6;
 
 grammar PDF::Grammar {
     # abstract base grammar for PDF Elements, see instances:
-    # PDF::Grammar::Body     - Overall PDF Document Structure
     # PDF::Grammar::Content  - Text and Graphics Content
     # PDF::Grammar::FDF      - Describes FDF (Form Data) files
+    # PDF::Grammar::PDF     - Overall PDF Document Structure
     # 
 
     # [PDF 1.7] 7.2.2 Character Set + 7.2.3 Comment characters

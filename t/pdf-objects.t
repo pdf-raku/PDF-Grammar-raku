@@ -180,8 +180,11 @@ Nested stream - yikes!
   /NowWhereWasI (?)
 >>";
 
-for ('<<>>', '<< >>', '<</id 42>>', '<</a 1 /b (2)>>', $dict_example, $dict_example2, $dict_example3, $dict_example4) {
-    ok($_ ~~ /^<PDF::Grammar::PDF::dict>$/, "dict")
+for (empty1 => '<<>>', empty2 => '<< >>', trival => '<</id 42>>',
+     trivial2 => '<</a 1 /b (2)>>', example_hex => $dict_example,
+     example_nested => $dict_example2, sans_whitespace => $dict_example3,
+     nested_stream => $dict_example4) {
+    ok($_.value ~~ /^<PDF::Grammar::PDF::dict>$/, "dict " ~ $_.key)
     or diag $_;
 }
 
@@ -224,6 +227,7 @@ stream
 endstream
 ", $content3.chars, $content3;
 
+# have observed endstream without a proceeding eol
 my $stream4 = sprintf "<< /Length %d >>
 stream
 %sendstream
@@ -258,9 +262,15 @@ JD?M$0QP)lKn06l1apKDC@\qJ4B!!(5m+j.7F790m(Vj8
 endstream
 };
 
-for ($empty_stream, $stream1, $stream2, $stream3, $stream4, $stream5, $stream6) {
-    ok("$_ endobj" ~~ /^<PDF::Grammar::PDF::stream>'endobj'$/, "stream")
-    or diag $_;
+for (empty => $empty_stream, tiny => $stream1, content => $stream2,
+     non_ascii => $stream3, no_eol => $stream4, indirect => $stream5,
+     sizable => $stream6) {
+    my $test = $_.key;
+    my $val = $_.value;
+    ok($val ~~ /^<PDF::Grammar::PDF::stream_head>/, "$test stream - head match");
+    ok($val ~~ /<PDF::Grammar::PDF::stream_tail>$/, "$test stream - tail match");
+    ok("$val endobj" ~~ /^<PDF::Grammar::PDF::stream>'endobj'$/, "$test stream - full match")
+    or diag $val;
 }
 
 my $ind_obj1 = "10 0 obj

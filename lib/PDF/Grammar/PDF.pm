@@ -1,7 +1,6 @@
 use v6;
 
 use PDF::Grammar;
-use PDF::Grammar::Xref;
 
 grammar PDF::Grammar::PDF is PDF::Grammar {
     #
@@ -13,7 +12,7 @@ grammar PDF::Grammar::PDF is PDF::Grammar {
 
     # [PDF 1.7] 7.5.2 File Header
     # ---------------
-    token pdf_header {'%PDF-'(\d'.'\d)}
+    token pdf_header {'%PDF-'$<version>=(\d'.'\d)}
 
     # xref section is optional - document could have a cross reference stream
     # quite likley if linearized [PDF 1.7] 7.5.8 & Annex F (Linearized PDF)
@@ -27,24 +26,30 @@ grammar PDF::Grammar::PDF is PDF::Grammar {
 
     rule indirect_reference {<integer> <integer> R}
 
-    # stream parsing - efficiency matters here
-    token stream_marker {stream<eol>}
-    # Hmmm allow endstream .. anywhere?
-    # Seems to be some chance of streams appearing where they're not
-    # supposed to, e.g. nested in a subdictionary
-    token endstream_marker {<eol>?endstream<ws_char>+}
-    rule stream {<dict> <stream_marker>.*?<endstream_marker>}
+    # stream parsing
+    rule stream_head {<dict> stream<eol>}
+    token stream_tail {<eol>?endstream<ws_char>+}
+    rule stream {<stream_head>.*?<stream_tail>}
 
-    rule xref {<PDF::Grammar::Xref::xref>}
+    rule  xref {xref<eol><xref_section>+}
+    token object_first_num{\d+}
+    token object_count{\d+}
+    rule  xref_section {<object_first_num>\x20<object_count><eol><xref_entry>+}
+    rule  xref_entry {<byte_offset>\x20<generation_number>\x20<obj_status><eol>}
+    token byte_offset {\d+}
+    token generation_number {\d+}
+    rule  obj_status {<obj_status_free>|<obj_status_inuse>}
+    token obj_status_free {f}
+    token obj_status_inuse {n}
 
     # the trailer contains the position of the cross reference
     # table plus the file trailer dictionary
     rule trailer {
-        trailer<eol><dict><eol>startxref<eol>(\d+)<eol>}
+        trailer<eol><dict><eol>startxref<eol>$<byte_offset>=(\d+)<eol>}
 
-    # file_trailer: special stand-alone regex for reverse matching
+    # pdf_tail: special stand-alone regex for reverse matching
     # trailer information from the end of the file. Typically used
     # when reading last few KB of a PDF to locate trailer information
-    regex file_trailer {<trailer>'%%EOF'<eol>?$}
+    regex pdf_tail {<trailer>'%%EOF'<eol>?$}
 
 }

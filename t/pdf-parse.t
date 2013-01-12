@@ -129,7 +129,7 @@ for (unix => $nix_pdf,
        or diag $_.value;
 
     # see of we can independently locate the trailer
-    ok($_.value ~~ /<PDF::Grammar::PDF::file_trailer>$/, "file_trailer match " ~ $_.key);
+    ok($_.value ~~ /<PDF::Grammar::PDF::pdf_tail>$/, "file_trailer match " ~ $_.key);
 }
 
 done;
