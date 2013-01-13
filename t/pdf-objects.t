@@ -7,30 +7,30 @@ use PDF::Grammar::PDF;
 for ('123', '43445', '+17', '-98', '0') {
     ok($_ ~~ /^<PDF::Grammar::PDF::integer>$/, "integer: $_");
     ok($_ ~~ /^<PDF::Grammar::PDF::number>$/, "number: $_");
-    ok($_ ~~ /^<PDF::Grammar::PDF::object>$/, "object: $_");
+    ok($_ ~~ /^<PDF::Grammar::PDF::operand>$/, "operand: $_");
 }
 # reals
 for ('1234567890.', '.0', '34.5', '-3.62', '+123.6', '4.', '-.002', '0.0') {
     ok($_ !~~ /^<PDF::Grammar::PDF::integer>$/, "not integer: $_");
     ok($_  ~~ /^<PDF::Grammar::PDF::number>$/, "number: $_");
-    ok($_ ~~ /^<PDF::Grammar::PDF::object>$/, "object: $_");
+    ok($_ ~~ /^<PDF::Grammar::PDF::operand>$/, "operand: $_");
 }
 # some invalid cases (exponential format not allowed)
 for ('', '123A', '.', '. 42', '16#FFFE', '6.02E23') {
     ok($_ !~~ /^<PDF::Grammar::PDF::number>$/, "not number: $_");
-    ok($_ !~~ /^<PDF::Grammar::PDF::object>$/, "not object: $_");
+    ok($_ !~~ /^<PDF::Grammar::PDF::operand>$/, "not operand: $_");
 }
 
 # bool
 for ('true', 'false') {
     ok($_ ~~ /^<PDF::Grammar::PDF::bool>$/, "bool: $_");
-    ok($_ ~~ /^<PDF::Grammar::PDF::object>$/, "object: $_");
+    ok($_ ~~ /^<PDF::Grammar::PDF::operand>$/, "operand: $_");
 }
 ok(''           !~~ /^<PDF::Grammar::PDF::bool>$/, 'not bool: blank');
 
 # hex strings
 ok('<Af309>'     ~~ /^<PDF::Grammar::PDF::hex_string>$/, 'hex: basic');
-ok('<Af309>'     ~~ /^<PDF::Grammar::PDF::object>$/, 'hex object: basic');
+ok('<Af309>'     ~~ /^<PDF::Grammar::PDF::operand>$/, 'hex operand: basic');
 ok('<4E6F762073686D6F7A206B6120706F702E>'     ~~ /^<PDF::Grammar::PDF::hex_string>$/, 'hex: example ');
 ok('<901FA3>'     ~~ /^<PDF::Grammar::PDF::hex_string>$/, 'hex: example 2a (90, 1F, A3)');
 ok('<901FA>'     ~~ /^<PDF::Grammar::PDF::hex_string>$/, 'hex: example 2b (90, 1F, A0)');
@@ -132,7 +132,7 @@ for (
     ok($_ ~~ /^<PDF::Grammar::PDF::name>$/, "name: $_");
 }
 
-ok('/Name1' ~~ /^<PDF::Grammar::PDF::object>$/, "object: /Name1");
+ok('/Name1' ~~ /^<PDF::Grammar::PDF::operand>$/, "operand: /Name1");
 ok('[/Name1]' ~~ /^<PDF::Grammar::PDF::array>$/, "array: [/Name1]");
 
 ok('/a[/b]/c' ~~ /^<PDF::Grammar::PDF::name><PDF::Grammar::PDF::array><PDF::Grammar::PDF::name>$/, "parse: /a[/b]/c");
@@ -189,7 +189,7 @@ for (empty1 => '<<>>', empty2 => '<< >>', trival => '<</id 42>>',
 }
 
 for ('/BaseFont/Times-Roman', '/Producer(AFPL Ghostscript 8.51)', '/X<</Y(42)>>', '/Z#20[[1]]', '/a/b%comment') {
-    ok($_ ~~ /^<PDF::Grammar::PDF::name><PDF::Grammar::PDF::object>$/, "name + object: $_");
+    ok($_ ~~ /^<PDF::Grammar::PDF::name><PDF::Grammar::PDF::operand>$/, "name + operand: $_");
 }
 
 my $empty_stream = "<< /Length 0 >>
@@ -287,7 +287,7 @@ my $ind_ref3 = '13 0 R';
 
 for ($ind_ref1, $ind_ref2, $ind_ref3) {
     ok($_ ~~ /^<PDF::Grammar::PDF::indirect_reference>$/, "indirect_reference: $_");
-    ok($_ ~~ /^<PDF::Grammar::PDF::object>$/, "object: $_");
+    ok($_ ~~ /^<PDF::Grammar::PDF::operand>$/, "operand: $_");
 }
 
 my $ind_obj4 = "7 0 obj
@@ -319,7 +319,7 @@ for ($ind_obj1, $ind_obj2, $ind_obj3, $ind_obj4, $ind_obj5, $ind_obj_fdf) {
 # null
 for ('null') {
     ok($_ ~~ /^<PDF::Grammar::PDF::null>$/, "null: $_");
-    ok($_ ~~ /^<PDF::Grammar::PDF::object>$/, "object: $_");
+    ok($_ ~~ /^<PDF::Grammar::PDF::operand>$/, "operand: $_");
 }
 
 done;
