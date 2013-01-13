@@ -96,17 +96,17 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
    # caller to disseminate
 
     method stream_head($/) {
-	make $<dict>.ast => $/.to;
+	make $<dict>.ast => $/.to + 1;
     }
 
     method stream_tail($/) {
-	make $/.from;
+	make $/.from - 1;
     }
 
     method stream($/) {
 	my %stream;
-	(%stream<atts>, %stream<stream_start>) = $<stream_head>.ast.kv;
-	%stream<stream_end> = $<stream_tail>.ast;
-	make %stream;
+	(%stream<atts>, %stream<start>) = $<stream_head>.ast.kv;
+	%stream<end> = $<stream_tail>.ast;
+	make (stream => %stream);
     }
 }
