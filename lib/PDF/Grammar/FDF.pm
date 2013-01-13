@@ -10,9 +10,9 @@ grammar PDF::Grammar::FDF is PDF::Grammar::PDF {
     rule TOP {<fdf>}
     rule fdf {^<fdf_header><eol>[<content>+]'%%EOF'<eol>?$}
 
-    token fdf_header {'%FDF-'(\d'.'\d)}
+    token fdf_header {'%FDF-'$<version>=(\d'.'\d)}
 
     rule trailer {
-        trailer<eol><dict><eol>(startxref<eol>\d+<eol>)?}
+        trailer<eol><dict><eol>(startxref<eol>$<byte_offset>=(\d+)<eol>)?}
 
 }
