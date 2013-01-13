@@ -24,7 +24,7 @@ PDF-Grammar has so far been tested against a limited sample of PDF documents
 and has not yet been put to use for any serious PDF processing. The grammar is still evolving and is likely to change.
 
 I have been working off the PDF 1.7 reference manual (http://wwwimages.adobe.com/www.adobe.com/content/dam/Adobe/en/devnet/pdf/pdfs/PDF32000_2008.pdf). I've
-been liberal, when needed, to handle real-world examples.
+relaxed rules, when needed, to handle real-world examples.
 
 Rakudo Star
 -----------
