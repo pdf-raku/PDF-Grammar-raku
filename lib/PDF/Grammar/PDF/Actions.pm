@@ -82,8 +82,8 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
 
     method xref_entry($/) {
 	my %entry;
-	%entry<byte_offset> = $<byte_offset>.Int;
-	%entry<generation_number> = $<generation_number>.Int;
+	%entry<offset> = $<byte_offset>.Int;
+	%entry<gen> = $<generation_number>.Int;
 	%entry<status> = $<obj_status>.Str;
 
 	make %entry;
