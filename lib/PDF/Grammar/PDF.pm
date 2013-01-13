@@ -17,12 +17,12 @@ grammar PDF::Grammar::PDF is PDF::Grammar {
     # xref section is optional - document could have a cross reference stream
     # quite likley if linearized [PDF 1.7] 7.5.8 & Annex F (Linearized PDF)
     rule content {<indirect_object>+<xref>?<trailer>}
-    rule indirect_object { <integer> <integer> obj <object>* endobj }
+    rule indirect_object { <integer> <integer> obj <operand>* endobj }
 
-    rule object { <stream> | <indirect_reference> | <operand> }
-    # override PDF::Grammar <array> and <dict> rules to include all objects
-    rule array {\[ <object>* \]}
-    rule dict {'<<' [<name> <object>]* '>>'}
+    rule operand { <stream> | <indirect_reference> | <number> | <bool> | <string> | <name> | <array> | <dict> | <null> }
+    # override PDF::Grammar <array> and <dict> rules to include all operands
+    rule array {\[ <operand>* \]}
+    rule dict {'<<' [<name> <operand>]* '>>'}
 
     rule indirect_reference {<integer> <integer> R}
 

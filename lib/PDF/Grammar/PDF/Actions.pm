@@ -8,9 +8,12 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
 
     method pdf($/) {
 	my %pdf;
+
+	%pdf<header> = $<pdf_header>.ast;
+
 	my @contents = $<content>.map({$_.ast});
 	%pdf<contents> = @contents;
-	%pdf<header> = $<pdf_header>.ast;
+
 	make %pdf;
     }
 
@@ -23,32 +26,32 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
 
     method indirect_reference($/) {
 	my @ind_ref = $/.caps.map({ $_.value.ast });
-	make @ind_ref;
+	make (ind_ref => @ind_ref);
     }
 
     method indirect_object($/) {
 	my @ind_obj = $/.caps.map({ $_.value.ast });
-	make @ind_obj;
+	make (ind_obj => @ind_obj);
     }
 
-    method object($/) {
-	my ($object) = $/.caps;
-	make $object.value.ast;
+    method operand($/) {
+	my ($operand) = $/.caps;
+	make $operand.value.ast;
     }
 
     method dict ($/) {
 	my @names = @<name>.map({ $_.ast });
-	my @objects = @<object>.map({ $_.ast });
+	my @operands = @<operand>.map({ $_.ast });
 
 	my %dict;
-	%dict{ @names } = @objects;
+	%dict{ @names } = @operands;
 
-	make (dict => %dict);
+	make %dict;
     }
 
     method array ($/) {
-	my @objects = @<object>.map({ $_.ast });
-	make @objects;
+	my @operands = @<operand>.map({ $_.ast });
+	make @operands;
     }
 
     method content($/) {
@@ -88,7 +91,7 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
 
    # stream_head, stream_tail:
    # we don't actually capture streams, which can be huge and represent the
-   # majority of content in a typical PDF. Rather we just return the byte
+   # majority of data in a typical PDF. Rather we just return the byte
    # offsets of the start and the end of the stream and leave it up to the
    # caller to disseminate
 
@@ -102,7 +105,7 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
 
     method stream($/) {
 	my %stream;
-	(%stream<dict>, %stream<stream_start>) = $<stream_head>.ast.kv;
+	(%stream<atts>, %stream<stream_start>) = $<stream_head>.ast.kv;
 	%stream<stream_end> = $<stream_tail>.ast;
 	make %stream;
     }
