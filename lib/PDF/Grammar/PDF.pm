@@ -19,10 +19,9 @@ grammar PDF::Grammar::PDF is PDF::Grammar {
     rule content {<indirect_object>+<xref>?<trailer>}
     rule indirect_object { <integer> <integer> obj <operand>* endobj }
 
+    # operand: overridden from base grammar
+    # - extend to allow streams and indirect object refs
     rule operand { <stream> | <indirect_reference> | <number> | <bool> | <string> | <name> | <array> | <dict> | <null> }
-    # override PDF::Grammar <array> and <dict> rules to include all operands
-    rule array {\[ <operand>* \]}
-    rule dict {'<<' [<name> <operand>]* '>>'}
 
     rule indirect_reference {<integer> <integer> R}
 
@@ -34,8 +33,8 @@ grammar PDF::Grammar::PDF is PDF::Grammar {
     rule  xref {xref<eol><xref_section>+}
     token object_first_num{\d+}
     token object_count{\d+}
-    rule  xref_section {<object_first_num>\x20<object_count><eol><xref_entry>+}
-    rule  xref_entry {<byte_offset>\x20<generation_number>\x20<obj_status><eol>}
+    rule  xref_section {<object_first_num> <object_count><eol><xref_entry>+}
+    rule  xref_entry {<byte_offset> <generation_number> <obj_status><eol>}
     token byte_offset {\d+}
     token generation_number {\d+}
     rule  obj_status {<obj_status_free>|<obj_status_inuse>}
