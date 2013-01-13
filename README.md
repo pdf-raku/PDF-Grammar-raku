@@ -9,7 +9,7 @@ description; there are areas which these can be put to use, including:
 images and graphical elements.
 
 PDF::Grammar is under construction as an experimental/example Perl6 grammar
-for parsing and validation of PDF components. It currently implements
+for parsing and validation of real-world PDF examples. It currently implements
 three grammars:
 
 `PDF::Grammar::Content` - is a description of the text and graphics operators that are used to produce page layout.
@@ -23,7 +23,8 @@ including headers, trailers, top-level objects and the cross reference table.
 PDF-Grammar has so far been tested against a limited sample of PDF documents
 and has not yet been put to use for any serious PDF processing. The grammar is still evolving and is likely to change.
 
-I have been working off the PDF 1.7 reference manual (http://wwwimages.adobe.com/www.adobe.com/content/dam/Adobe/en/devnet/pdf/pdfs/PDF32000_2008.pdf).
+I have been working off the PDF 1.7 reference manual (http://wwwimages.adobe.com/www.adobe.com/content/dam/Adobe/en/devnet/pdf/pdfs/PDF32000_2008.pdf). I've
+been liberal, when needed, to handle real-world examples.
 
 Rakudo Star
 -----------
