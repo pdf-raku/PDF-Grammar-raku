@@ -21,15 +21,16 @@ grammar PDF::Grammar::PDF is PDF::Grammar {
 
     # operand: overridden from base grammar
     # - extend to allow streams and indirect object refs
-    rule operand { <stream> | <indirect_reference> | <number> | <bool> | <string> | <name> | <array> | <dict> | <null> }
+    rule operand { <indirect_reference> | <number> | <bool> | <string> | <name> | <array> | [<dict><stream>?] | <null> }
 
     rule indirect_reference {<integer> <integer> R}
 
     # stream parsing
-    rule stream_head {<dict> stream<eol>}
+    rule stream_head { stream<eol>}
     token stream_tail {<eol>?endstream<ws_char>+}
     rule stream {<stream_head>.*?<stream_tail>}
 
+    # cross reference table
     rule  xref {xref<eol><xref_section>+}
     token object_first_num{\d+}
     token object_count{\d+}
@@ -49,6 +50,6 @@ grammar PDF::Grammar::PDF is PDF::Grammar {
     # pdf_tail: special stand-alone regex for reverse matching
     # trailer information from the end of the file. Typically used
     # when reading last few KB of a PDF to locate trailer information
-    regex pdf_tail {<trailer>'%%EOF'<eol>?$}
+    token pdf_tail {<trailer>'%%EOF'<eol>?$}
 
 }

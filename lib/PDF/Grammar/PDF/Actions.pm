@@ -21,7 +21,10 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
     method pdf_tail ($/) { make $<trailer>.ast }
 
     method trailer ($/) {
-	make $<byte_offset>.Int => $<dict>.ast;
+	my %trailer;
+	%trailer<dict> = $<dict>.ast;
+	%trailer<byte_offset> = $<byte_offset>.Int;
+	make (trailer => %trailer);
     }
 
     method indirect_reference($/) {
@@ -35,8 +38,18 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
     }
 
     method operand($/) {
-	my ($operand) = $/.caps;
-	make $operand.value.ast;
+	my ($operand, $stream) = $/.caps;
+	my $value = $operand.value.ast;
+
+	if ($stream) {
+	    my %stream;
+	    %stream<atts> = $value;
+	    (%stream<start>, %stream<end>) = $stream.value.ast.kv;
+	    make (stream => %stream)
+	}
+	else {
+	    make $value;
+	}
     }
 
     method dict ($/) {
@@ -96,7 +109,7 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
    # caller to disseminate
 
     method stream_head($/) {
-	make $<dict>.ast => $/.to + 1;
+	make $/.to + 1;
     }
 
     method stream_tail($/) {
@@ -104,9 +117,6 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
     }
 
     method stream($/) {
-	my %stream;
-	(%stream<atts>, %stream<start>) = $<stream_head>.ast.kv;
-	%stream<end> = $<stream_tail>.ast;
-	make (stream => %stream);
+	make ($<stream_head>.ast => $<stream_tail>.ast);
     }
 }

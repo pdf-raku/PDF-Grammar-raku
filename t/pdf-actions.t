@@ -15,16 +15,19 @@ my $indirect_obj1 = '1 0 obj
 endobj
 ';
 
-my $indirect_obj2 = '5 0 obj
-<< /Length 44 >>
+my $stream_content = 'BT
+  /F1 24 Tf  % useless comment
+  100 100 Td (Hello, world!) Tj
+ET';
+my $stream_length = $stream_content.chars;
+
+my $indirect_obj2 = "5 0 obj
+<< /Length $stream_length >>
 stream
-BT
-/F1 24 Tf
-100 100 Td (Hello, world!) Tj
-ET
+$stream_content
 endstream
 endobj
-';
+";
 
 my $body = $indirect_obj1 ~
 $indirect_obj2 ~

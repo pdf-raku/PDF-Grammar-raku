@@ -4,13 +4,11 @@ use Test;
 
 use PDF::Grammar::FDF;
 
-# Minimal grammar for matching an FDF - Form Data Exchange file.
-
-my $fdf_minimal = '%FDF-1.2
+my $fdf_small = '%FDF-1.2
 %âãÏÓ
 1 0 obj
 <</FDF
-    << /F (minimal.pdf) /Fields [] >>
+    << /F (small.pdf) /Fields [<</T(barcode)/V(*TEST-1234*)>>] >>
 >>
 endobj
 trailer
@@ -28,7 +26,7 @@ trailer
 %%EOF
 END_END_END
 
-for (minimal => $fdf_minimal, real => $fdf_body) {
+for (small => $fdf_small, real => $fdf_body) {
     my $p = PDF::Grammar::FDF.parse($_.value);
 
     ok($p, "fdf parse " ~ $_.key)

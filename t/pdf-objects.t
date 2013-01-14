@@ -267,9 +267,9 @@ for (empty => $empty_stream, tiny => $stream1, content => $stream2,
      sizable => $stream6) {
     my $test = $_.key;
     my $val = $_.value;
-    ok($val ~~ /^<PDF::Grammar::PDF::stream_head>/, "$test stream - head match");
+    ok($val ~~ /^<PDF::Grammar::PDF::dict> <PDF::Grammar::PDF::stream_head>/, "$test stream - head match");
     ok($val ~~ /<PDF::Grammar::PDF::stream_tail>$/, "$test stream - tail match");
-    ok("$val endobj" ~~ /^<PDF::Grammar::PDF::stream>'endobj'$/, "$test stream - full match")
+    ok("$val endobj" ~~ /^<PDF::Grammar::PDF::dict> <PDF::Grammar::PDF::stream>'endobj'$/, "$test stream - full match")
     or diag $val;
 }
 
