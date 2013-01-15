@@ -47,15 +47,12 @@ grammar PDF::Grammar {
     rule string {<hex_string>|<literal_string>}
 
     token name_char_number_symbol { '##' }
-    # name escapes are strictly two hex characters
     token name_char_escaped { '#'<hex_char> }
-    # all printable but '#', '/', '[', ']',
-##  not having any luck with the following regex; me? rakudo-star? (2012.11)
-##   token name_char_printable { <[\!..\~] - [\[\#\]\//\(\)\<\>]> }
-##  .. rather more ungainly...
-    token name_chars_printable { <[a..z A..Z 0..9 \! \" \$..\' \*..\. \: \; \= \? \@ _ \^ \' \{ \| \} \~]>+ }
+    # [PDF 1.7] 7.2.2 Character Set
+    regex delimiter_character {<[ \( \) \< \> \[ \] \{ \} \/ \%]>}
+    token name_chars_regular{ [<!delimiter_character><[\! .. \~]>]+ }
 
-    rule name { '/'[<name_chars_printable>|<name_char_escaped>|<name_char_number_symbol>]+ }
+    rule name { '/'[<name_chars_regular>|<name_char_escaped>|<name_char_number_symbol>]+ }
 
     # [PDF 1.7] 7.3.2  Boolean objects + Null object
     # ---------------

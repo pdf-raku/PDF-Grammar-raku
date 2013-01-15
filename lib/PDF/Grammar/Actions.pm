@@ -9,11 +9,15 @@ class PDF::Grammar::Actions {
 	my $result = 0;
 
 	for $oct.split('') {
-	    die "illegal octal char: $_"
+
+	    # our grammar shouldn't allow this
+	    die "illegal octal digit: $_"
 		unless $_ ge '0' && $_ le '7';
+
 	    $result *= 8;
 	    $result += $_;
 	}
+
 	return $result;
     }
 
@@ -28,7 +32,7 @@ class PDF::Grammar::Actions {
 
 	    my $hex_digit;
 
-	    if ($_ ~~ /\d/) {
+	    if ($_ ge '0' && $_ le '9') {
 		$hex_digit = $_;
 	    }
 	    elsif ($_ ge 'A' && $_ le 'F') {
@@ -59,7 +63,7 @@ class PDF::Grammar::Actions {
 	make $number;
     }
     method hex_char($/) {
-	make chr( _from_hex($/.Str))
+	make chr( _from_hex($/.Str) )
     }
 
     method name_char_number_symbol($/) {
@@ -68,8 +72,8 @@ class PDF::Grammar::Actions {
     method name_char_escaped($/) {
 	make $<hex_char>.ast;
     }
-    method name_chars_printable($/) {
-	make $/;
+    method name_chars_regular($/) {
+	make $/.Str;
     }
 
     method name ($/) {
@@ -87,16 +91,22 @@ class PDF::Grammar::Actions {
        my $char;
 
        if $<char_code> {
-	   $char =  {n => "\n", r => "\r", t => "\t",
-		     b => "\b", f => "\f",
-		     '(' => '(', ')' => ')'}{ $<char_code> }
-			 or die "unhandled escape character \$<char_code>";
-
+	   $char =  {
+		     b   => "\b", 
+                     f   => "\f",
+                     n   => "\n",
+                     r   => "\r",
+                     t   => "\t",
+		     '(' => '(',
+                     ')' => ')'
+           }{ $<char_code> }
+	       or die "illegal escape character \$<char_code>";
        }
        elsif $<octal_code> {
 	   $char =  chr( _from_octal( $<octal_code> ) );
        }
        else {
+	   # silently consume stray '\'
 	   $char = '';
        }
 
@@ -105,7 +115,6 @@ class PDF::Grammar::Actions {
 
     method literal_string ($/) {
 	make $/.caps.map({
-
 	    my $token = $_;
 
 	    given $token.key {

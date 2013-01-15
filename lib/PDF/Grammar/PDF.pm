@@ -4,7 +4,7 @@ use PDF::Grammar;
 
 grammar PDF::Grammar::PDF is PDF::Grammar {
     #
-    # An experimental Perl6  grammar for scanning the basic outer block
+    # An experimental Perl6  grammar for describing the basic block
     # structure of PDF documents.
     #
     rule TOP {<pdf>}
@@ -49,7 +49,7 @@ grammar PDF::Grammar::PDF is PDF::Grammar {
 
     # pdf_tail: special stand-alone regex for reverse matching
     # trailer information from the end of the file. Typically used
-    # when reading last few KB of a PDF to locate trailer information
+    # when reading last few KB of a PDF to locate root resources
     token pdf_tail {<trailer>'%%EOF'<eol>?$}
 
 }

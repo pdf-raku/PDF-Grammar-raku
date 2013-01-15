@@ -38,17 +38,17 @@ my @tests = (
     'hex_char',                '6D',               'm',
     'name_char_escaped',       '#6E',              'n'
 ,
-    'name_chars_printable',    'snoopy',           'snoopy',
+    'name_chars_regular',      'snoopy',           'snoopy',
     'name',                    '/snoopy',          'snoopy',
     'name',                    '/s#6Eo#6fpy',      'snoopy',
 
     'hex_string',              '<736E6F6f7079>',   'snoopy',
 
-    'literal_string',          '(hello world\41)',     'hello world!',
-    'literal_string',          '(hi\nagain)',          "hi\nagain",
-    'literal_string',          "(hi\r\nagain)",        "hi\nagain",
-    'literal_string',          '(perl(6) rocks!)',     'perl(6) rocks!',
-    'literal_string',          "(continued\\\n line)", 'continued line',
+    'literal_string',          '(hello world\41)',      'hello world!',
+    'literal_string',          '(hi\nagain)',           "hi\nagain",
+    'literal_string',          "(hi\r\nagain)",         "hi\nagain",
+    'literal_string',          '(perl(6) rocks! :-\))', 'perl(6) rocks! :-)',
+    'literal_string',          "(continued\\\n line)",  'continued line',
 
     'string',                  '(hi)',             'hi',
     'string',                  "<68\n69>",         'hi',
