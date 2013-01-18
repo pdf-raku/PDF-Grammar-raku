@@ -1,6 +1,6 @@
 use v6;
 
-grammar PDF::Grammar {
+grammar PDF::Grammar:ver<0.0.1> {
     # abstract base grammar for PDF Elements, see instances:
     # PDF::Grammar::Content  - Text and Graphics Content
     # PDF::Grammar::FDF      - Describes FDF (Form Data) files
@@ -49,8 +49,8 @@ grammar PDF::Grammar {
     token name_char_number_symbol { '##' }
     token name_char_escaped { '#'<hex_char> }
     # [PDF 1.7] 7.2.2 Character Set
-    regex delimiter_character {<[ \( \) \< \> \[ \] \{ \} \/ \%]>}
-    token name_chars_regular{ [<!delimiter_character><[\! .. \~]>]+ }
+    regex delimiter_character {<[ \( \) \< \> \[ \] \{ \} \/ \% ]>}
+    token name_chars_regular{ [<[\! .. \~] - delimiter_character>]+ }
 
     rule name { '/'[<name_chars_regular>|<name_char_escaped>|<name_char_number_symbol>]+ }
 
