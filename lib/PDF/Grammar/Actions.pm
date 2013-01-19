@@ -57,12 +57,28 @@ class PDF::Grammar::Actions {
     method bool($/) {
 	make $/.Str eq 'true';
     }
-    method real($/) {make $/.Num}
-    method integer($/) {make $/.Int}
+
+    method real($/) {
+	my $num = $/.Num
+	    does PDF::Grammar::Attributes;
+
+	$num.pdf_subtype = 'real';
+	make $num;
+    }
+
+    method integer($/) {
+	my $num = $/.Int
+	    does PDF::Grammar::Attributes;
+
+	$num.pdf_subtype = 'integer';
+	make $num;
+    }
+
     method number ($/) {
 	my $number = ($<real> || $<integer>).ast;
 	make $number;
     }
+
     method hex_char($/) {
 	make chr( _from_hex($/.Str) )
     }
@@ -82,7 +98,11 @@ class PDF::Grammar::Actions {
     }
 
     method hex_string ($/) {
-	make $/.caps.grep({$_.key eq 'hex_char'}).map({ $_.value.ast }).join('')
+	my $string = $/.caps.grep({$_.key eq 'hex_char'}).map({ $_.value.ast }).join('')
+	    does PDF::Grammar::Attributes;
+
+        $string.pdf_subtype = 'hex';
+	make $string;
     }
 
     method literal_chars($/) { make $/.Str }
@@ -115,7 +135,7 @@ class PDF::Grammar::Actions {
     }
 
     method literal_string ($/) {
-	make $/.caps.map({
+	my $string = $/.caps.map({
 	    my $token = $_;
 
 	    given $token.key {
@@ -124,7 +144,12 @@ class PDF::Grammar::Actions {
                 when 'literal_string' {'(' ~ $token.value.ast ~ ')'}
 		default { $token.value.ast} }
                 
-	 }).join('')
+	 }).join('');
+
+	$string does PDF::Grammar::Attributes;
+
+        $string.pdf_subtype = 'literal';
+	make $string;
     }
 
     method string ($/) {
@@ -154,7 +179,6 @@ class PDF::Grammar::Actions {
 	    does PDF::Grammar::Attributes;
 
 	$operand.pdf_type = $_operand.key;
-
 	make $operand;
     }
 }
