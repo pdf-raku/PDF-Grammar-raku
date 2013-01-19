@@ -175,8 +175,11 @@ class PDF::Grammar::Actions {
     method operand($/) {
 	my ($_operand) = $/.caps;
 
-	my $operand =  $_operand.value.ast
-	    does PDF::Grammar::Attributes;
+	my $operand =  $_operand.value.ast;
+
+	$operand
+	    does PDF::Grammar::Attributes
+	    unless $operand.can('pdf_type'); 
 
 	$operand.pdf_type = $_operand.key;
 	make $operand;

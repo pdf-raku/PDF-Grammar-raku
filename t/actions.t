@@ -59,26 +59,36 @@ my @tests = (
     'number',                  '42',                42,
     'number',                  '12.5',              12.5,
 
-    'operand' => 'string',     '(hi)',              'hi',
+    'operand' => ['string',
+		  'literal'],  '(hi)',              'hi',
 
-    'operand' => 'number',     '-042',              -42,
+    'operand' => ['string',
+		  'hex'],      '<6869>',            'hi',
 
-    'operand' => 'dict',       '<</Length 42>>',    {Length => 42},
+    'operand' => ['number',
+		  'integer'],  '-042',             -42,
 
-    'operand' => 'array',      '[/Apples(oranges)]',['apples', 'oranges'],
+    'operand' => ['number',
+		  'real'],     '+3.50',             3.5,
 
-    'operand' => 'bool',       'true',              1,
-    'operand' => 'bool',       'false',             0,
-    'operand' => 'dict',       '<</Length 42>>',    {Length => 42},
+    'operand' => ['dict'],     '<</Length 42>>',    {Length => 42},
+
+    'operand' => ['array'],    '[/Apples(oranges)]',['apples', 'oranges'],
+
+    'operand' => ['bool'],     'true',              1,
+    'operand' => ['bool'],     'false',             0,
+    'operand' => ['dict'],     '<</Length 42>>',    {Length => 42},
 
     );
 
 for @tests -> $_rule, $string, $expected_result {
     my $expected_type;
+    my $expected_subtype;
     my $rule;
 
     if $_rule.isa('Pair') {
-	($rule, $expected_type) = $_rule.kv;
+	($rule, my $type) = $_rule.kv;
+	($expected_type, $expected_subtype) = @$type;
     }
     else {
 	$rule = $_rule;
@@ -101,6 +111,20 @@ for @tests -> $_rule, $string, $expected_result {
 	    is($result.pdf_type, $expected_type, $test);
 	}
 	else {
+	    diag "$rule - doesn't do .pdf_type";
+	    fail( $test );
+	}
+    }
+
+    if ($expected_subtype) {
+	my $test = "rule $rule: $string has subtype $expected_subtype";
+	if $result.can('pdf_subtype') {
+	    diag "type: " ~ $result.pdf_type;
+	    diag "subtype: " ~ $result.pdf_subtype;
+	    is($result.pdf_subtype, $expected_subtype, $test);
+	}
+	else {
+	    diag "$rule - doesn't do .pdf_subtype";
 	    fail( $test );
 	}
     }
