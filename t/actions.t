@@ -4,6 +4,7 @@ use Test;
 
 use PDF::Grammar;
 use PDF::Grammar::Actions;
+use PDF::Grammar::Attributes;
 
 my $sample_content1 = '(Hello\nWorld\043) Tj';
 
@@ -58,9 +59,31 @@ my @tests = (
     'number',                  '42',                42,
     'number',                  '12.5',              12.5,
 
+    'operand' => 'string',     '(hi)',              'hi',
+
+    'operand' => 'number',     '-042',              -42,
+
+    'operand' => 'dict',       '<</Length 42>>',    {Length => 42},
+
+    'operand' => 'array',      '[/Apples(oranges)]',['apples', 'oranges'],
+
+    'operand' => 'bool',       'true',              1,
+    'operand' => 'bool',       'false',             0,
+    'operand' => 'dict',       '<</Length 42>>',    {Length => 42},
+
     );
 
-for @tests -> $rule, $string, $expected_result {
+for @tests -> $_rule, $string, $expected_result {
+    my $expected_type;
+    my $rule;
+
+    if $_rule.isa('Pair') {
+	($rule, $expected_type) = $_rule.kv;
+    }
+    else {
+	$rule = $_rule;
+    }
+
     my $p = PDF::Grammar.parse($string, :rule($rule), :actions($actions));
     die ("unable to parse as $rule: $string")
 	unless $p;
@@ -71,22 +94,32 @@ for @tests -> $rule, $string, $expected_result {
     else {
 	is($result, $expected_result, "rule $rule: $string => $expected_result");
     }
+
+    if ($expected_type) {
+	my $test = "rule $rule: $string has type $expected_type";
+	if $result.can('pdf_type') {
+	    is($result.pdf_type, $expected_type, $test);
+	}
+	else {
+	    fail( $test );
+	}
+    }
 }
 
 my $p = PDF::Grammar.parse('<</MoL 42>>', :rule('dict'), :actions($actions));
 
-my $dict = $p.ast;
+my %dict = $p.ast;
 my $dict_eqv = {'MoL' => 42};
 
-ok($dict eqv $dict_eqv, "dict structure")
-    or diag {dict => $dict, eqv => $dict_eqv}.perl;
+is(%dict, $dict_eqv, "dict structure")
+    or diag {dict => %dict, eqv => $dict_eqv}.perl;
 
 $p = PDF::Grammar.parse('[ 42 (snoopy) <</foo (bar)>>]', :rule('array'), :actions($actions));
 my $array = $p.ast;
 
 my $array_eqv = [42, 'snoopy', {foo => 'bar'}];
 
-ok($array eqv $array_eqv, "array structure")
+is($array, $array_eqv, "array structure")
     or diag {array => $array, eqv => $array_eqv}.perl;
 
 done;

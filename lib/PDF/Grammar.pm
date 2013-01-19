@@ -1,6 +1,6 @@
 use v6;
 
-grammar PDF::Grammar:ver<0.0.1> {
+grammar PDF::Grammar:ver<0.0.2> {
     # abstract base grammar for PDF Elements, see instances:
     # PDF::Grammar::Content  - Text and Graphics Content
     # PDF::Grammar::FDF      - Describes FDF (Form Data) files
@@ -34,7 +34,9 @@ grammar PDF::Grammar:ver<0.0.1> {
     token char_code  {<[nrtbf\(\)\\]>}
     token escape_seq { '\\'[<octal_code>|<char_code>]? }
     # literal_character - all but '(' ')' '\'
-    token literal_chars { <-[\(\)\\\n\r]>+ }
+    token printable_char{<[\! .. \~]>+}
+    token literal_escaped {<[ \( \) \\ \n \r ]>}
+    token literal_chars { <-literal_escaped>+ }
     # nb
     # -- new-lines are acceptable within strings
     # -- nested parenthesis are acceptable - allow recursive substrings
@@ -49,8 +51,8 @@ grammar PDF::Grammar:ver<0.0.1> {
     token name_char_number_symbol { '##' }
     token name_char_escaped { '#'<hex_char> }
     # [PDF 1.7] 7.2.2 Character Set
-    regex delimiter_character {<[ \( \) \< \> \[ \] \{ \} \/ \% ]>}
-    token name_chars_regular{ [<[\! .. \~] - delimiter_character>]+ }
+    regex delimiter_char {<[ \( \) \< \> \[ \] \{ \} \/ \% ]>}
+    token name_chars_regular{ [<[\! .. \~] - delimiter_char>]+ }
 
     rule name { '/'[<name_chars_regular>|<name_char_escaped>|<name_char_number_symbol>]+ }
 

@@ -1,6 +1,7 @@
 use v6;
 
 # rules for constructing operand values for PDF::Grammar
+use PDF::Grammar::Attributes;
 
 class PDF::Grammar::Actions {
 
@@ -147,7 +148,13 @@ class PDF::Grammar::Actions {
     }
 
     method operand($/) {
-	my ($operand) = $/.caps;
-	make $operand.value.ast;
+	my ($_operand) = $/.caps;
+
+	my $operand =  $_operand.value.ast
+	    does PDF::Grammar::Attributes;
+
+	$operand.pdf_type = $_operand.key;
+
+	make $operand;
     }
 }

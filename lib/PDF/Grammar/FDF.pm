@@ -4,7 +4,7 @@ use PDF::Grammar::PDF;
 
 grammar PDF::Grammar::FDF is PDF::Grammar::PDF {
     #
-    # An experimental Perl6  grammar for scanning the basic outer block
+    # An experimental Perl6 grammar for scanning the basic outer block
     # structure of FDF form data exchange files.
     #
     rule TOP {<fdf>}

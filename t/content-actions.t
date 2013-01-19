@@ -122,7 +122,7 @@ for ([$sample_content1, $expected1], [$sample_content2, $expected2],
        or do {diag ("unable to parse: $str"); next}
     my $result = $p.ast; 
     if ($eqv) {
-       ok($result eqv $eqv, "result as expected")
+       is($result, $eqv, "result as expected")
            or diag {expected => $eqv, actual => $result}.perl;
     }
 }

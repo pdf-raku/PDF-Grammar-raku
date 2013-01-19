@@ -302,7 +302,9 @@ endstream
 endobj";
 
 my $ind_obj5 = '8 0 obj
+% hello
 77% The length of the preceding stream
+% goodbye
 endobj';
 
 my $ind_obj_fdf = '1 0 obj
@@ -311,9 +313,10 @@ my $ind_obj_fdf = '1 0 obj
 >>
 endobj';
 
-for ($ind_obj1, $ind_obj2, $ind_obj3, $ind_obj4, $ind_obj5, $ind_obj_fdf) {
-    ok($_ ~~ /^<PDF::Grammar::PDF::indirect_object>$/, "indirect_object")
-        or diag $_;
+for (simple => $ind_obj1, empty => $ind_obj2, squashed => $ind_obj3,
+     stream => $ind_obj4, comments => $ind_obj5, fdf => $ind_obj_fdf) {
+    ok($_.value ~~ /^<PDF::Grammar::PDF::indirect_object>$/, "indirect_object - " ~ $_.key)
+        or diag $_.value;
 }
 
 # null
