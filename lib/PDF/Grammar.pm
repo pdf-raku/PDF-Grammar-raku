@@ -10,8 +10,7 @@ grammar PDF::Grammar:ver<0.0.3> {
     # [PDF 1.7] 7.2.2 Character Set + 7.2.3 Comment characters
     # ---------------
     # This <ws> rule treats % as "comment to eol".
-    token ws_char {"\n" | "\t" | "\o12" | "\f" | "\r" | " "}
-    token ws_seq {'%' <- eol>* <eol>? | }
+    token ws_char {'%' <- eol>* <eol>? | "\n" | "\t" | "\o12" | "\f" | "\r" | " "}
 
     token ws {
 	<!ww>

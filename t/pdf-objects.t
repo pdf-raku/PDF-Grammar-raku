@@ -39,9 +39,6 @@ ok('<304B66CBD3DCBEC4CA8EA2B66D8DACF1F6FBC1D2E2A4B2C052708FE9EBED4F62
 77BFD5EB7A99B8A4BBD26A7B8DDEE9F5B6CEE744586E8AA7C5C4D7EC97B4D2FF>'  ~~ /^<PDF::Grammar::PDF::hex_string>$/, 'hex: multiline');
 
 # - hex strings - counter examples
-ok('< ABC123>'         !~~ /^<PDF::Grammar::PDF::hex_string>$/, 'not hex whitespace lhs');
-ok('<ABC123 >'         !~~ /^<PDF::Grammar::PDF::hex_string>$/, 'not hex whitespace rhs');
-ok('<>'         !~~ /^<PDF::Grammar::PDF::hex_string>$/, 'not hex empty');
 ok('<x>'        !~~ /^<PDF::Grammar::PDF::hex_string>$/, 'not hex illegal char');
 
 # literal strings
