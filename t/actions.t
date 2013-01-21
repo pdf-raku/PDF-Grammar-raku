@@ -31,6 +31,13 @@ for %escape_char_mappings.kv -> $escape_seq, $expected_result {
 
 my @tests = (
 #    rule                      input               result
+
+    'ws',                      ' ',                Any,
+    'ws',                      "  \r\n \t",        Any,
+    'ws',                      " %hi\r",           Any,
+    'ws',                      "\%XX\n \%\%YYY\n", Any,
+    'ws',                      '\%bye',            Any,
+
     'null',                    'null',             Any,
     'bool',                    'true',             True,
     'bool',                    'false',            False,
