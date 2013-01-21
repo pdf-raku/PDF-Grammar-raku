@@ -27,7 +27,7 @@ grammar PDF::Grammar::PDF is PDF::Grammar {
 
     # stream parsing
     rule stream_head { stream<eol>}
-    token stream_tail {<eol>?endstream<ws_char>+}
+    token stream_tail {<eol>?endstream<ws_seq>+}
     rule stream {<stream_head>.*?<stream_tail>}
 
     # cross reference table

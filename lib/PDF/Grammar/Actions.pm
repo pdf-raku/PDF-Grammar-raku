@@ -24,9 +24,6 @@ class PDF::Grammar::Actions {
 
     sub _from_hex($hex) {
 
-	$hex ~= '0'
-	    unless $hex.chars >= 2;
-
 	my $result = 0;
 
 	for $hex.split('') {
@@ -50,6 +47,7 @@ class PDF::Grammar::Actions {
 	    $result *= 16;
 	    $result += $hex_digit;
 	}
+	$result *= 16 if $hex.chars < 2;
 	return $result;
     }
 
@@ -98,7 +96,9 @@ class PDF::Grammar::Actions {
     }
 
     method hex_string ($/) {
-	my $string = $/.caps.grep({$_.key eq 'hex_char'}).map({ $_.value.ast }).join('')
+	my $xdigits = $/.caps.grep({$_.key eq 'xdigit'}).map({$_.value}).join('');
+	my @hex_codes = $xdigits.comb(/..?/).map({ _from_hex ($_) });
+	my $string = @hex_codes.map({ chr($_) }).join('')
 	    does PDF::Grammar::Attributes;
 
         $string.pdf_subtype = 'hex';

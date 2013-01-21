@@ -39,6 +39,7 @@ my @tests = (
     'ws',                      '\%bye',            Any,
 
     'null',                    'null',             Any,
+
     'bool',                    'true',             True,
     'bool',                    'false',            False,
 
@@ -57,9 +58,12 @@ my @tests = (
     'literal_string',          "(hi\r\nagain)",         "hi\nagain",
     'literal_string',          '(perl(6) rocks! :-\))', 'perl(6) rocks! :-)',
     'literal_string',          "(continued\\\n line)",  'continued line',
+    'literal_string',          "(try\\\n\\\n%this\\\n)",'try%this',
 
     'string',                  '(hi)',             'hi',
     'string',                  "<68\n69>",         'hi',
+    'string',                  "<6\n869>",         'hi',
+    'string',                  "<68\n7>",          'hp',
 
     'integer',                 '42',                42,
     'real',                    '12.5',              12.5,
@@ -80,10 +84,10 @@ my @tests = (
 
     'operand' => ['dict'],     '<</Length 42>>',    {Length => 42},
 
-    'operand' => ['array'],    '[/Apples(oranges)]',['apples', 'oranges'],
+    'operand' => ['array'],    '[/Apples(oranges)]',['Apples', 'oranges'],
 
-    'operand' => ['bool'],     'true',              1,
-    'operand' => ['bool'],     'false',             0,
+    'operand' => ['bool'],     'true',              True,
+    'operand' => ['bool'],     'false',             False,
     'operand' => ['dict'],     '<</Length 42>>',    {Length => 42},
 
     );
@@ -105,11 +109,11 @@ for @tests -> $_rule, $string, $expected_result {
     die ("unable to parse as $rule: $string")
 	unless $p;
     my $result = $p.ast;
-    if ($expected_result.isa('Any')) {
-	ok($result.isa('Any'), "rule $rule: $string => (Any)");
+    if defined $expected_result {
+	is($result, $expected_result, "rule $rule: $string => $expected_result");
     }
     else {
-	is($result, $expected_result, "rule $rule: $string => $expected_result");
+	ok($result.isa('Any'), "rule $rule: $string => (Any)");
     }
 
     if ($expected_type) {

@@ -10,7 +10,8 @@ grammar PDF::Grammar:ver<0.0.2> {
     # [PDF 1.7] 7.2.2 Character Set + 7.2.3 Comment characters
     # ---------------
     # This <ws> rule treats % as "comment to eol".
-    token ws_char {['%' <- eol>* <eol>? | "\n" | "\t" | "\o12" | "\f" | "\r" | " "]}
+    token ws_char {"\n" | "\t" | "\o12" | "\f" | "\r" | " "}
+    token ws_seq {'%' <- eol>* <eol>? | }
 
     token ws {
 	<!ww>
@@ -44,14 +45,14 @@ grammar PDF::Grammar:ver<0.0.2> {
 
     # hex strings
     token hex_char {<xdigit>**1..2}
-    token hex_string { \<<hex_char>[<hex_char>|<eol>]*\> }
+    token hex_string { \< [<xdigit>|<ws_char>]* \> }
 
     rule string {<hex_string>|<literal_string>}
 
     token name_char_number_symbol { '##' }
     token name_char_escaped { '#'<hex_char> }
     # [PDF 1.7] 7.2.2 Character Set
-    regex delimiter_char {<[ \( \) \< \> \[ \] \{ \} \/ \% ]>}
+    regex delimiter_char {<[ \( \) \< \> \[ \] \{ \} \/ \% \# ]>}
     token name_chars_regular{ [<[\! .. \~] - delimiter_char>]+ }
 
     rule name { '/'[<name_chars_regular>|<name_char_escaped>|<name_char_number_symbol>]+ }
