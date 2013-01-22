@@ -113,7 +113,7 @@ for (
     CurveTo2 => '.1 .2 .3 .4 y',
 
     MoveSetShowText => '10 20 (hi) "',      # "         moveShow
-    MoveShowText => "(hello) '",         # '         show
+    MoveShowText => "(hello) '",            # '         show
 
     ) {
     ok($_.value ~~ /^<PDF::Grammar::Content::instruction>$/, "instruction " ~ $_.key)
@@ -136,15 +136,15 @@ for (
     'too few args' =>'20 (hi) "',      
     'type mismatch (wrong order)' =>'10 (hi) 20 "',   
     'unknown operator' =>'crud',           
-    'unbalanced text block' =>'B ET',           
-    'unbalanced text block' =>'BT B',           
-    'unbalanced text block' =>'BT B ET ET',     
-    'Text block incomplete content' =>'BT 42 ET',       
-    'Text block nested' =>'BT BT ET ET',    
+    'Text block - unclosed' =>'BT B',           
+    'Text block - unopened' =>'B ET',           
+    'Text block - extra end' =>'BT B ET ET',     
+    'Text block - incomplete content' =>'BT 42 ET',       
+    'Text block - nested' =>'BT BT ET ET',    
     'Marked content - incorrect text nesting' =>'/foo BMC BT EMC ET',     
     'Marked content - nested' =>'/bar BMC /baz BMC B* EMC EMC',  
     'Marked content - extra end' =>'/foo BMC BT ET EMC EMC',   
-    'Marked content mising arg' =>'/BMC BT B* ET EMC',        
+    'Marked content - mising arg' =>'/BMC BT B* ET EMC',        
     'Marked content - incomplete contents' =>'/baz BMC (hi) EMC',        
 ##todo    'BX BX EX',                 # BX ... EX incorrect nesting (extra BX)
     'BX ... EX incorrect nesting (extra EX)' =>'BX EX EX',                 

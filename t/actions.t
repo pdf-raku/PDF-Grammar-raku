@@ -6,8 +6,6 @@ use PDF::Grammar;
 use PDF::Grammar::Actions;
 use PDF::Grammar::Attributes;
 
-my $sample_content1 = '(Hello\nWorld\043) Tj';
-
 my %escape_char_mappings = (
     '\n'   => "\n", 
     '\r'   => "\r", 
@@ -113,7 +111,7 @@ for @tests -> $_rule, $string, $expected_result {
 	is($result, $expected_result, "rule $rule: $string => $expected_result");
     }
     else {
-	ok($result.isa('Any'), "rule $rule: $string => (Any)");
+	ok(! defined($result), "rule $rule: $string => (undef)");
     }
 
     if ($expected_type) {
