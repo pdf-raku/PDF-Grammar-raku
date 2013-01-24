@@ -2,12 +2,15 @@
 
 use Test;
 use PDF::Grammar::PDF;
+use PDF::Grammar::PDF::Actions;
 
 for ('%PDF-1.0', '%PDF-1.7') {
     ok($_ ~~ /^<PDF::Grammar::PDF::pdf_header>$/, "pdf_header: $_");
 }
 
-my $header = '%PDF-1.0';
+my $pdf_header_version = 1.5;
+my $header = "%PDF-{$pdf_header_version}";
+
 ok($header ~~ /^<PDF::Grammar::PDF::pdf_header>$/, "pdf_header: $header");
 
 my $indirect_obj1 = '1 0 obj
@@ -120,16 +123,31 @@ $xref$trailer%\%EOF";
 # changes byte offsets and corrupts the xref table
 (my $ms_dos_pdf = $nix_pdf)  ~~ s:g/\n/\r\n/;
 
+my $actions = PDF::Grammar::PDF::Actions.new;
+
 for (unix => $nix_pdf,
      bin_comments => $bin_commented_pdf,
      edit_history => $edited_pdf,
      mac_osx_formatted => $mac_osx_pdf,
      ms_dos_formatted => $ms_dos_pdf) {
-     ok(PDF::Grammar::PDF.parse($_.value), "pdf parse - " ~ $_.key)
+     my $p = PDF::Grammar::PDF.parse($_.value, :actions($actions));
+     ok($p, "pdf parse - " ~ $_.key)
        or diag $_.value;
 
-    # see of we can independently locate the trailer
-    ok($_.value ~~ /<PDF::Grammar::PDF::pdf_tail>$/, "file_trailer match " ~ $_.key);
+     my $pdf = $p.ast;
+     is($pdf<header>, $pdf_header_version, "pdf version - as expected");
+     ok($pdf<content>, "pdf has content");
+
+# ++To do
+#     # see if we can independently locate the trailer
+#     my $tail_p = PDF::Grammar::PDF.parse($_.value, :rule('pdf_tail'), :actions($actions));
+#     ok($tail_p, "pdf tail parse - " ~ $_.key)
+#       or diag substr($_.value, *-80) ~ '...';
+#     my $trailer = $tail_p.ast;
+# --To do
+
+   # see of we can independently locate the trailer
+   ok($_.value ~~ /<PDF::Grammar::PDF::pdf_tail>/, "file_trailer match " ~ $_.key);
 }
 
 done;

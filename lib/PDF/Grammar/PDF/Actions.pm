@@ -6,13 +6,15 @@ use PDF::Grammar::Actions;
 
 class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
 
+    method TOP($/) { make $<pdf>.ast }
+
     method pdf($/) {
 	my %pdf;
 
 	%pdf<header> = $<pdf_header>.ast;
 
 	my @contents = $<content>.map({$_.ast});
-	%pdf<contents> = @contents;
+	%pdf<content> = @contents;
 
 	make %pdf;
     }
