@@ -35,7 +35,7 @@ grammar PDF::Grammar::PDF is PDF::Grammar {
     token object_first_num{\d+}
     token object_count{\d+}
     rule  xref_section {<object_first_num> <object_count><eol><xref_entry>+}
-    rule  xref_entry {<byte_offset> <generation_number> <obj_status><eol>}
+    rule  xref_entry {<byte_offset> <generation_number> <obj_status><ws_char>?<eol>}
     token byte_offset {\d+}
     token generation_number {\d+}
     rule  obj_status {<obj_status_free>|<obj_status_inuse>}
@@ -51,5 +51,4 @@ grammar PDF::Grammar::PDF is PDF::Grammar {
     # trailer information from the end of the file. Typically used
     # when reading last few KB of a PDF to locate root resources
     token pdf_tail {<trailer>'%%EOF'<eol>?$}
-
 }
