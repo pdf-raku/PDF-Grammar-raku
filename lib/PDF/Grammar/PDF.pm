@@ -8,7 +8,7 @@ grammar PDF::Grammar::PDF is PDF::Grammar {
     # structure of PDF documents.
     #
     rule TOP {<pdf>}
-    rule pdf {^<pdf_header><eol>[<content>+]'%%EOF'<eol>?$}
+    rule pdf {^<pdf_header><eol>[<body>+]'%%EOF'<eol>?$}
 
     # [PDF 1.7] 7.5.2 File Header
     # ---------------
@@ -16,7 +16,7 @@ grammar PDF::Grammar::PDF is PDF::Grammar {
 
     # xref section is optional - document could have a cross reference stream
     # quite likley if linearized [PDF 1.7] 7.5.8 & Annex F (Linearized PDF)
-    rule content {<indirect_object>+<xref>?<trailer>}
+    rule body {<indirect_object>+<xref>?<trailer>}
     rule indirect_object { <integer> <integer> obj <operand>* endobj }
 
     # operand: overridden from base grammar

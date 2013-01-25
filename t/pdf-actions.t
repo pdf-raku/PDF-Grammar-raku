@@ -100,7 +100,7 @@ for (
       indirect_object => $indirect_obj2,
       trailer => $trailer,
       xref => $xref,
-      content => $body ~ "\n" ~ $trailer,
+      body => $body ~ "\n" ~ $trailer,
       pdf => $pdf,
     ) {
      my $rule = $_.key;

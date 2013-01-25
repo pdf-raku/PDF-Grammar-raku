@@ -137,7 +137,7 @@ for (unix => $nix_pdf,
 
      my $pdf = $p.ast;
      is($pdf<header>, $pdf_header_version, "pdf version - as expected");
-     ok($pdf<content>, "pdf has content");
+     ok($pdf<body>, "pdf has body");
 
 # ++To do
 #     # see if we can independently locate the trailer

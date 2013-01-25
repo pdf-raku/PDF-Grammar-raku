@@ -13,8 +13,8 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
 
 	%pdf<header> = $<pdf_header>.ast;
 
-	my @contents = $<content>.map({$_.ast});
-	%pdf<content> = @contents;
+	my @contents = $<body>.map({$_.ast});
+	%pdf<body> = @contents;
 
 	make %pdf;
     }
@@ -69,16 +69,16 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
 	make @operands;
     }
 
-    method content($/) {
-	my %content;
+    method body($/) {
+	my %body;
         my @indirect_objects = $<indirect_object>.map({ $_.ast });
-	%content<objects> = @indirect_objects;
-	%content<xref> = $_.ast
+	%body<objects> = @indirect_objects;
+	%body<xref> = $_.ast
 	    for $<xref>;
-	%content<trailer> = $_.ast
+	%body<trailer> = $_.ast
 	    for $<trailer>;
 
-	make %content;
+	make %body;
     }
 
     method xref($/) {

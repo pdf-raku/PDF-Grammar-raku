@@ -8,7 +8,7 @@ grammar PDF::Grammar::FDF is PDF::Grammar::PDF {
     # structure of FDF form data exchange files.
     #
     rule TOP {<fdf>}
-    rule fdf {^<fdf_header><eol>[<content>+]'%%EOF'<eol>?$}
+    rule fdf {^<fdf_header><eol>[<body>+]'%%EOF'<eol>?$}
 
     token fdf_header {'%FDF-'$<version>=(\d'.'\d)}
 
