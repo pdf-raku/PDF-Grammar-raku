@@ -10,7 +10,7 @@ images and graphical elements.
 
 PDF::Grammar is under construction as an experimental/example Perl6 grammar
 for parsing and validation of real-world PDF examples. It currently implements
-three grammars:
+four grammars:
 
 `PDF::Grammar::Content` - is a description of the text and graphics operators that are used to produce page layout.
 
@@ -19,6 +19,8 @@ exchange files.
 
 `PDF::Grammar::PDF` - this  describes the file structure of PDF documents,
 including headers, trailers, top-level objects and the cross reference table.
+
+`PDF::Grammar::Function` - a tokeniser for Postscript Caculator (type 4) functions. 
 
 PDF-Grammar has so far been tested against a limited sample of PDF documents
 and has not yet been put to use for any serious PDF processing. The grammar is still evolving and is likely to change.

@@ -30,7 +30,7 @@ for (small => $fdf_small, real => $fdf_body) {
     my $p = PDF::Grammar::FDF.parse($_.value);
 
     ok($p, "fdf parse " ~ $_.key)
-        or diag $_; 
+        or diag $_.value; 
 }
 
 done;

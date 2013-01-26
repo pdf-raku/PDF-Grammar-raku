@@ -7,8 +7,8 @@ grammar PDF::Grammar::PDF is PDF::Grammar {
     # An experimental Perl6  grammar for describing the basic block
     # structure of PDF documents.
     #
-    rule TOP {<pdf>}
-    rule pdf {^<pdf_header><eol>[<body>+]'%%EOF'<eol>?$}
+    rule TOP {^<pdf>$}
+    rule pdf {<pdf_header><eol>[<body>+]'%%EOF'<eol>?}
 
     # [PDF 1.7] 7.5.2 File Header
     # ---------------
