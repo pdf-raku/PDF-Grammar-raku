@@ -17,14 +17,14 @@ class PDF::Grammar::Function::Actions is PDF::Grammar::Actions {
 
     method if($/) {
 	my %branch;
-	%branch<if_expr> = $<if_expr>.ast.value;
+	%branch<if> = $<if_expr>.ast;
 	make %branch;
     }
 
     method ifelse($/) {
 	my %branch;
-	%branch<if_expr> = $<if_expr>.ast.value;
-	%branch<else_expr> = $<else_expr>.ast.value;
+	%branch<if> = $<if_expr>.ast;
+	%branch<else> = $<else_expr>.ast;
 	make %branch;
     }
 

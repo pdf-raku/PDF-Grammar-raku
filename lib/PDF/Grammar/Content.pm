@@ -140,8 +140,6 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule op:sym<MoveShowText>        { <string> ("'") }
 
     # catchall for unknown opcodes and arguments
-    token id { <[a..zA..Z\*\"\']><[\w\*\"\']>* }
-    rule unknown               { [<operand>|<id>]+? } 
+    token guff { <[a..zA..Z\*\"\']><[\w\*\"\']>* }
+    rule unknown               { [<operand>|<guff>]+? } 
 }
-
-
