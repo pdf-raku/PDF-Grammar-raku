@@ -70,7 +70,7 @@ class PDF::Grammar::Content::Actions is PDF::Grammar::Actions {
 	make @result;
     }
 
-    method id ($/) {
+    method guff ($/) {
 	make $/.Str;
     }
 
