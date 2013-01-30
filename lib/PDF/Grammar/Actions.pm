@@ -105,10 +105,14 @@ class PDF::Grammar::Actions {
 	make $string;
     }
 
-    method literal_chars($/) { make $/.Str }
-    method line_continuation($/) { make '' }
+    method char_code($/) { make $/.Str }
 
-    method escape_seq ($/) {
+    method literal:sym<continuation>($/) { make '' }
+    method literal:sym<eol>($/) { make "\n" }
+    method literal:sym<substring>($/) { make '(' ~ $<literal_string>.ast ~ ')' }
+    method literal:sym<chars>($/) { make $/.Str }
+
+    method literal:sym<escape> ($/) {
        my $char;
 
        if $<char_code> {
@@ -135,20 +139,11 @@ class PDF::Grammar::Actions {
     }
 
     method literal_string ($/) {
-	my $string = $/.caps.map({
-	    my $token = $_;
-
-	    given $token.key {
-		when 'line_continuation' {''}
-		when 'eol' {"\n"}
-                when 'literal_string' {'(' ~ $token.value.ast ~ ')'}
-		default { $token.value.ast} }
-                
-	 }).join('');
-
-	$string does PDF::Grammar::Attributes;
+	my $string = $<literal>.map({ $_.ast }).join('')
+	    does PDF::Grammar::Attributes;
 
         $string.pdf_subtype = 'literal';
+
 	make $string;
     }
 

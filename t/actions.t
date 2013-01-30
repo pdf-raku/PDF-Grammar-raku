@@ -20,11 +20,11 @@ my %escape_char_mappings = (
 my $actions = PDF::Grammar::Actions.new;
 
 for %escape_char_mappings.kv -> $escape_seq, $expected_result {
-    my $p = PDF::Grammar.parse($escape_seq, :rule('escape_seq'), :actions($actions));
+    my $p = PDF::Grammar.parse($escape_seq, :rule('literal'), :actions($actions));
     die ("unable to parse escape_seq: $escape_seq")
 	unless $p;
     my $result = $p.ast;
-    is($result, $expected_result, "string escape seq: $escape_seq");
+    is($result, $expected_result, "literal escape: $escape_seq");
 }
 
 my @tests = (

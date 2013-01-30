@@ -1,6 +1,6 @@
 use v6;
 
-grammar PDF::Grammar:ver<0.0.4> {
+grammar PDF::Grammar:ver<0.0.5> {
     # abstract base grammar for PDF Elements, see instances:
     # PDF::Grammar::Content  - Text and Graphics Content
     # PDF::Grammar::FDF      - Describes FDF (Form Data) files
@@ -30,18 +30,21 @@ grammar PDF::Grammar:ver<0.0.4> {
 
     rule number { <real> | <integer> }
 
-    token line_continuation {"\\"<eol>}
-    token octal_code { <[0..7]> ** 1..3 }
+    token octal_code {<[0..7]> ** 1..3}
     token char_code  {<[nrtbf\(\)\\]>}
-    token escape_seq { '\\'[<octal_code>|<char_code>]? }
-    # literal_character - all but '(' ')' '\'
-    token printable_char{<[\! .. \~]>+}
+
     token literal_escaped {<[ \( \) \\ \n \r ]>}
-    token literal_chars { <-literal_escaped>+ }
+
+    proto token literal {<...>}
+    token literal:sym<continuation> {"\\"<eol>}
+    token literal:sym<eol> {<eol>}
+    token literal:sym<escape> {'\\'[<octal_code>|<char_code>]?}
+    token literal:sym<substring> {<literal_string>}
+    token literal:sym<chars> {<-literal_escaped>+}
     # nb
     # -- new-lines are acceptable within strings
     # -- nested parenthesis are acceptable - allow recursive substrings
-    rule literal_string {'('[<line_continuation>|<eol>|<escape_seq>|<literal_string>|<literal_chars>]*')'}
+    rule literal_string {'('<literal>*')'}
 
     # hex strings
     token hex_char {<xdigit>**1..2}
