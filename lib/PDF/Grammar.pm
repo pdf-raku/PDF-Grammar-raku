@@ -10,16 +10,15 @@ grammar PDF::Grammar:ver<0.0.5> {
 
     # [PDF 1.7] 7.2.2 Character Set + 7.2.3 Comment characters
     # ---------------
-    proto token ws_char {<...>}
-    # This <ws> rule treats % as "comment to eol".
-    token ws_char:sym<comment> {'%' <- eol>* <eol>?}
-    token ws_char:sym<char>    {"\n" | "\t" | "\o12" | "\f" | "\r" | " "}
+    token comment {'%' <- eol>* <eol>?}
+    token ws_char {"\n" | "\t" | "\o12" | "\f" | "\r" | " "}
+    token ws {<!ww>[<ws_char>|<comment>]*}
 
-    token ws {<!ww><ws_char>*}
-
-    token eol {"\r\n"  # ms/dos
-               | "\n"  # 'nix
-               | "\r"} # mac-osx
+   # Newlines, on various platforms.
+    proto token eol        {<...>}
+    token eol:sym<ms_dos>  {"\r\n"}
+    token eol:sym<nix>     {"\n"}
+    token eol:sym<mac_osx> {"\r"}
 
     # [PDF 1.7] 7.3.3  Numeric Objects
     # ---------------
