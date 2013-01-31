@@ -141,5 +141,5 @@ grammar PDF::Grammar::Content is PDF::Grammar {
 
     # catchall for unknown opcodes and arguments
     token guff { <[a..zA..Z\*\"\']><[\w\*\"\']>* }
-    rule unknown               { [<operand>|<guff>]+? } 
+    rule unknown               { [<operand>|<guff>] } 
 }
