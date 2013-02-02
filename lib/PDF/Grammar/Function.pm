@@ -8,7 +8,8 @@ grammar PDF::Grammar::Function is PDF::Grammar {
     # functions, as described in [PDF 1.7] section 7.10.5
     rule TOP {^ <expression> $}
 
-    rule expression { '{' [ <ifelse> | <if> | <operator> | <operand> | <unknown> ]+ '}' }
+    rule expression { '{' <statement>* '}' }
+    rule statement  { <ifelse> | <if> | <operator> | <operand> | <unknown> }
 
     # Operands - restricted to numbers, booleans or strings
     rule operand { <number> | <bool> | <string> }
