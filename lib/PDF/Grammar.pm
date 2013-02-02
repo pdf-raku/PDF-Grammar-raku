@@ -11,8 +11,8 @@ grammar PDF::Grammar:ver<0.0.5> {
     # [PDF 1.7] 7.2.2 Character Set + 7.2.3 Comment characters
     # ---------------
     token comment {'%' <- eol>* <eol>?}
-    token ws_char {"\n" | "\t" | "\o12" | "\f" | "\r" | " "}
-    token ws {<!ww>[<ws_char>|<comment>]*}
+    token ws_char {"\n" | "\t" | "\o12" | "\f" | "\r" | " " | <comment>}
+    token ws {<!ww><ws_char>*}
 
    # Newlines, on various platforms.
     proto token eol        {<...>}
