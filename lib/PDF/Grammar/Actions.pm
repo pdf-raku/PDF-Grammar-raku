@@ -3,7 +3,128 @@ use v6;
 # rules for constructing operand values for PDF::Grammar
 use PDF::Grammar::Attributes;
 
-class PDF::Grammar::Actions {
+class PDF::Grammar::Actions:ver<0.0.1> {
+
+    method ast(Mu $ast, :$pdf_type, :$pdf_subtype) {
+	$ast
+	    does PDF::Grammar::Attributes
+	    unless $ast.can('pdf_type');
+
+	$ast.pdf_type = $pdf_type if defined $pdf_type;
+	$ast.pdf_subtype = $pdf_subtype if defined $pdf_subtype;
+
+	return $ast;
+    }
+
+    method null($/) { make Any }
+    method bool($/) {
+	make $.ast( $/.Str eq 'true', :pdf_type('bool') );
+    }
+
+    method real($/) {
+	make $.ast( $/.Num, :pdf_type('number'), :pdf_subtype('real') );
+    }
+
+    method integer($/) {
+	make $.ast( $/.Int, :pdf_type('number'), :pdf_subtype('integer') );
+    }
+
+    method number ($/) {
+	make ($<real> || $<integer>).ast;
+    }
+
+    method hex_char($/) {
+	make chr( _from_hex($/.Str) )
+    }
+
+    method name_char_number_symbol($/) {
+	make '#';
+    }
+    method name_char_escaped($/) {
+	make $<hex_char>.ast;
+    }
+    method name_chars_regular($/) {
+	make $/.Str;
+    }
+
+    method name ($/) {
+	make $.ast( $/.caps.map({ $_.value.ast }).join(''),
+		    :pdf_type('name') );
+    }
+
+    method hex_string ($/) {
+	my $xdigits = $/.caps.grep({$_.key eq 'xdigit'}).map({$_.value}).join('');
+	my @hex_codes = $xdigits.comb(/..?/).map({ _from_hex ($_) });
+	my $string = @hex_codes.map({ chr($_) }).join('');
+
+	make $.ast( $string, :pdf_subtype('hex') );
+    }
+
+    method char_code($/) { make $/.Str }
+
+    method literal:sym<continuation>($/) { make '' }
+    method literal:sym<eol>($/) { make "\n" }
+    method literal:sym<substring>($/) { make '(' ~ $<literal_string>.ast ~ ')' }
+    method literal:sym<chars>($/) { make $/.Str }
+
+    method literal:sym<escape> ($/) {
+       my $char;
+
+       if $<char_code> {
+	   $char =  {
+		     b   => "\b", 
+                     f   => "\f",
+                     n   => "\n",
+                     r   => "\r",
+                     t   => "\t",
+		     '(' => '(',
+                     ')' => ')'
+           }{ $<char_code> }
+	       or die "illegal escape character \$<char_code>";
+       }
+       elsif $<octal_code> {
+	   $char =  chr( _from_octal( $<octal_code> ) );
+       }
+       else {
+	   # silently consume stray '\'
+	   $char = '';
+       }
+
+       make $char;
+    }
+
+    method literal_string ($/) {
+	my $string = $<literal>.map({ $_.ast }).join('');
+	make $.ast( $string, :pdf_subtype('literal') );
+    }
+
+    method string ($/) {
+	my $string = ($<literal_string> || $<hex_string>).ast;
+	make $.ast( $string, :pdf_type('string') );
+    }
+
+    method array ($/) {
+	my @operands = @<operand>.map({ $_.ast });
+	make $.ast( @operands, :pdf_type('array') );
+    }
+
+    method dict ($/) {
+	my @names = @<name>.map({ $_.ast });
+	my @operands = @<operand>.map({ $_.ast });
+
+	my %dict;
+	%dict{ @names } = @operands;
+
+	make $.ast( %dict, :pdf_type('dict') );
+    }
+
+    method operand($/) {
+	my ($_operand) = $/.caps;
+	my $operand =  $_operand.value.ast;
+	make $operand;
+    }
+
+    # utility subs
 
     sub _from_octal($oct) {
 
@@ -49,134 +170,5 @@ class PDF::Grammar::Actions {
 	}
 	$result *= 16 if $hex.chars < 2;
 	return $result;
-    }
-
-    method null($/) { make Any }
-    method bool($/) {
-	make $/.Str eq 'true';
-    }
-
-    method real($/) {
-	my $num = $/.Num
-	    does PDF::Grammar::Attributes;
-
-	$num.pdf_subtype = 'real';
-	make $num;
-    }
-
-    method integer($/) {
-	my $num = $/.Int
-	    does PDF::Grammar::Attributes;
-
-	$num.pdf_subtype = 'integer';
-	make $num;
-    }
-
-    method number ($/) {
-	my $number = ($<real> || $<integer>).ast;
-	make $number;
-    }
-
-    method hex_char($/) {
-	make chr( _from_hex($/.Str) )
-    }
-
-    method name_char_number_symbol($/) {
-	make '#';
-    }
-    method name_char_escaped($/) {
-	make $<hex_char>.ast;
-    }
-    method name_chars_regular($/) {
-	make $/.Str;
-    }
-
-    method name ($/) {
-	make $/.caps.map({ $_.value.ast }).join('')
-    }
-
-    method hex_string ($/) {
-	my $xdigits = $/.caps.grep({$_.key eq 'xdigit'}).map({$_.value}).join('');
-	my @hex_codes = $xdigits.comb(/..?/).map({ _from_hex ($_) });
-	my $string = @hex_codes.map({ chr($_) }).join('')
-	    does PDF::Grammar::Attributes;
-
-        $string.pdf_subtype = 'hex';
-	make $string;
-    }
-
-    method char_code($/) { make $/.Str }
-
-    method literal:sym<continuation>($/) { make '' }
-    method literal:sym<eol>($/) { make "\n" }
-    method literal:sym<substring>($/) { make '(' ~ $<literal_string>.ast ~ ')' }
-    method literal:sym<chars>($/) { make $/.Str }
-
-    method literal:sym<escape> ($/) {
-       my $char;
-
-       if $<char_code> {
-	   $char =  {
-		     b   => "\b", 
-                     f   => "\f",
-                     n   => "\n",
-                     r   => "\r",
-                     t   => "\t",
-		     '(' => '(',
-                     ')' => ')'
-           }{ $<char_code> }
-	       or die "illegal escape character \$<char_code>";
-       }
-       elsif $<octal_code> {
-	   $char =  chr( _from_octal( $<octal_code> ) );
-       }
-       else {
-	   # silently consume stray '\'
-	   $char = '';
-       }
-
-       make $char;
-    }
-
-    method literal_string ($/) {
-	my $string = $<literal>.map({ $_.ast }).join('')
-	    does PDF::Grammar::Attributes;
-
-        $string.pdf_subtype = 'literal';
-
-	make $string;
-    }
-
-    method string ($/) {
-	my $string = ($<literal_string> || $<hex_string>).ast;
-	make $string;
-    }
-
-    method array ($/) {
-	my @operands = @<operand>.map({ $_.ast });
-	make @operands;
-    }
-
-    method dict ($/) {
-	my @names = @<name>.map({ $_.ast });
-	my @operands = @<operand>.map({ $_.ast });
-
-	my %dict;
-	%dict{ @names } = @operands;
-
-	make %dict;
-    }
-
-    method operand($/) {
-	my ($_operand) = $/.caps;
-
-	my $operand =  $_operand.value.ast;
-
-	$operand
-	    does PDF::Grammar::Attributes
-	    unless $operand.can('pdf_type'); 
-
-	$operand.pdf_type = $_operand.key;
-	make $operand;
     }
 }
