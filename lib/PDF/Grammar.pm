@@ -36,10 +36,10 @@ grammar PDF::Grammar:ver<0.0.5> {
 
     proto token literal {<...>}
     token literal:sym<continuation> {"\\"<eol>}
-    token literal:sym<eol> {<eol>}
-    token literal:sym<escape> {'\\'[<octal_code>|<char_code>]?}
-    token literal:sym<substring> {<literal_string>}
-    token literal:sym<chars> {<-literal_delimiter>+}
+    token literal:sym<eol>          {<eol>}
+    token literal:sym<escape>       {'\\'[<octal_code>|<char_code>]?}
+    token literal:sym<substring>    {<literal_string>}
+    token literal:sym<chars>        {<-literal_delimiter>+}
 
     rule literal_string {'('<literal>*')'}
 
@@ -49,23 +49,22 @@ grammar PDF::Grammar:ver<0.0.5> {
 
     rule string {<hex_string>|<literal_string>}
 
-    token name_char_number_symbol {'##'}
-    token name_char_escaped { '#'<hex_char> }
     # [PDF 1.7] 7.2.2 Character Set
     regex delimiter_char {<[ \( \) \< \> \[ \] \{ \} \/ \% \# ]>}
-    token name_chars_regular{ [<[\! .. \~] - delimiter_char>]+ }
 
-    rule name { '/'[<name_chars_regular>|<name_char_escaped>|<name_char_number_symbol>]+ }
+    proto token name_chars {<...>}
+    token name_chars:sym<number_symbol> {'##'}
+    token name_chars:sym<escaped>       {'#'<hex_char> }
+    token name_chars:sym<regular>       {[<[\! .. \~] - delimiter_char>]+}
+
+    rule name { '/'<name_chars>+ }
 
     # [PDF 1.7] 7.3.2  Boolean objects + Null object
     # ---------------
-    token bool { ['true' | 'false'] }
-
-    token null { 'null' }
-
-    rule array {\[ <operand>* \]}
-    rule dict {'<<' [<name> <operand>]* '>>'}
-
+    token bool        {'true' | 'false'}
+    token null        {'null'}
+    rule array        {\[ <operand>* \]}
+    rule dict         {'<<' [<name> <operand>]* '>>'}
     rule indirect_ref {<integer> <integer> R}
 
     # Define a core set of objects/operands.

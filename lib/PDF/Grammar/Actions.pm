@@ -37,13 +37,13 @@ class PDF::Grammar::Actions:ver<0.0.1> {
 	make chr( _from_hex($/.Str) )
     }
 
-    method name_char_number_symbol($/) {
+    method name_chars:sym<number_symbol>($/) {
 	make '#';
     }
-    method name_char_escaped($/) {
+    method name_chars:sym<escaped>($/) {
 	make $<hex_char>.ast;
     }
-    method name_chars_regular($/) {
+    method name_chars:sym<regular>($/) {
 	make $/.Str;
     }
 

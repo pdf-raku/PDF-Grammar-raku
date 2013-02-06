@@ -41,11 +41,10 @@ my @tests = (
     'bool',                    'true',             True,
     'bool',                    'false',            False,
 
-    'name_char_number_symbol', '##',               '#',
+    'name_chars',              '##',               '#',
     'hex_char',                '6D',               'm',
-    'name_char_escaped',       '#6E',              'n'
-,
-    'name_chars_regular',      'snoopy',           'snoopy',
+    'name_chars',              '#6E',              'n',
+    'name_chars',              'snoopy',           'snoopy',
     'name',                    '/snoopy',          'snoopy',
     'name',                    '/s#6Eo#6fpy',      'snoopy',
 
