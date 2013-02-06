@@ -48,14 +48,14 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
 	my $dict_ast = $dict.value.ast;
 
 	if ($stream) {
-	    # <dict> is a header for the ensuring <stream>
+	    # <dict> is a just a header the following <stream>
 	    my %stream;
 	    %stream<atts> = $dict_ast;
 	    (%stream<start>, %stream<end>) = $stream.value.ast.kv;
 	    make (stream => %stream)
 	}
 	else {
-	    # simple <dict>
+	    # simple stand-alone <dict>
 	    make $dict_ast;
 	}
     }
@@ -101,15 +101,7 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
    # offsets of the start and the end of the stream and leave it up to the
    # caller to disseminate
 
-    method stream_head($/) {
-	make $/.to + 1;
-    }
-
-    method stream_tail($/) {
-	make $/.from - 1;
-    }
-
     method stream($/) {
-	make ($<stream_head>.ast => $<stream_tail>.ast);
+	make (($<stream_head>.to + 1) => ($<stream_tail>.from - 1));
     }
 }
