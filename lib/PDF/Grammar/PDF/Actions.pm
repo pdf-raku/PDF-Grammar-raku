@@ -40,12 +40,7 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
     }
 
     method operand($/) {
-	my $operand = $<indirect_ref>
-	    || do {
-		my ($_operand) = $<object>.caps;
-		$_operand.value;
-	};
-	make $operand.ast;
+	make ($<indirect_ref> || $<object>).ast;
     }
 
     method object:sym<dict>($/) {

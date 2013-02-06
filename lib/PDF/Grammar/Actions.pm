@@ -118,11 +118,15 @@ class PDF::Grammar::Actions:ver<0.0.1> {
 	make $.ast( %dict, :pdf_type('dict') );
     }
 
-    method operand($/) {
-	my ($_operand) = $<object>.caps;
-	my $operand =  $_operand.value.ast;
-	make $operand;
-    }
+    method object:sym<number>($/)  { make $<number>.ast }
+    method object:sym<bool>($/)    { make $<bool>.ast }
+    method object:sym<string>($/)  { make $<string>.ast }
+    method object:sym<name>($/)    { make $<name>.ast }
+    method object:sym<array>($/)   { make $<array>.ast }
+    method object:sym<dict>($/)    { make $<dict>.ast }
+    method object:sym<null>($/)    { make $<null>.ast }
+
+    method operand($/)             { make $<object>.ast }
 
     # utility subs
 
