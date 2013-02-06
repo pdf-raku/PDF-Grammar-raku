@@ -29,35 +29,37 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
 	make (trailer => %trailer);
     }
 
-    method indirect_reference($/) {
+    method indirect_ref($/) {
 	my @ind_ref = $/.caps.map({ $_.value.ast });
 	make (ind_ref => @ind_ref);
     }
 
-    method indirect_object($/) {
+    method indirect_obj($/) {
 	my @ind_obj = $/.caps.map({ $_.value.ast });
 	make (ind_obj => @ind_obj);
     }
 
-    method operand($/) {
-	my ($operand, $stream) = $/.caps;
-	my $value = $operand.value.ast;
+    method object:sym<dict>($/) {
+	my ($dict, $stream) = $/.caps;
+	my $dict_ast = $dict.value.ast;
 
 	if ($stream) {
+	    # <dict> is a header for the ensuring <stream>
 	    my %stream;
-	    %stream<atts> = $value;
+	    %stream<atts> = $dict_ast;
 	    (%stream<start>, %stream<end>) = $stream.value.ast.kv;
 	    make (stream => %stream)
 	}
 	else {
-	    make $value;
+	    # simple <dict>
+	    make $dict_ast;
 	}
     }
 
     method body($/) {
 	my %body;
-        my @indirect_objects = $<indirect_object>.map({ $_.ast });
-	%body<objects> = @indirect_objects;
+        my @indirect_objs = $<indirect_obj>.map({ $_.ast });
+	%body<objects> = @indirect_objs;
 	%body<xref> = $_.ast
 	    for $<xref>;
 	%body<trailer> = $_.ast

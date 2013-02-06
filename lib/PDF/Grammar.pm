@@ -66,16 +66,18 @@ grammar PDF::Grammar:ver<0.0.5> {
     rule array {\[ <operand>* \]}
     rule dict {'<<' [<name> <operand>]* '>>'}
 
-    # Define a core set of objects/operands. Grammar instances are free
-    # to extend or modify the list
+    rule indirect_ref {<integer> <integer> R}
+
+    # Define a core set of objects/operands.
     proto rule object { <...> }
-    rule object:sym<number> { <number> }
-    rule object:sym<bool>   { <bool> }
-    rule object:sym<string> { <string> }
-    rule object:sym<name>   { <name> }
-    rule object:sym<array>  { <array> }
-    rule object:sym<dict>   { <dict> }
-    rule object:sym<null>   { <null> }
+    rule object:sym<ind_ref> { <indirect_ref> }
+    rule object:sym<number>  { <number> }
+    rule object:sym<bool>    { <bool> }
+    rule object:sym<string>  { <string> }
+    rule object:sym<name>    { <name> }
+    rule object:sym<array>   { <array> }
+    rule object:sym<dict>    { <dict> }
+    rule object:sym<null>    { <null> }
 
     rule operand { <object> }
 };

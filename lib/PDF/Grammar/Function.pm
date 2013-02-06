@@ -11,10 +11,10 @@ grammar PDF::Grammar::Function is PDF::Grammar {
     rule expression { '{' <statement>* '}' }
     rule statement  { <ifelse> | <if> | <restricted> | <operand> | <unknown> }
 
-    # <operand> :- <object>*
-    # -- restricted to exclude types: dict array name
-    # -- extended to allow postcript operators
-    rule restricted { <dict> | <array> | <name> | <null> }
+    # Operands:
+    # -- restricted operators; not permitted in postscript functions
+    rule restricted { <indirect_ref> | <dict> | <array> | <name> | <null> }
+    # -- postscript operators; only permitted in postscript functions
     rule object:sym<ps_op> { <ps_op> }
 
     proto token ps_op { <...> }

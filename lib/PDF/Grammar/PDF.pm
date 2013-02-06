@@ -16,15 +16,11 @@ grammar PDF::Grammar::PDF is PDF::Grammar {
 
     # xref section is optional - document could have a cross reference stream
     # quite likely if linearized [PDF 1.7] 7.5.8 & Annex F (Linearized PDF)
-    rule body {<indirect_object>+<xref>?<trailer>}
-    rule indirect_object { <integer> <integer> obj <operand>* endobj }
+    rule body {<indirect_obj>+<xref>?<trailer>}
+    rule indirect_obj { <integer> <integer> obj <operand>* endobj }
 
-    # operand: overridden from base grammar
-    # - extend to allow streams and indirect object refs
+    # - Modify dict rule to allow a trailing stream anywhere
     rule object:sym<dict>   { <dict><stream>? }
-    rule operand { <indirect_reference> | <number> | <bool> | <string> | <name> | <array> | [<dict><stream>?] | <null> }
-
-    rule indirect_reference {<integer> <integer> R}
 
     # stream parsing
     rule stream_head { stream<eol>}

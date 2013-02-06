@@ -96,8 +96,8 @@ my $actions = PDF::Grammar::PDF::Actions.new;
 
 for (
       pdf_header => $header,
-      indirect_object => $indirect_obj1,
-      indirect_object => $indirect_obj2,
+      indirect_obj => $indirect_obj1,
+      indirect_obj => $indirect_obj2,
       trailer => $trailer,
       xref => $xref,
       body => $body ~ "\n" ~ $trailer,

@@ -268,7 +268,7 @@ my $ind_obj3 = '13 0 obj<</BaseFont/Times-Roman/Type/Font
 my $ind_ref3 = '13 0 R';
 
 for ($ind_ref1, $ind_ref2, $ind_ref3) {
-    ok($_ ~~ /^<PDF::Grammar::PDF::indirect_reference>$/, "indirect_reference: $_");
+    ok($_ ~~ /^<PDF::Grammar::PDF::indirect_ref>$/, "indirect_ref: $_");
     ok($_ ~~ /^<PDF::Grammar::PDF::operand>$/, "operand: $_");
 }
 
@@ -297,7 +297,7 @@ endobj';
 
 for (simple => $ind_obj1, empty => $ind_obj2, squashed => $ind_obj3,
      stream => $ind_obj4, comments => $ind_obj5, fdf => $ind_obj_fdf) {
-    ok($_.value ~~ /^<PDF::Grammar::PDF::indirect_object>$/, "indirect_object - " ~ $_.key)
+    ok($_.value ~~ /^<PDF::Grammar::PDF::indirect_obj>$/, "indirect_obj - " ~ $_.key)
         or diag $_.value;
 }
 

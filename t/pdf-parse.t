@@ -69,12 +69,12 @@ endobj
 endobj';
 
 for ($indirect_obj1) {
-    ok($_ ~~ /^<PDF::Grammar::PDF::indirect_object>$/, "indirect obj")
+    ok($_ ~~ /^<PDF::Grammar::PDF::indirect_obj>$/, "indirect object")
         or diag $_;
 }
 
 for ($indirect_obj1, $body) {
-    ok($_ ~~ /^<PDF::Grammar::PDF::indirect_object>+$/, "body")
+    ok($_ ~~ /^<PDF::Grammar::PDF::indirect_obj>+$/, "body")
         or diag $_;
 }
 
@@ -140,14 +140,14 @@ for (unix => $nix_pdf,
      ok($pdf<body>, "pdf has body");
 
 # ++To do
-#     # see if we can independently locate the trailer
+#     # see if we can independently locate the trailer (parse)
 #     my $tail_p = PDF::Grammar::PDF.parse($_.value, :rule('pdf_tail'), :actions($actions));
 #     ok($tail_p, "pdf tail parse - " ~ $_.key)
 #       or diag substr($_.value, *-80) ~ '...';
 #     my $trailer = $tail_p.ast;
 # --To do
 
-   # see of we can independently locate the trailer
+   # see of we can independently locate the trailer (regex)
    ok($_.value ~~ /<PDF::Grammar::PDF::pdf_tail>/, "file_trailer match " ~ $_.key);
 }
 
