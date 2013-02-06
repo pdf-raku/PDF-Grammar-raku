@@ -54,21 +54,6 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
 	}
     }
 
-    method dict ($/) {
-	my @names = @<name>.map({ $_.ast });
-	my @operands = @<operand>.map({ $_.ast });
-
-	my %dict;
-	%dict{ @names } = @operands;
-
-	make %dict;
-    }
-
-    method array ($/) {
-	my @operands = @<operand>.map({ $_.ast });
-	make @operands;
-    }
-
     method body($/) {
 	my %body;
         my @indirect_objects = $<indirect_object>.map({ $_.ast });

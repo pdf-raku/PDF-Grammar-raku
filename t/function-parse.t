@@ -18,12 +18,15 @@ my $if_expr = '{ 1 1 add 3 eq ' ~ $example_expr ~' if }';
 
 my $if_else_expr = '{false ' ~ $if_expr ~' {(booya!)} ifelse}';
 
+my $restricted_ops = '{ 360 sin <</x [exch]>> def }';
+
 my $actions = PDF::Grammar::Function::Actions.new;
 
 for (trivial => $trivial_expr,
      example => $example_expr,
      if => $if_expr,
      if_else => $if_else_expr,
+     restricted_ops => $restricted_ops,
     ) {
     my $p = PDF::Grammar::Function.parse($_.value, :actions($actions));
 

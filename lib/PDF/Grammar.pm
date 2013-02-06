@@ -66,6 +66,16 @@ grammar PDF::Grammar:ver<0.0.5> {
     rule array {\[ <operand>* \]}
     rule dict {'<<' [<name> <operand>]* '>>'}
 
-    # Operand - as permitted in Content streams [PDF 1.7] 7.8.2
-    rule operand { <number> | <bool> | <string> | <name> | <array> | <dict> | <null> }
+    # Define a core set of objects/operands. Grammar instances are free
+    # to extend or modify the list
+    proto rule object { <...> }
+    rule object:sym<number> { <number> }
+    rule object:sym<bool>   { <bool> }
+    rule object:sym<string> { <string> }
+    rule object:sym<name>   { <name> }
+    rule object:sym<array>  { <array> }
+    rule object:sym<dict>   { <dict> }
+    rule object:sym<null>   { <null> }
+
+    rule operand { <object> }
 };

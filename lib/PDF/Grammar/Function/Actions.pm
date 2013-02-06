@@ -7,13 +7,19 @@ class PDF::Grammar::Function::Actions is PDF::Grammar::Actions {
     method TOP($/) { make $<expression>.ast }
 
     method expression($/) {
-	my @result = $/.caps.map({ $_.value.ast });
+	my @result = $<statement>.map({ $_.ast });
 	make (expr => @result);
     }
 
-    method operator($/) {
-	make (op => $<op>.Str);
+    method statement($/) {
+	make $/.caps[0].value.ast;
     }
+
+    method object:sym<ps_op>($/) {make ($/.ast || 42)};
+    # extended postcript operators
+    method ps_op:sym<arithmetic>($/) {make $<op>.Str }
+    method ps_op:sym<bitwise>($/)    {make $<op>.Str }
+    method ps_op:sym<stack>($/)      {make $<op>.Str }
 
     method if($/) {
 	my %branch;
@@ -28,8 +34,7 @@ class PDF::Grammar::Function::Actions is PDF::Grammar::Actions {
 	make %branch;
     }
 
-    method unknown ($/) {
-	my @u =  $/.caps.map({ $_.value.ast });
-	make '??' => @u
-    }
+    method restricted($/) {make ('??' => $/.caps.[0].value.ast)}
+    method unknown($/) {make ('??' => $/.Str)}
+
 }

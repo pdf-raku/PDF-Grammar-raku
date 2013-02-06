@@ -21,6 +21,7 @@ grammar PDF::Grammar::PDF is PDF::Grammar {
 
     # operand: overridden from base grammar
     # - extend to allow streams and indirect object refs
+    rule object:sym<dict>   { <dict><stream>? }
     rule operand { <indirect_reference> | <number> | <bool> | <string> | <name> | <array> | [<dict><stream>?] | <null> }
 
     rule indirect_reference {<integer> <integer> R}

@@ -119,7 +119,7 @@ class PDF::Grammar::Actions:ver<0.0.1> {
     }
 
     method operand($/) {
-	my ($_operand) = $/.caps;
+	my ($_operand) = $<object>.caps;
 	my $operand =  $_operand.value.ast;
 	make $operand;
     }
