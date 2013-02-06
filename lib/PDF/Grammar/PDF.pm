@@ -18,9 +18,13 @@ grammar PDF::Grammar::PDF is PDF::Grammar {
     # quite likely if linearized [PDF 1.7] 7.5.8 & Annex F (Linearized PDF)
     rule body {<indirect_obj>+<xref>?<trailer>}
     rule indirect_obj { <integer> <integer> obj <operand>* endobj }
+    rule indirect_ref { <integer> <integer> R }
 
+    # Operand extensions
+    # - Prepend indrect references to operand list
+    rule operand { <indirect_ref> | <object> }
     # - Modify dict rule to allow a trailing stream anywhere
-    rule object:sym<dict>   { <dict><stream>? }
+    rule object:sym<dict>  { <dict><stream>? }
 
     # stream parsing
     rule stream_head { stream<eol>}

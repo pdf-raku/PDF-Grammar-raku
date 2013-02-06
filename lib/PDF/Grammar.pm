@@ -65,11 +65,9 @@ grammar PDF::Grammar:ver<0.0.5> {
     token null        {'null'}
     rule array        {\[ <operand>* \]}
     rule dict         {'<<' [<name> <operand>]* '>>'}
-    rule indirect_ref {<integer> <integer> R}
 
     # Define a core set of objects/operands.
     proto rule object { <...> }
-    rule object:sym<ind_ref> { <indirect_ref> }
     rule object:sym<number>  { <number> }
     rule object:sym<bool>    { <bool> }
     rule object:sym<string>  { <string> }

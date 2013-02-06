@@ -13,7 +13,7 @@ grammar PDF::Grammar::Function is PDF::Grammar {
 
     # Operands:
     # -- restricted operators; not permitted in postscript functions
-    rule restricted { <indirect_ref> | <dict> | <array> | <name> | <null> }
+    rule restricted { <dict> | <array> | <name> | <null> }
     # -- postscript operators; only permitted in postscript functions
     rule object:sym<ps_op> { <ps_op> }
 
