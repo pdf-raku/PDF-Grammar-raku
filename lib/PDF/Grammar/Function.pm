@@ -20,16 +20,16 @@ grammar PDF::Grammar::Function is PDF::Grammar {
     proto token ps_op { <...> }
 
     token ps_op:sym<arithmetic> {
-	$<op>=[abs|add|atan|ceiling|cos|cvi|cvr|div|exp|floor
-	|idiv|ln|log|mod|mul|neg|round|sin|sqrt|sub|truncate]
+        $<op>=[abs|add|atan|ceiling|cos|cvi|cvr|div|exp|floor
+        |idiv|ln|log|mod|mul|neg|round|sin|sqrt|sub|truncate]
     }
 
     token ps_op:sym<bitwise> {
-	$<op>=[and|bitshift|eq|false|ge|gt|le|lt|ne|not|or|true|xor]
+        $<op>=[and|bitshift|eq|false|ge|gt|le|lt|ne|not|or|true|xor]
     }
 
     token ps_op:sym<stack> {
-	$<op>=[copy|dup|exch|index|pop|roll]
+        $<op>=[copy|dup|exch|index|pop|roll]
     }
 
     rule if { $<if_expr>=<expression> 'if' }

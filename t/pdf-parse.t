@@ -4,14 +4,12 @@ use Test;
 use PDF::Grammar::PDF;
 use PDF::Grammar::PDF::Actions;
 
-for ('%PDF-1.0', '%PDF-1.7') {
-    ok($_ ~~ /^<PDF::Grammar::PDF::pdf_header>$/, "pdf_header: $_");
-}
-
 my $pdf_header_version = 1.5;
 my $header = "%PDF-{$pdf_header_version}";
 
-ok($header ~~ /^<PDF::Grammar::PDF::pdf_header>$/, "pdf_header: $header");
+for ('%PDF-1.0', $pdf_header_version) {
+     ok($header ~~ /^<PDF::Grammar::PDF::pdf_header>$/, "pdf_header: $header");
+}
 
 my $indirect_obj1 = '1 0 obj
 <<
@@ -135,9 +133,9 @@ for (unix => $nix_pdf,
      ok($p, "pdf parse - " ~ $_.key)
        or diag $_.value;
 
-     my $pdf = $p.ast;
-     is($pdf<header>, $pdf_header_version, "pdf version - as expected");
-     ok($pdf<body>, "pdf has body");
+     my $pdf_ast = $p.ast;
+     is($pdf_ast<header>, $pdf_header_version, "pdf version - as expected");
+     ok($pdf_ast<body>, "pdf has body");
 
 # ++To do
 #     # see if we can independently locate the trailer (parse)

@@ -117,17 +117,17 @@ for (
 
     ) {
     ok($_.value ~~ /^<PDF::Grammar::Content::instruction>$/, "instruction " ~ $_.key)
-	or do {
-	    diag "failed instruction: " ~ $_.value;
-	    if ($_.value ~~ /^(.*?)(<PDF::Grammar::Content::instruction>)(.*?)$/) {
+        or do {
+            diag "failed instruction: " ~ $_.value;
+            if ($_.value ~~ /^(.*?)(<PDF::Grammar::Content::instruction>)(.*?)$/) {
 
-		my $p = $0 && $0.join(',');
-		note "(preceeding: $p)" if $p;
-		my $m = $1 && $1.join(',');
-		note "(best match: $m)" if $m;
-		my $f = $2 && $2.join(',');
-		note "(following: $f)" if $f;
-	    }
+                my $p = $0 && $0.join(',');
+                note "(preceeding: $p)" if $p;
+                my $m = $1 && $1.join(',');
+                note "(best match: $m)" if $m;
+                my $f = $2 && $2.join(',');
+                note "(following: $f)" if $f;
+            }
     }
 }
 
@@ -152,7 +152,7 @@ for (
     # test our parser's resilience
     ok($_.value !~~ /^<PDF::Grammar::Content::instruction>$/,
        "invalid instruction: " ~ $_.key)
-	or diag $_.value;
+        or diag $_.value;
     ok($_ ~~ /<PDF::Grammar::Content::unknown>/,
        "parsed as unknown: " ~ $_.key);
 }

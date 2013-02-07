@@ -21,7 +21,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
 
     # marked content blocks: BMC ... EMC   or   BDC ... EMC
     rule opBeginMarkedContent  { <name> (BMC)
-				     | [<name> [<name> | <dict>] (BDC) }
+                                     | <name> [<name> | <dict>] (BDC) }
     rule opEndMarkedContent    { (EMC) }
 
     # image blocks BI ... ID ... EI
@@ -39,7 +39,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule inner_text_block { <opBeginText> <op>* <opEndText> }
     rule inner_marked_content_block {<opBeginMarkedContent> <op>* <opEndMarkedContent>}
     proto rule block { <...> }
-    rule block:sym<text> {<opBeginText> [ <inner_marked_content_block> | <op>]* <opEndText>}
+    rule block:sym<text> {<opBeginText> [ <inner_marked_content_block> | <op> ]* <opEndText>}
     rule block:sym<markedContent> {<opBeginMarkedContent> [ <inner_text_block> | <op> ]* <opEndMarkedContent>}
     rule imageAtts { [<name> <operand>]* }
     regex stream_chars{<PDF::Grammar::Stream::chars>}

@@ -7,12 +7,12 @@ class PDF::Grammar::Function::Actions is PDF::Grammar::Actions {
     method TOP($/) { make $<expression>.ast }
 
     method expression($/) {
-	my @result = $<statement>.map({ $_.ast });
-	make (expr => @result);
+        my @result = $<statement>.map({ $_.ast });
+        make (expr => @result);
     }
 
     method statement($/) {
-	make $/.caps[0].value.ast;
+        make $/.caps[0].value.ast;
     }
 
     method object:sym<ps_op>($/) {make ($/.ast || 42)};
@@ -22,16 +22,16 @@ class PDF::Grammar::Function::Actions is PDF::Grammar::Actions {
     method ps_op:sym<stack>($/)      {make $<op>.Str }
 
     method if($/) {
-	my %branch;
-	%branch<if> = $<if_expr>.ast;
-	make %branch;
+        my %branch;
+        %branch<if> = $<if_expr>.ast;
+        make %branch;
     }
 
     method ifelse($/) {
-	my %branch;
-	%branch<if> = $<if_expr>.ast;
-	%branch<else> = $<else_expr>.ast;
-	make %branch;
+        my %branch;
+        %branch<if> = $<if_expr>.ast;
+        %branch<else> = $<else_expr>.ast;
+        make %branch;
     }
 
     method restricted($/) {make ('??' => $/.caps.[0].value.ast)}

@@ -22,7 +22,7 @@ my $actions = PDF::Grammar::Actions.new;
 for %escape_char_mappings.kv -> $escape_seq, $expected_result {
     my $p = PDF::Grammar.parse($escape_seq, :rule('literal'), :actions($actions));
     die ("unable to parse escape_seq: $escape_seq")
-	unless $p;
+        unless $p;
     my $result = $p.ast;
     is($result, $expected_result, "literal escape: $escape_seq");
 }
@@ -68,16 +68,16 @@ my @tests = (
     'number',                  '12.5',              12.5,
 
     'operand' => ['string',
-		  'literal'],  '(hi)',              'hi',
+                  'literal'],  '(hi)',              'hi',
 
     'operand' => ['string',
-		  'hex'],      '<6869>',            'hi',
+                  'hex'],      '<6869>',            'hi',
 
     'operand' => ['number',
-		  'integer'],  '-042',             -42,
+                  'integer'],  '-042',             -42,
 
     'operand' => ['number',
-		  'real'],     '+3.50',             3.5,
+                  'real'],     '+3.50',             3.5,
 
     'operand' => ['dict'],     '<</Length 42>>',    {Length => 42},
 
@@ -95,46 +95,46 @@ for @tests -> $_rule, $string, $expected_result {
     my $rule;
 
     if $_rule.isa('Pair') {
-	($rule, my $type) = $_rule.kv;
-	($expected_type, $expected_subtype) = @$type;
+        ($rule, my $type) = $_rule.kv;
+        ($expected_type, $expected_subtype) = @$type;
     }
     else {
-	$rule = $_rule;
+        $rule = $_rule;
     }
 
     my $p = PDF::Grammar.parse($string, :rule($rule), :actions($actions));
     die ("unable to parse as $rule: $string")
-	unless $p;
+        unless $p;
     my $result = $p.ast;
     if defined $expected_result {
-	is($result, $expected_result, "rule $rule: $string => $expected_result");
+        is($result, $expected_result, "rule $rule: $string => $expected_result");
     }
     else {
-	ok(! defined($result), "rule $rule: $string => (undef)");
+        ok(! defined($result), "rule $rule: $string => (undef)");
     }
 
     if ($expected_type) {
-	my $test = "rule $rule: $string has type $expected_type";
-	if $result.can('pdf_type') {
-	    is($result.pdf_type, $expected_type, $test);
-	}
-	else {
-	    diag "$rule - doesn't do .pdf_type";
-	    fail( $test );
-	}
+        my $test = "rule $rule: $string has type $expected_type";
+        if $result.can('pdf_type') {
+            is($result.pdf_type, $expected_type, $test);
+        }
+        else {
+            diag "$rule - doesn't do .pdf_type";
+            fail( $test );
+        }
     }
 
     if ($expected_subtype) {
-	my $test = "rule $rule: $string has subtype $expected_subtype";
-	if $result.can('pdf_subtype') {
-	    diag "type: " ~ $result.pdf_type;
-	    diag "subtype: " ~ $result.pdf_subtype;
-	    is($result.pdf_subtype, $expected_subtype, $test);
-	}
-	else {
-	    diag "$rule - doesn't do .pdf_subtype";
-	    fail( $test );
-	}
+        my $test = "rule $rule: $string has subtype $expected_subtype";
+        if $result.can('pdf_subtype') {
+            diag "type: " ~ $result.pdf_type;
+            diag "subtype: " ~ $result.pdf_subtype;
+            is($result.pdf_subtype, $expected_subtype, $test);
+        }
+        else {
+            diag "$rule - doesn't do .pdf_subtype";
+            fail( $test );
+        }
     }
 }
 

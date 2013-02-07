@@ -87,7 +87,7 @@ for (
     "(\\\n)",
     "(\\\n()\n)",
     "(These (\\\ntwo strings) \\\nare the same.)",
-    '(These (two strings) are the same.)',	 
+    '(These (two strings) are the same.)',       
     '(This \( is unmatched)',
     ) {
     ok($_     ~~ /^<PDF::Grammar::PDF::literal_string>$/, "literal string: $_");
