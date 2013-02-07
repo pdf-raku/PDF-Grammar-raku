@@ -61,10 +61,10 @@ grammar PDF::Grammar:ver<0.0.5> {
 
     # [PDF 1.7] 7.3.2  Boolean objects + Null object
     # ---------------
-    token bool        {'true' | 'false'}
-    token null        {'null'}
-    rule array        {\[ <operand>* \]}
-    rule dict         {'<<' [<name> <operand>]* '>>'}
+    token bool  {'true' | 'false'}
+    token null  {'null'}
+    rule array  {\[ <operand>* \]}
+    rule dict   {'<<' [<name> <operand>]* '>>'}
 
     # Define a core set of objects/operands.
     proto rule object { <...> }

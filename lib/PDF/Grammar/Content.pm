@@ -20,8 +20,8 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule opEndText             { (ET) }
 
     # marked content blocks: BMC ... EMC   or   BDC ... EMC
-    rule opBeginMarkedContent  { [<name> (BMC)]
-				     | [<name> [<name> | <dict>] (BDC)] }
+    rule opBeginMarkedContent  { <name> (BMC)
+				     | [<name> [<name> | <dict>] (BDC) }
     rule opEndMarkedContent    { (EMC) }
 
     # image blocks BI ... ID ... EI
