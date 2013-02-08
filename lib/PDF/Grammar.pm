@@ -41,13 +41,13 @@ grammar PDF::Grammar:ver<0.0.5> {
     token literal:sym<substring>    {<literal_string>}
     token literal:sym<chars>        {<-literal_delimiter>+}
 
-    rule literal_string {'('<literal>*')'}
+    token literal_string {'('<literal>*')'}
 
     # hex strings
     token hex_char {<xdigit>**1..2}
     token hex_string {\< [<xdigit>|<ws_char>]* \>}
 
-    rule string {<hex_string>|<literal_string>}
+    token string {<hex_string>|<literal_string>}
 
     # [PDF 1.7] 7.2.2 Character Set
     regex delimiter_char {<[ \( \) \< \> \[ \] \{ \} \/ \% \# ]>}
@@ -66,15 +66,13 @@ grammar PDF::Grammar:ver<0.0.5> {
     rule array  {\[ <operand>* \]}
     rule dict   {'<<' [<name> <operand>]* '>>'}
 
-    # Define a core set of objects/operands.
-    proto rule object { <...> }
-    rule object:sym<number>  { <number> }
-    rule object:sym<bool>    { <bool> }
-    rule object:sym<string>  { <string> }
-    rule object:sym<name>    { <name> }
-    rule object:sym<array>   { <array> }
-    rule object:sym<dict>    { <dict> }
-    rule object:sym<null>    { <null> }
-
-    rule operand { <object> }
+    # Define a core set of operands.
+    proto rule operand { <...> }
+    rule operand:sym<number>  { <number> }
+    rule operand:sym<bool>    { <bool> }
+    rule operand:sym<string>  { <string> }
+    rule operand:sym<name>    { <name> }
+    rule operand:sym<array>   { <array> }
+    rule operand:sym<dict>    { <dict> }
+    rule operand:sym<null>    { <null> }
 };

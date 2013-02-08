@@ -263,8 +263,7 @@ my $ind_ref1 = '10 0 R';
 my $ind_obj2 = '20 1 obj endobj';
 my $ind_ref2 = '20 1 R';
 
-my $ind_obj3 = '13 0 obj<</BaseFont/Times-Roman/Type/Font
-/Subtype/Type1>>endobj';
+my $ind_obj3 = '13 0 obj<</BaseFont/Times-Roman/Type/Font/Subtype/Type1>>endobj';
 my $ind_ref3 = '13 0 R';
 
 for ($ind_ref1, $ind_ref2, $ind_ref3) {
@@ -295,8 +294,13 @@ my $ind_obj_fdf = '1 0 obj
 >>
 endobj';
 
-for (simple => $ind_obj1, empty => $ind_obj2, squashed => $ind_obj3,
-     stream => $ind_obj4, comments => $ind_obj5, fdf => $ind_obj_fdf) {
+my $ind_obj_scrunched = '1 0 obj<</FDF<</F(Document.pdf)/ID[<7a0631678ed475f0898815f0a818cfa1><bef7724317b311718e8675b677ef9b4e>]/Fields[<</T(Street)/V(345 Park Ave.)>><</T(City)/V(San Jose)>>]>>>> 
+endobj';
+
+for (simple => $ind_obj1, empty => $ind_obj2, squashed1 => $ind_obj3,
+     squashed2 => $ind_obj_scrunched, stream => $ind_obj4,
+     comments => $ind_obj5, fdf => $ind_obj_fdf,
+     ) {
     ok($_.value ~~ /^<PDF::Grammar::PDF::indirect_obj>$/, "indirect_obj - " ~ $_.key)
         or diag $_.value;
 }

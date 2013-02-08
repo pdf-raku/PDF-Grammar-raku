@@ -16,7 +16,7 @@ my $example_expr = '{ 360 mul sin
 
 my $if_expr = '{ 1 1 add 3 eq ' ~ $example_expr ~' if }';
 
-my $if_else_expr = '{false ' ~ $if_expr ~' {(booya!)} ifelse}';
+my $if_else_expr = '{2 1 1 add eq {7 6 mul} {(booya!)} ifelse}';
 
 my $restricted_ops = '{ 360 sin <</x [exch]>> def }';
 
