@@ -15,6 +15,16 @@ trailer
 <</Root 1 0 R>>
 %%EOF';
 
+my $fdf_medium = '%FDF-1.2
+%âãÏÓ
+1 0 obj<</FDF<</F(Document.pdf)
+/ID[<7a0631678ed475f0898815f0a818cfa1><bef7724317b311718e8675b677ef9b4e>]
+/Fields[<</T(Street)/V(345 Park Ave.)>><</T(City)/V(San Jose)>>]>>>>
+endobj
+trailer
+<</Root 1 0 R>>
+%%EOF';
+
 my $fdf_body = q:to/END_END_END/;
 %FDF-1.2
 %âãÏÓ
@@ -26,7 +36,7 @@ trailer
 %%EOF
 END_END_END
 
-for (small => $fdf_small, real => $fdf_body) {
+for (small => $fdf_small, medium => $fdf_medium, real => $fdf_body) {
     my $p = PDF::Grammar::FDF.parse($_.value);
 
     ok($p, "fdf parse " ~ $_.key)

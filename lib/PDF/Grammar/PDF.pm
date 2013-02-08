@@ -21,10 +21,8 @@ grammar PDF::Grammar::PDF is PDF::Grammar {
     rule indirect_ref { <integer> <integer> R }
 
     # Operand extensions
-    # - Prepend indrect references to operand list
-    rule operand { <indirect_ref> | <object> }
-    # - Modify dict rule to allow a trailing stream anywhere
-    rule object:sym<dict>  { <dict><stream>? }
+    rule operand:sym<dict>  { <dict><stream>? }
+    rule operand:sym<indirect_ref>  { <indirect_ref> }
 
     # stream parsing
     rule stream_head { stream<eol>}

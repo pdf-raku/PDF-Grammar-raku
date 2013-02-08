@@ -15,7 +15,7 @@ grammar PDF::Grammar::Function is PDF::Grammar {
     # -- restricted operators; not permitted in postscript functions
     rule restricted { <dict> | <array> | <name> | <null> }
     # -- postscript operators; only permitted in postscript functions
-    rule object:sym<ps_op> { <ps_op> }
+    rule operand:sym<ps_op> { <ps_op> }
 
     proto token ps_op { <...> }
 

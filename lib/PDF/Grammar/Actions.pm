@@ -118,12 +118,12 @@ class PDF::Grammar::Actions:ver<0.0.1> {
         make $.ast( %dict, :pdf_type('dict') );
     }
 
-    method object:sym<number>($/)  { make $<number>.ast }
-    method object:sym<bool>($/)    { make $<bool>.ast }
-    method object:sym<string>($/)  { make $<string>.ast }
-    method object:sym<name>($/)    { make $<name>.ast }
-    method object:sym<array>($/)   { make $<array>.ast }
-    method object:sym<dict>($/)    { make $<dict>.ast }
+    method operand:sym<number>($/)  { make $<number>.ast }
+    method operand:sym<bool>($/)    { make $<bool>.ast }
+    method operand:sym<string>($/)  { make $<string>.ast }
+    method operand:sym<name>($/)    { make $<name>.ast }
+    method operand:sym<array>($/)   { make $<array>.ast }
+    method operand:sym<dict>($/)    { make $<dict>.ast }
     method object:sym<null>($/)    { make $<null>.ast }
 
     method operand($/)             { make $<object>.ast }
