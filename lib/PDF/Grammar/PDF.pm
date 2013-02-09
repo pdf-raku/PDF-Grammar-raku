@@ -20,8 +20,10 @@ grammar PDF::Grammar::PDF is PDF::Grammar {
     rule indirect_obj { <integer> <integer> obj <operand>* endobj }
     rule indirect_ref { <integer> <integer> R }
 
-    # Operand extensions
+    # Operand extensions for indirect objects:
+    # modify <dict> - allow trailing stream anywhere
     rule operand:sym<dict>  { <dict><stream>? }
+    # add <indrect_ref> to the list of permitted operands
     rule operand:sym<indirect_ref>  { <indirect_ref> }
 
     # stream parsing
