@@ -34,7 +34,7 @@ class PDF::Grammar::Function::Actions is PDF::Grammar::Actions {
         make %branch;
     }
 
-    method restricted($/) {make ('??' => $/.caps.[0].value.ast)}
+    method unexpected($/) {make ('??' => $/.caps.[0].value.ast)}
     method unknown($/) {make ('??' => $/.Str)}
 
 }
