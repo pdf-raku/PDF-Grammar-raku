@@ -30,8 +30,6 @@ grammar PDF::Grammar:ver<0.0.5> {
     rule number { <real> | <integer> }
 
     token octal_code {<[0..7]> ** 1..3}
-    token char_code  {<[nrtbf\(\)\\]>}
-
     token literal_delimiter {<[ \( \) \\ \n \r ]>}
 
     # literal string components
