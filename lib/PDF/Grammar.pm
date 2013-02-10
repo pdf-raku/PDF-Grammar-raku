@@ -63,16 +63,16 @@ grammar PDF::Grammar:ver<0.0.5> {
     # ---------------
     token bool  {'true' | 'false'}
     token null  {'null'}
-    rule array  {\[ <operand>* \]}
-    rule dict   {'<<' [<name> <operand>]* '>>'}
+    rule array  {\[ <object>* \]}
+    rule dict   {'<<' [<name> <object>]* '>>'}
 
-    # Define a core set of operands.
-    proto rule operand { <...> }
-    rule operand:sym<number>  { <number> }
-    rule operand:sym<bool>    { <bool> }
-    rule operand:sym<string>  { <string> }
-    rule operand:sym<name>    { <name> }
-    rule operand:sym<array>   { <array> }
-    rule operand:sym<dict>    { <dict> }
-    rule operand:sym<null>    { <null> }
+    # Define a core set of objects.
+    proto rule object { <...> }
+    rule object:sym<number>  { <number> }
+    rule object:sym<bool>    { <bool> }
+    rule object:sym<string>  { <string> }
+    rule object:sym<name>    { <name> }
+    rule object:sym<array>   { <array> }
+    rule object:sym<dict>    { <dict> }
+    rule object:sym<null>    { <null> }
 };

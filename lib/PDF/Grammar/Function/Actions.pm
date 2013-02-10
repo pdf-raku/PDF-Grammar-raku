@@ -15,7 +15,7 @@ class PDF::Grammar::Function::Actions is PDF::Grammar::Actions {
         make $/.caps[0].value.ast;
     }
 
-    method operand:sym<ps_op>($/) {make ($/.ast || 42)};
+    method object:sym<ps_op>($/) {make $/.ast};
     # extended postcript operators
     method ps_op:sym<arithmetic>($/) {make $<op>.Str }
     method ps_op:sym<bitwise>($/)    {make $<op>.Str }

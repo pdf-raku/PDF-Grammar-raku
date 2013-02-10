@@ -41,7 +41,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     proto rule block { <...> }
     rule block:sym<text> {<opBeginText> [ <inner_marked_content_block> | <op> ]* <opEndText>}
     rule block:sym<markedContent> {<opBeginMarkedContent> [ <inner_text_block> | <op> ]* <opEndMarkedContent>}
-    rule imageAtts { [<name> <operand>]* }
+    rule imageAtts { [<name> <object>]* }
     regex stream_chars{<PDF::Grammar::Stream::chars>}
     regex block:sym<image> {
                       <opBeginImage>:
@@ -52,7 +52,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule block:sym<ignore> {<opBeginIgnore>: (<block:sym<ignore>>|.)*? <opEndIgnore>}
 
     # ------------------------
-    # Operators and Operands
+    # Operators and Objects
     # ------------------------
 
     # operator names courtersy of xpdf / Gfx.cc (http://foolabs.com/xdf/)
@@ -110,8 +110,8 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule op:sym<Stroke>              { (S) }
     rule op:sym<SetStrokeColor>      { <number>**4 (SC) }
     rule op:sym<SetFillColor>        { <number>**4 (sc) }
-    rule op:sym<SetFillColorN>       { <operand>+ (scn) }
-    rule op:sym<SetStrokeColorN>     { <operand>+ (SCN) }
+    rule op:sym<SetFillColorN>       { <object>+ (scn) }
+    rule op:sym<SetStrokeColorN>     { <object>+ (SCN) }
     rule op:sym<ShFill>              { <name> (sh) }
 
     rule op:sym<TextNextLine>        { (T\*) }
@@ -141,5 +141,5 @@ grammar PDF::Grammar::Content is PDF::Grammar {
 
     # catchall for unknown opcodes and arguments
     token guff { <[a..zA..Z\*\"\']><[\w\*\"\']>* }
-    rule unknown               { [<operand>|<guff>] } 
+    rule unknown               { [<object>|<guff>] } 
 }

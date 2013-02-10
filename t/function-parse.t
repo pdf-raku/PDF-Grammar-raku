@@ -26,7 +26,7 @@ for (trivial => $trivial_expr,
      example => $example_expr,
      if => $if_expr,
      if_else => $if_else_expr,
-     restricted_ops => $restricted_ops,
+     unexpected => $restricted_ops,
     ) {
     my $p = PDF::Grammar::Function.parse($_.value, :actions($actions));
 

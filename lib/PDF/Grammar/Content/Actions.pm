@@ -11,18 +11,18 @@ class PDF::Grammar::Content::Actions is PDF::Grammar::Actions {
 
     sub _op_data($op) {
         my $operator;
-        my @operands;
+        my @objects;
 
         for $op.caps -> $cap {
             if $cap.key eq '0' {
                 $operator = $cap.value.Str;
             }
             else {
-                push @operands, $cap.value.ast;
+                push @objects, $cap.value.ast;
             }
         }
 
-        return $operator => @operands;
+        return $operator => @objects;
      }
 
     sub _image_block_data($image_block) {
@@ -82,10 +82,10 @@ class PDF::Grammar::Content::Actions is PDF::Grammar::Actions {
     method imageAtts ($/) {
 
         my @names = @<name>.map({ $_.ast });
-        my @operands = @<operand>.map({ $_.ast });
+        my @objects = @<object>.map({ $_.ast });
 
         my %atts;
-        %atts{ @names } = @operands;
+        %atts{ @names } = @objects;
 
         make %atts;
 

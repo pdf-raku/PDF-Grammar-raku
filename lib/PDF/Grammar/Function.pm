@@ -9,13 +9,11 @@ grammar PDF::Grammar::Function is PDF::Grammar {
     rule TOP {^ <expression> $}
 
     rule expression { '{' <statement>* '}' }
-    rule statement  { <ifelse> | <if> | <unexpected> | <operand> | <unknown> }
+    rule statement  { <ifelse> | <if> | <unexpected> | <object> | <unknown> }
 
-    # Operands:
-    # -- restricted operators; not permitted in postscript functions
     rule unexpected { <dict> | <array> | <name> | <null> }
-    # -- postscript operators; only permitted in postscript functions
-    rule operand:sym<ps_op> { <ps_op> }
+
+    rule object:sym<ps_op> {<ps_op>}
 
     proto token ps_op { <...> }
 

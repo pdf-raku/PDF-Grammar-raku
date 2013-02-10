@@ -2,7 +2,7 @@ use v6;
 
 use PDF::Grammar::Actions;
 
-# rules for constructing operand values for PDF::Grammar::PDF
+# rules for constructing PDF::Grammar::PDF AST
 
 class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
 
@@ -93,9 +93,8 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
         make %entry;
     }
 
-   # stream_head, stream_tail:
-   # we don't actually capture streams, which can be huge and represent the
-   # majority of data in a typical PDF. Rather we just return the byte
+   # we don't actually capture streams, which can be huge and represent
+   # the majority of data in a typical PDF. Rather we just return the byte
    # offsets of the start and the end of the stream and leave it up to the
    # caller to disseminate
 

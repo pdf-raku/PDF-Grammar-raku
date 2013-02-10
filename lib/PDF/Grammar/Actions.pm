@@ -1,6 +1,6 @@
 use v6;
 
-# rules for constructing operand values for PDF::Grammar
+# rules for constructing PDF::Grammar AST
 use PDF::Grammar::Attributes;
 
 class PDF::Grammar::Actions:ver<0.0.1> {
@@ -104,29 +104,27 @@ class PDF::Grammar::Actions:ver<0.0.1> {
     }
 
     method array ($/) {
-        my @operands = @<operand>.map({ $_.ast });
-        make $.ast( @operands, :pdf_type('array') );
+        my @objects = @<object>.map({ $_.ast });
+        make $.ast( @objects, :pdf_type('array') );
     }
 
     method dict ($/) {
         my @names = @<name>.map({ $_.ast });
-        my @operands = @<operand>.map({ $_.ast });
+        my @objects = @<object>.map({ $_.ast });
 
         my %dict;
-        %dict{ @names } = @operands;
+        %dict{ @names } = @objects;
 
         make $.ast( %dict, :pdf_type('dict') );
     }
 
-    method operand:sym<number>($/)  { make $<number>.ast }
-    method operand:sym<bool>($/)    { make $<bool>.ast }
-    method operand:sym<string>($/)  { make $<string>.ast }
-    method operand:sym<name>($/)    { make $<name>.ast }
-    method operand:sym<array>($/)   { make $<array>.ast }
-    method operand:sym<dict>($/)    { make $<dict>.ast }
+    method object:sym<number>($/)  { make $<number>.ast }
+    method object:sym<bool>($/)    { make $<bool>.ast }
+    method object:sym<string>($/)  { make $<string>.ast }
+    method object:sym<name>($/)    { make $<name>.ast }
+    method object:sym<array>($/)   { make $<array>.ast }
+    method object:sym<dict>($/)    { make $<dict>.ast }
     method object:sym<null>($/)    { make $<null>.ast }
-
-    method operand($/)             { make $<object>.ast }
 
     # utility subs
 

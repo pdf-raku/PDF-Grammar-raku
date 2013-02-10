@@ -67,25 +67,25 @@ my @tests = (
     'number',                  '42',                42,
     'number',                  '12.5',              12.5,
 
-    'operand' => ['string',
+    'object' => ['string',
                   'literal'],  '(hi)',              'hi',
 
-    'operand' => ['string',
+    'object' => ['string',
                   'hex'],      '<6869>',            'hi',
 
-    'operand' => ['number',
+    'object' => ['number',
                   'integer'],  '-042',             -42,
 
-    'operand' => ['number',
+    'object' => ['number',
                   'real'],     '+3.50',             3.5,
 
-    'operand' => ['dict'],     '<</Length 42>>',    {Length => 42},
+    'object' => ['dict'],     '<</Length 42>>',    {Length => 42},
 
-    'operand' => ['array'],    '[/Apples(oranges)]',['Apples', 'oranges'],
+    'object' => ['array'],    '[/Apples(oranges)]',['Apples', 'oranges'],
 
-    'operand' => ['bool'],     'true',              True,
-    'operand' => ['bool'],     'false',             False,
-    'operand' => ['dict'],     '<</Length 42>>',    {Length => 42},
+    'object' => ['bool'],     'true',              True,
+    'object' => ['bool'],     'false',             False,
+    'object' => ['dict'],     '<</Length 42>>',    {Length => 42},
 
     );
 
