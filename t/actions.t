@@ -55,6 +55,7 @@ my @tests = (
     'literal_string',          "(hi\r\nagain)",         "hi\nagain",
     'literal_string',          '(perl(6) rocks! :-\))', 'perl(6) rocks! :-)',
     'literal_string',          "(continued\\\n line)",  'continued line',
+    'literal_string',          '(stray back\-slash)',   'stray back-slash',
     'literal_string',          "(try\\\n\\\n%this\\\n)",'try%this',
 
     'string',                  '(hi)',             'hi',
@@ -107,7 +108,11 @@ for @tests -> $_rule, $string, $expected_result {
         unless $p;
     my $result = $p.ast;
     if defined $expected_result {
-        is($result, $expected_result, "rule $rule: $string => $expected_result");
+        is($result, $expected_result, "rule $rule: $string => $expected_result")
+            || do {
+                diag "expected: " ~ $expected_result.split('').map({$_.ord});
+                diag "actual: " ~ $result.split('').map({$_.ord});
+        };
     }
     else {
         ok(! defined($result), "rule $rule: $string => (undef)");

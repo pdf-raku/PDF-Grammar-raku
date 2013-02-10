@@ -62,35 +62,25 @@ class PDF::Grammar::Actions:ver<0.0.1> {
 
     method char_code($/) { make $/.Str }
 
-    method literal:sym<continuation>($/) { make '' }
+    method literal_esc:sym<octal>($/)  {
+        make chr( _from_octal($<octal_code>) )
+    }
+    method literal_esc:sym<delim>($/)        { make $<delim>.Str }
+    method literal_esc:sym<backspace>($/)    { make "\b" }
+    method literal_esc:sym<formfeed>($/)     { make "\f" }
+    method literal_esc:sym<newline>($/)      { make "\n" }
+    method literal_esc:sym<cr>($/)           { make "\r" }
+    method literal_esc:sym<tab>($/)          { make "\t" }
+    method literal_esc:sym<continuation>($/) { make '' }
+
     method literal:sym<eol>($/) { make "\n" }
-    method literal:sym<substring>($/) { make '(' ~ $<literal_string>.ast ~ ')' }
-    method literal:sym<chars>($/) { make $/.Str }
+    method literal:sym<substring>($/)    {
+        make '(' ~ $<literal_string>.ast ~ ')'
+    }
+    method literal:sym<regular>($/)      { make $/.Str }
 
     method literal:sym<escape> ($/) {
-       my $char;
-
-       if $<char_code> {
-           $char =  {
-                     b   => "\b", 
-                     f   => "\f",
-                     n   => "\n",
-                     r   => "\r",
-                     t   => "\t",
-                     '(' => '(',
-                     ')' => ')'
-           }{ $<char_code> }
-               or die "illegal escape character \$<char_code>";
-       }
-       elsif $<octal_code> {
-           $char =  chr( _from_octal( $<octal_code> ) );
-       }
-       else {
-           # silently consume stray '\'
-           $char = '';
-       }
-
-       make $char;
+        make  $<literal_esc>.ast;
     }
 
     method literal_string ($/) {

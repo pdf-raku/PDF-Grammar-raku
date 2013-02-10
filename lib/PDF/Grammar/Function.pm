@@ -13,6 +13,7 @@ grammar PDF::Grammar::Function is PDF::Grammar {
 
     rule unexpected { <dict> | <array> | <name> | <null> }
 
+    # extend <object> add <ps_op>
     rule object:sym<ps_op> {<ps_op>}
 
     proto token ps_op { <...> }

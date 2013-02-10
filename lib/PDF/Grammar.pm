@@ -17,7 +17,7 @@ grammar PDF::Grammar:ver<0.0.5> {
     token eol:sym<mac_osx> {"\r"}
 
     token comment {'%' <- eol>* <eol>?}
-    token ws_char {"\t" | "\f" | ' ' | <eol> | <comment>}
+    token ws_char {' ' | "\t" | "\f" | <eol> | <comment>}
     token ws {<!ww><ws_char>*}
 
     # [PDF 1.7] 7.3.3  Numeric Objects
@@ -34,12 +34,23 @@ grammar PDF::Grammar:ver<0.0.5> {
 
     token literal_delimiter {<[ \( \) \\ \n \r ]>}
 
+    # literal string components
     proto token literal {<...>}
-    token literal:sym<continuation> {"\\"<eol>}
+    token literal:sym<escape>       {<literal_esc>}
     token literal:sym<eol>          {<eol>}
-    token literal:sym<escape>       {'\\'[<octal_code>|<char_code>]?}
     token literal:sym<substring>    {<literal_string>}
-    token literal:sym<chars>        {<-literal_delimiter>+}
+    token literal:sym<regular>      {<-literal_delimiter>+}
+
+    # literal string escape codes
+    proto token literal_esc {<...>}
+    token literal_esc:sym<octal>        {\\ <octal_code>}
+    token literal_esc:sym<delim>        {\\ $<delim>=[\( | \) | \\]}
+    token literal_esc:sym<backspace>    {\\ b}
+    token literal_esc:sym<formfeed>     {\\ f}
+    token literal_esc:sym<newline>      {\\ n}
+    token literal_esc:sym<cr>           {\\ r}
+    token literal_esc:sym<tab>          {\\ t}
+    token literal_esc:sym<continuation> {\\ <eol>?}
 
     token literal_string {'('<literal>*')'}
 
