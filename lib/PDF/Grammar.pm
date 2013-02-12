@@ -34,21 +34,18 @@ grammar PDF::Grammar:ver<0.0.5> {
 
     # literal string components
     proto token literal {<...>}
-    token literal:sym<escape>       {<literal_esc>}
-    token literal:sym<eol>          {<eol>}
-    token literal:sym<substring>    {<literal_string>}
-    token literal:sym<regular>      {<-literal_delimiter>+}
-
+    token literal:sym<eol>              {<eol>}
+    token literal:sym<substring>        {<literal_string>}
+    token literal:sym<regular>          {<-literal_delimiter>+}
     # literal string escape codes
-    proto token literal_esc {<...>}
-    token literal_esc:sym<octal>        {\\ <octal_code>}
-    token literal_esc:sym<delim>        {\\ $<delim>=[\( | \) | \\]}
-    token literal_esc:sym<backspace>    {\\ b}
-    token literal_esc:sym<formfeed>     {\\ f}
-    token literal_esc:sym<newline>      {\\ n}
-    token literal_esc:sym<cr>           {\\ r}
-    token literal_esc:sym<tab>          {\\ t}
-    token literal_esc:sym<continuation> {\\ <eol>?}
+    token literal:sym<esc_octal>        {\\ <octal_code>}
+    token literal:sym<esc_delim>        {\\ $<delim>=[\( | \) | \\]}
+    token literal:sym<esc_backspace>    {\\ b}
+    token literal:sym<esc_formfeed>     {\\ f}
+    token literal:sym<esc_newline>      {\\ n}
+    token literal:sym<esc_cr>           {\\ r}
+    token literal:sym<esc_tab>          {\\ t}
+    token literal:sym<esc_continuation> {\\ <eol>?}
 
     token literal_string {'('<literal>*')'}
 

@@ -62,26 +62,24 @@ class PDF::Grammar::Actions:ver<0.0.1> {
 
     method char_code($/) { make $/.Str }
 
-    method literal_esc:sym<octal>($/)  {
-        make chr( _from_octal($<octal_code>) )
-    }
-    method literal_esc:sym<delim>($/)        { make $<delim>.Str }
-    method literal_esc:sym<backspace>($/)    { make "\b" }
-    method literal_esc:sym<formfeed>($/)     { make "\f" }
-    method literal_esc:sym<newline>($/)      { make "\n" }
-    method literal_esc:sym<cr>($/)           { make "\r" }
-    method literal_esc:sym<tab>($/)          { make "\t" }
-    method literal_esc:sym<continuation>($/) { make '' }
-
     method literal:sym<eol>($/) { make "\n" }
     method literal:sym<substring>($/)    {
         make '(' ~ $<literal_string>.ast ~ ')'
     }
     method literal:sym<regular>($/)      { make $/.Str }
-
     method literal:sym<escape> ($/) {
         make  $<literal_esc>.ast;
     }
+    method literal:sym<esc_octal>($/)  {
+        make chr( _from_octal($<octal_code>) )
+    }
+    method literal:sym<esc_delim>($/)        { make $<delim>.Str }
+    method literal:sym<esc_backspace>($/)    { make "\b" }
+    method literal:sym<esc_formfeed>($/)     { make "\f" }
+    method literal:sym<esc_newline>($/)      { make "\n" }
+    method literal:sym<esc_cr>($/)           { make "\r" }
+    method literal:sym<esc_tab>($/)          { make "\t" }
+    method literal:sym<esc_continuation>($/) { make '' }
 
     method literal_string ($/) {
         my $string = $<literal>.map({ $_.ast }).join('');
