@@ -15,7 +15,10 @@ class PDF::Grammar::Function::Actions is PDF::Grammar::Actions {
         make $/.caps[0].value.ast;
     }
 
-    method object:sym<ps_op>($/) {make $/.ast};
+    method unexpected($/) {make ('??' => $/.caps.[0].value.ast)}
+    method unknown($/) {make ('??' => $/.Str)}
+
+    method object:sym<ps_op>($/) {make $.ast( $<ps_op>.ast, :pdf_type('ps_op') )};
     # extended postcript operators
     method ps_op:sym<arithmetic>($/) {make $<op>.Str }
     method ps_op:sym<bitwise>($/)    {make $<op>.Str }
@@ -33,8 +36,5 @@ class PDF::Grammar::Function::Actions is PDF::Grammar::Actions {
         %branch<else> = $<else_expr>.ast;
         make %branch;
     }
-
-    method unexpected($/) {make ('??' => $/.caps.[0].value.ast)}
-    method unknown($/) {make ('??' => $/.Str)}
 
 }
