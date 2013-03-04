@@ -30,7 +30,7 @@ relaxed rules, when needed, to handle real-world examples.
 
 Rakudo Star
 -----------
-You'll first need to download and build Rakudo Star 2012.11 or better (https://github.com/rakudo/star/downloads - don't forget the final `make install`):
+You'll first need to download and build Rakudo Star 2012.11 or better (http://rakudo.org/downloads/star/ - don't forget the final `make install`):
 
 Ensure that `perl6` and `panda` are available on your path, e.g. :
 
