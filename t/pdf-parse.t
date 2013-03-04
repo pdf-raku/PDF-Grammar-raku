@@ -7,8 +7,8 @@ use PDF::Grammar::PDF::Actions;
 my $pdf_header_version = 1.5;
 my $header = "%PDF-{$pdf_header_version}";
 
-for ('%PDF-1.0', $pdf_header_version) {
-     ok($header ~~ /^<PDF::Grammar::PDF::pdf_header>$/, "pdf_header: $header");
+for ('%PDF-1.0', $header) {
+     ok($_ ~~ /^<PDF::Grammar::PDF::pdf_header>$/, "pdf_header: $_");
 }
 
 my $indirect_obj1 = '1 0 obj

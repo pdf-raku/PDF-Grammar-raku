@@ -23,9 +23,9 @@ grammar PDF::Grammar:ver<0.0.5> {
     # [PDF 1.7] 7.3.3  Numeric Objects
     # ---------------
     token integer { ['+' | '-']? \d+ }
-    # reals must have at least one digit either before or after the decimal
+    # reals must have a decimal point and some digits before or after it.
     # point
-    token real { ['+' | '-']? [[\d+\.\d*] | [\d*\.\d+]] }
+    token real { ['+' | '-']? [\d+\.\d* | \d*\.\d+] }
 
     rule number { <real> | <integer> }
 
@@ -37,7 +37,7 @@ grammar PDF::Grammar:ver<0.0.5> {
     token literal:sym<eol>              {<eol>}
     token literal:sym<substring>        {<literal_string>}
     token literal:sym<regular>          {<-literal_delimiter>+}
-    # literal string escape codes
+    # literal string escape sequences
     token literal:sym<esc_octal>        {\\ <octal_code>}
     token literal:sym<esc_delim>        {\\ $<delim>=[\( | \) | \\]}
     token literal:sym<esc_backspace>    {\\ b}

@@ -67,9 +67,7 @@ class PDF::Grammar::Actions:ver<0.0.1> {
         make '(' ~ $<literal_string>.ast ~ ')'
     }
     method literal:sym<regular>($/)      { make $/.Str }
-    method literal:sym<escape> ($/) {
-        make  $<literal_esc>.ast;
-    }
+    # literal escape sequences
     method literal:sym<esc_octal>($/)  {
         make chr( _from_octal($<octal_code>) )
     }
