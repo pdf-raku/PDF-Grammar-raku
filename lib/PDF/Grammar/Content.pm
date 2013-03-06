@@ -46,7 +46,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     regex block:sym<image> {
                       <opBeginImage>:
                       <imageAtts>
-                      <opImageData>(<stream_chars>?)<eol>?<opEndImage>
+                      <opImageData>(<stream_chars>?)<.eol>?<opEndImage>
     }
 
     rule block:sym<ignore> {<opBeginIgnore>: (<block:sym<ignore>>|.)*? <opEndIgnore>}

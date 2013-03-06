@@ -51,7 +51,7 @@ grammar PDF::Grammar:ver<0.0.5> {
 
     # hex strings
     token hex_char {<xdigit>**1..2}
-    token hex_string {\< [<xdigit>|<ws_char>]* \>}
+    token hex_string {\< [<xdigit>|<.ws_char>]* \>}
 
     token string {<hex_string>|<literal_string>}
 

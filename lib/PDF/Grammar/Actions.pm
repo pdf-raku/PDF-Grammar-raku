@@ -53,7 +53,7 @@ class PDF::Grammar::Actions:ver<0.0.1> {
     }
 
     method hex_string ($/) {
-        my $xdigits = $/.caps.grep({$_.key eq 'xdigit'}).map({$_.value}).join('');
+        my $xdigits = $<xdigit>.map({$_.Str}).join('');
         my @hex_codes = $xdigits.comb(/..?/).map({ _from_hex ($_) });
         my $string = @hex_codes.map({ chr($_) }).join('');
 
