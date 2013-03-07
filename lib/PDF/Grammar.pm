@@ -1,6 +1,6 @@
 use v6;
 
-grammar PDF::Grammar:ver<0.0.5> {
+grammar PDF::Grammar:ver<0.0.6> {
     # abstract base grammar for PDF Elements, see instances:
     # PDF::Grammar::Content  - Text and Graphics Content
     # PDF::Grammar::FDF      - Describes FDF (Form Data) files
@@ -34,9 +34,9 @@ grammar PDF::Grammar:ver<0.0.5> {
 
     # literal string components
     proto token literal {<...>}
+    token literal:sym<regular>          {<-literal_delimiter>+}
     token literal:sym<eol>              {<eol>}
     token literal:sym<substring>        {<literal_string>}
-    token literal:sym<regular>          {<-literal_delimiter>+}
     # literal string escape sequences
     token literal:sym<esc_octal>        {\\ <octal_code>}
     token literal:sym<esc_delim>        {\\ $<delim>=[\( | \) | \\]}

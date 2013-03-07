@@ -4,16 +4,24 @@ use Test;
 use PDF::Grammar::PDF;
 use PDF::Grammar::PDF::Actions;
 
-my $header = '%PDF-1.3';
+use lib '.';
+use t::AST;
 
-my $indirect_obj1 = '1 0 obj
+my $header = '%PDF-1.3';
+my $header_ast = 1.3;
+
+my $ind_ref1 =  '3 0 R';
+my $ind_ref1_ast = "ind_ref" => [3, 0];
+
+my $ind_obj1 = "1 0 obj
 <<
 /Type /Catalog
-/Pages 3 0 R
+/Pages {$ind_ref1}
 /Outlines 2 0 R
 >>
 endobj
-';
+";
+my $ind_obj1_ast = "ind_obj" => [1, 0, {"Type" => "Catalog", "Pages" => $ind_ref1_ast, "Outlines" => 'ind_ref' => [2, 0]}];
 
 my $stream_content = 'BT
   /F1 24 Tf  % useless comment
@@ -21,16 +29,17 @@ my $stream_content = 'BT
 ET';
 my $stream_length = $stream_content.chars;
 
-my $indirect_obj2 = "5 0 obj
+my $ind_obj2 = "5 0 obj
 << /Length $stream_length >>
 stream
 $stream_content
 endstream
 endobj
 ";
+my $ind_obj2_ast = "ind_obj" => [5, 0, "stream" => {"atts" => {"Length" => 68}, "start" => 33, "end" => 99}];
 
-my $body = $indirect_obj1 ~
-$indirect_obj2 ~
+my $body = $ind_obj1 ~
+$ind_obj2 ~
 '3 0 obj
 <<
   /Type /Outlines
@@ -78,6 +87,7 @@ my $xref = "xref
 0000000415 00000 n
 0000000445 00000 n
 ";
+my $xref_ast = [{"object_first_num" => 0, "object_count" => 8, "entries" => [{"offset" => 0, "gen" => 65535, "status" => "f"}, {"offset" => 9, "gen" => 0, "status" => "n"}, {"offset" => 74, "gen" => 0, "status" => "n"}, {"offset" => 120, "gen" => 0, "status" => "n"}, {"offset" => 179, "gen" => 0, "status" => "n"}, {"offset" => 322, "gen" => 0, "status" => "n"}, {"offset" => 415, "gen" => 0, "status" => "n"}, {"offset" => 445, "gen" => 0, "status" => "n"}]}];
 
 my $trailer = 'trailer
 <<
@@ -88,6 +98,8 @@ startxref
 553
 ';
 
+my $trailer_ast = "trailer" => {"dict" => {"Size" => 8, "Root" => "ind_ref" => [1, 0]}, "byte_offset" => 553};
+
 my $pdf = "$header
 $body
 $xref$trailer%\%EOF";
@@ -95,22 +107,23 @@ $xref$trailer%\%EOF";
 my $actions = PDF::Grammar::PDF::Actions.new;
 
 for (
-      pdf_header => $header,
-      indirect_obj => $indirect_obj1,
-      indirect_obj => $indirect_obj2,
-      trailer => $trailer,
-      xref => $xref,
-      body => $body ~ "\n" ~ $trailer,
-      pdf => $pdf,
+      pdf_header => {input => $header, ast => $header_ast},
+      indirect_ref => {input => $ind_ref1, ast => $ind_ref1_ast},
+      indirect_obj => {input => $ind_obj1, ast => $ind_obj1_ast},
+      indirect_obj => {input => $ind_obj2, ast => $ind_obj2_ast},
+      trailer => {input => $trailer, ast => $trailer_ast},
+      xref => {input => $xref, ast => $xref_ast},
+      body => {input => $body ~ "\n" ~ $trailer},
+      pdf => {input => $pdf},
     ) {
      my $rule = $_.key;
-     my $str = $_.value;
-     my $p = PDF::Grammar::PDF.parse($str, :rule($rule), :actions($actions)),
+     my %test = $_.value;
+     my $input = %test<input>;
 
-     ok($p, "pdf parse - rule: " ~ $rule)
-       or do {diag $str; next};
+     my $p = PDF::Grammar::PDF.parse($input, :rule($rule), :actions($actions)),
 
-     diag {$rule => $p.ast}.perl;
+    t::AST::parse_tests($input, $p, :rule($rule), :suite('css3'),
+                         :expected(%test) );
 }
 
 done;

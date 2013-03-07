@@ -39,9 +39,9 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
         make (ind_obj => @ind_obj);
     }
 
-    method operand:sym<indiect_ref>($/)  { make $<indirect_ref>.ast }
+    method object:sym<indirect_ref>($/)  { make $<indirect_ref>.ast }
 
-    method operand:sym<dict>($/) {
+    method object:sym<dict>($/) {
         my ($dict, $stream) = $/.caps;
         my $dict_ast = $dict.value.ast;
 
