@@ -67,8 +67,8 @@ grammar PDF::Grammar:ver<0.0.6> {
 
     # [PDF 1.7] 7.3.2  Boolean objects + Null object
     # ---------------
-    token bool  {'true' | 'false'}
-    token null  {'null'}
+    token bool  {true|false}
+    token null  {null}
     rule array  {\[ <object>* \]}
     rule dict   {'<<' [<name> <object>]* '>>'}
 

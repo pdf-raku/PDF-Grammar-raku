@@ -1,6 +1,7 @@
 use v6;
 
-# rules for constructing PDF::Grammar AST
+# base rules for constructing AST from PDF::Grammar.
+
 use PDF::Grammar::Attributes;
 
 class PDF::Grammar::Actions:ver<0.0.1> {
@@ -59,8 +60,6 @@ class PDF::Grammar::Actions:ver<0.0.1> {
 
         make $.ast( $string, :pdf_subtype('hex') );
     }
-
-    method char_code($/) { make $/.Str }
 
     method literal:sym<eol>($/) { make "\n" }
     method literal:sym<substring>($/)    {

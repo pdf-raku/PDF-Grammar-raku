@@ -26,7 +26,7 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
         my %trailer;
         %trailer<dict> = $<dict>.ast;
         %trailer<byte_offset> = $<byte_offset>.Int;
-        make (trailer => %trailer);
+        make %trailer;
     }
 
     method indirect_ref($/) {
@@ -48,7 +48,7 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
         if ($stream) {
             # <dict> is a just a header the following <stream>
             my %stream;
-            %stream<atts> = $dict_ast;
+            %stream<dict> = $dict_ast;
             (%stream<start>, %stream<end>) = $stream.value.ast.kv;
             make (stream => %stream)
         }

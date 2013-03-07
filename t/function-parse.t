@@ -4,6 +4,8 @@ use Test;
 
 use PDF::Grammar::Function;
 use PDF::Grammar::Function::Actions;
+use lib '.';
+use t::AST;
 
 my $trivial_expr = '{6 7 mul}';
 my $trivial_ast = (expr => [6, 7, "mul"]);
@@ -33,22 +35,12 @@ for (trivial =>    {input => $trivial_expr,   ast => $trivial_ast},
      if_else =>    {input => $if_else_expr,   ast => $if_else_ast},
      unexpected => {input => $restricted_ops, ast => $restricted_ast},
     ) {
-    my $test = $_.value;
-    my $input = %$test<input> // die "malformed test";
+    my %test = $_.value;
+    my $input = %test<input> // die "malformed test";
     my $p = PDF::Grammar::Function.parse($input, :actions($actions));
 
-    is($p.Str, $input, "function parse " ~ $_.key)
-        or diag $input;
-
-    my $expected_ast = %$test<ast>;
-
-    if defined $expected_ast  {
-        is($p.ast, $expected_ast, 'AST ' ~ $_.key)
-            or diag $p.ast.perl;
-    }
-    else {
-        diag "****" ~ $p.ast.perl;
-    }
+    t::AST::parse_tests($input, $p, :rule('TOP'), :suite('functions'),
+                         :expected(%test) );
 }
 
 done;

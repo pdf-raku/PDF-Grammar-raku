@@ -21,7 +21,9 @@ my $ind_obj1 = "1 0 obj
 >>
 endobj
 ";
-my $ind_obj1_ast = "ind_obj" => [1, 0, {"Type" => "Catalog", "Pages" => $ind_ref1_ast, "Outlines" => 'ind_ref' => [2, 0]}];
+my $ind_obj1_ast = "ind_obj" => [1, 0, {"Type" => "Catalog",
+                                        "Pages" => $ind_ref1_ast,
+                                        "Outlines" => 'ind_ref' => [2, 0]}];
 
 my $stream_content = 'BT
   /F1 24 Tf  % useless comment
@@ -36,7 +38,9 @@ $stream_content
 endstream
 endobj
 ";
-my $ind_obj2_ast = "ind_obj" => [5, 0, "stream" => {"atts" => {"Length" => 68}, "start" => 33, "end" => 99}];
+my $ind_obj2_ast = "ind_obj" => [5, 0, "stream" => {"dict" => {"Length" => 68},
+                                                    "start" => 33,
+                                                    "end" => 99}];
 
 my $body = $ind_obj1 ~
 $ind_obj2 ~
@@ -46,35 +50,16 @@ $ind_obj2 ~
   /Count 0
 >>
 endobj
-4 0 obj
-<<
-  /Type /Pages
-  /Count 1
-  /Kids [4 0 R]
->>
-endobj
-5 0 obj
-<<
-  /Type /Page
-  /Parent 3 0 R
-  /Resources << /Font << /F1 7 0 R >>/ProcSet 6 0 R
-  >>
-  /MediaBox [0 0 612 792]
-  /Contents 5 0 R
->>
-endobj
-6 0 obj
+4 2 obj
 [/PDF /Text]
-endobj
-7 0 obj
-<<
-  /Type /Font
-  /Subtype /Type1
-  /Name /F1
-  /BaseFont /Helvetica
-  /Encoding /MacRomanEncoding
->>
 endobj';
+
+my $body_objects_ast = [$ind_obj1_ast,
+                        "ind_obj" => [5, 0, "stream" => {"dict" => {"Length" => 68},
+                                                    "start" => 98,
+                                                    "end" => 164}],
+                        "ind_obj" => [3, 0, {"Type" => "Outlines", "Count" => 0}],
+                        "ind_obj" => [4, 2, ["PDF", "Text"]]];
 
 my $xref = "xref
 0 8
@@ -87,7 +72,17 @@ my $xref = "xref
 0000000415 00000 n
 0000000445 00000 n
 ";
-my $xref_ast = [{"object_first_num" => 0, "object_count" => 8, "entries" => [{"offset" => 0, "gen" => 65535, "status" => "f"}, {"offset" => 9, "gen" => 0, "status" => "n"}, {"offset" => 74, "gen" => 0, "status" => "n"}, {"offset" => 120, "gen" => 0, "status" => "n"}, {"offset" => 179, "gen" => 0, "status" => "n"}, {"offset" => 322, "gen" => 0, "status" => "n"}, {"offset" => 415, "gen" => 0, "status" => "n"}, {"offset" => 445, "gen" => 0, "status" => "n"}]}];
+my $xref_ast = [{"object_first_num" => 0,
+                 "object_count" => 8,
+                 "entries" => [{"offset" => 0, "gen" => 65535, "status" => "f"},
+                               {"offset" => 9, "gen" => 0, "status" => "n"},
+                               {"offset" => 74, "gen" => 0, "status" => "n"},
+                               {"offset" => 120, "gen" => 0, "status" => "n"},
+                               {"offset" => 179, "gen" => 0, "status" => "n"},
+                               {"offset" => 322, "gen" => 0, "status" => "n"},
+                               {"offset" => 415, "gen" => 0, "status" => "n"},
+                               {"offset" => 445, "gen" => 0, "status" => "n"}]
+               }];
 
 my $trailer = 'trailer
 <<
@@ -98,7 +93,11 @@ startxref
 553
 ';
 
-my $trailer_ast = "trailer" => {"dict" => {"Size" => 8, "Root" => "ind_ref" => [1, 0]}, "byte_offset" => 553};
+my $trailer_ast = {"dict" => {"Size" => 8,
+                              "Root" => "ind_ref" => [1, 0]},
+                   "byte_offset" => 553};
+
+my $body_trailer_ast = {objects => $body_objects_ast, trailer => $trailer_ast};
 
 my $pdf = "$header
 $body
@@ -113,8 +112,8 @@ for (
       indirect_obj => {input => $ind_obj2, ast => $ind_obj2_ast},
       trailer => {input => $trailer, ast => $trailer_ast},
       xref => {input => $xref, ast => $xref_ast},
-      body => {input => $body ~ "\n" ~ $trailer},
-      pdf => {input => $pdf},
+      body => {input => $body ~ "\n" ~ $trailer, ast => $body_trailer_ast},
+      pdf => {input => $pdf, ast => Mu},
     ) {
      my $rule = $_.key;
      my %test = $_.value;
@@ -122,7 +121,7 @@ for (
 
      my $p = PDF::Grammar::PDF.parse($input, :rule($rule), :actions($actions)),
 
-    t::AST::parse_tests($input, $p, :rule($rule), :suite('css3'),
+    t::AST::parse_tests($input, $p, :rule($rule), :suite('pdf doc'),
                          :expected(%test) );
 }
 
