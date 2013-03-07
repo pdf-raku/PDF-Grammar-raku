@@ -8,7 +8,7 @@ grammar PDF::Grammar::PDF is PDF::Grammar {
     # structure of PDF documents.
     #
     rule TOP {^<pdf>$}
-    rule pdf {<pdf_header><eol>[<body>+]'%%EOF'<eol>?}
+    rule pdf {<pdf_header><.eol>[<body>+]'%%EOF'<.eol>?}
 
     # [PDF 1.7] 7.5.2 File Header
     # ---------------
@@ -27,16 +27,16 @@ grammar PDF::Grammar::PDF is PDF::Grammar {
     rule object:sym<indirect_ref>  { <indirect_ref> }
 
     # stream parsing
-    rule stream_head { stream<eol>}
-    token stream_tail {<eol>?endstream<ws_char>+}
+    rule stream_head { stream<.eol>}
+    token stream_tail {<.eol>?endstream<.ws_char>+}
     rule stream {<stream_head>.*?<stream_tail>}
 
     # cross reference table
-    rule  xref {xref<eol><xref_section>+}
+    rule  xref {xref<.eol><xref_section>+}
     token object_first_num{\d+}
     token object_count{\d+}
-    rule  xref_section {<object_first_num> <object_count><eol><xref_entry>+}
-    rule  xref_entry {<byte_offset> <generation_number> <obj_status>' '?<eol>}
+    rule  xref_section {<object_first_num> <object_count><.eol><xref_entry>+}
+    rule  xref_entry {<byte_offset> <generation_number> <obj_status>' '?<.eol>}
     token byte_offset {\d+}
     token generation_number {\d+}
     rule  obj_status {<obj_status_free>|<obj_status_inuse>}
@@ -46,10 +46,10 @@ grammar PDF::Grammar::PDF is PDF::Grammar {
     # the trailer contains the position of the cross reference
     # table plus the file trailer dictionary
     rule trailer {
-        trailer<eol><dict><eol>startxref<eol>$<byte_offset>=(\d+)<eol>}
+        trailer<.eol><dict><eol>startxref<.eol>$<byte_offset>=(\d+)<.eol>}
 
     # pdf_tail: special stand-alone regex for reverse matching
     # trailer information from the end of the file. Typically used
     # when reading last few KB of a PDF to locate root resources
-    regex pdf_tail {<trailer>'%%EOF'<eol>?$}
+    regex pdf_tail {<trailer>'%%EOF'<.eol>?$}
 }
