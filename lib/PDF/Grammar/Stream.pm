@@ -16,8 +16,6 @@ grammar PDF::Grammar::Stream {
                | " \r" # mac-osx - trailing blank
     }
 
-    regex anychar  {.}      # take anything, including whitespace
-    regex anychars {.*}     # take anything, including whitespace
     regex char     { . }    # omit whitespace
     regex chars    { .* }   # omit whitespace
 }

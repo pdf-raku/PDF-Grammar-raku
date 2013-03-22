@@ -9,9 +9,20 @@ grammar PDF::Grammar::Function is PDF::Grammar {
     rule TOP {^ <expression> $}
 
     rule expression { '{' <statement>* '}' }
-    rule statement  { <ifelse> | <if> | <unexpected> | <object> | <unknown> }
 
-    rule unexpected { <dict> | <array> | <name> | <null> }
+    proto rule statement {<...>}
+    rule statement:sym<ifelse>     { <ifelse> }
+    rule statement:sym<if>         { <if> }
+    rule statement:sym<unexpected> { <unexpected> }
+    rule statement:sym<object>     { <object> }
+    rule statement:sym<unknown>    { <unknown> }
+
+    proto rule unexpected {<...>}
+    rule unexpected:sym<dict>  { <dict> }
+    rule unexpected:sym<array> { <array> }
+    rule unexpected:sym<name>  { <name> }
+    rule unexpected:sym<null>  { <null> }
+    rule Xunexpected { <dict> | <array>| <name> | <null> }
 
     # extend <object> add <ps_op>
     rule object:sym<ps_op> {<ps_op>}

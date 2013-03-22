@@ -11,30 +11,25 @@ class PDF::Grammar::Function::Actions is PDF::Grammar::Actions {
         make (expr => @result);
     }
 
-    method statement($/) {
-        make $/.caps[0].value.ast;
-    }
+    method statement:sym<ifelse>($/)     { make $<ifelse>.ast; }
+    method statement:sym<if>($/)         { make $<if>.ast; }
+    method statement:sym<object>($/)     { make $<object>.ast}
+    method statement:sym<unexpected>($/) { make ('??' => $<unexpected>.ast); }
+    method statement:sym<unknown>($/)    { make ('??' => $<unknown>.Str); }
 
-    method unexpected($/) {make ('??' => $/.caps.[0].value.ast)}
-    method unknown($/) {make ('??' => $/.Str)}
-
+    method unexpected:sym<dict>($/)  { make $<dict>.ast }
+    method unexpected:sym<array>($/) { make $<array>.ast }
+    method unexpected:sym<name>($/)  { make $<name>.ast }
+    method unexpected:sym<null>($/)  { make $<null>.ast }
+  
     method object:sym<ps_op>($/) {make $.ast( $<ps_op>.ast, :pdf_type('ps_op') )};
     # extended postcript operators
     method ps_op:sym<arithmetic>($/) {make $<op>.Str }
     method ps_op:sym<bitwise>($/)    {make $<op>.Str }
     method ps_op:sym<stack>($/)      {make $<op>.Str }
 
-    method if($/) {
-        my %branch;
-        %branch<if> = $<if_expr>.ast;
-        make %branch;
-    }
+    method if($/)     { make {if => $<if_expr>.ast} }
 
-    method ifelse($/) {
-        my %branch;
-        %branch<if> = $<if_expr>.ast;
-        %branch<else> = $<else_expr>.ast;
-        make %branch;
-    }
-
+    method ifelse($/) { make {if => $<if_expr>.ast,
+                              else => $<else_expr>.ast} }
 }

@@ -23,10 +23,8 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
     method pdf_tail ($/) { make $<trailer>.ast }
 
     method trailer ($/) {
-        my %trailer;
-        %trailer<dict> = $<dict>.ast;
-        %trailer<byte_offset> = $<byte_offset>.Int;
-        make %trailer;
+        make { dict => $<dict>.ast,
+               byte_offset => $<byte_offset>.Int };
     }
 
     method indirect_ref($/) {
@@ -42,19 +40,17 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
     method object:sym<indirect_ref>($/)  { make $<indirect_ref>.ast }
 
     method object:sym<dict>($/) {
-        my ($dict, $stream) = $/.caps;
-        my $dict_ast = $dict.value.ast;
 
-        if ($stream) {
+        if ($<stream>) {
             # <dict> is a just a header the following <stream>
             my %stream;
-            %stream<dict> = $dict_ast;
-            (%stream<start>, %stream<end>) = $stream.value.ast.kv;
+            %stream<dict> = $<dict>.ast;
+            (%stream<start>, %stream<end>) = $<stream>[0].ast.kv;
             make (stream => %stream)
         }
         else {
             # simple stand-alone <dict>
-            make $dict_ast;
+            make $<dict>.ast;
         }
     }
 

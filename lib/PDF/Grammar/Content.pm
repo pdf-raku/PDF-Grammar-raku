@@ -9,7 +9,9 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     # Text operations as described in sections 8 and 9 of [PDF 1.7].
     rule TOP {^ [<instruction>|<unknown>]* $}
 
-    rule instruction {<block>|<op>}
+    proto rule instruction {<...>}
+    rule instruction:sym<block> {<block>}
+    rule instruction:sym<op>    {<op>}
 
     # ------------------------
     # Blocks

@@ -54,20 +54,12 @@ class PDF::Grammar::Content::Actions is PDF::Grammar::Actions {
         return @result;
     }
 
-    method instruction ($/) {
+    method instruction:sym<block>($/) {
+        make _block_data($<block>);
+    }
 
-        my @result;
-
-        if $<op> {
-            @result = _op_data($<op>);
-        }
-        elsif $<block> {
-            @result = _block_data($<block>);
-        }
-        else {
-            die "unable to process instruction: " ~ $/.Str;
-        }
-        make @result;
+    method instruction:sym<op>($/) {
+        make _op_data($<op>);
     }
 
     method guff ($/) {
@@ -88,7 +80,6 @@ class PDF::Grammar::Content::Actions is PDF::Grammar::Actions {
         %atts{ @names } = @objects;
 
         make %atts;
-
     }
 
 }
