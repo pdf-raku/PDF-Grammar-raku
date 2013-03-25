@@ -146,7 +146,7 @@ for (
     'Marked content - extra end' =>'/foo BMC BT ET EMC EMC',   
     'Marked content - mising arg' =>'/BMC BT B* ET EMC',        
     'Marked content - incomplete contents' =>'/baz BMC (hi) EMC',        
-##todo    'BX BX EX',                 # BX ... EX incorrect nesting (extra BX)
+    'BX ... EX incorrect nesting (extra BX)' => 'BX BX EX',
     'BX ... EX incorrect nesting (extra EX)' =>'BX EX EX',                 
     ) {
     # test our parser's resilience

@@ -32,17 +32,17 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     rule opEndImage            { (EI) }
 
     # ignored blocks BX .. EX (nestable)
-    rule opBeginIgnore         {(BX)}
-    rule opEndIgnore           {(EX)}
+    rule opBeginIgnore         { (BX) }
+    rule opEndIgnore           { (EX) }
 
     # blocks have limited nesting capability and aren't fully recursive.
-    # So theretically, we only have to deal with a few combinations...
+    # So theoretically, we only have to deal with a few combinations...
 
     rule inner_text_block { <opBeginText> <op>* <opEndText> }
-    rule inner_marked_content_block {<opBeginMarkedContent> <op>* <opEndMarkedContent>}
+    rule inner_marked_content_block { <opBeginMarkedContent> <op>* <opEndMarkedContent> }
     proto rule block { <...> }
-    rule block:sym<text> {<opBeginText> [ <inner_marked_content_block> | <op> ]* <opEndText>}
-    rule block:sym<markedContent> {<opBeginMarkedContent> [ <inner_text_block> | <op> ]* <opEndMarkedContent>}
+    rule block:sym<text> { <opBeginText> [ <inner_marked_content_block> | <op> ]* <opEndText> }
+    rule block:sym<markedContent> { <opBeginMarkedContent> [ <inner_text_block> | <op> ]* <opEndMarkedContent> }
     rule imageAtts { [<name> <object>]* }
     regex stream_chars{<PDF::Grammar::Stream::chars>}
     regex block:sym<image> {
@@ -51,7 +51,12 @@ grammar PDF::Grammar::Content is PDF::Grammar {
                       <opImageData>(<stream_chars>?)<.eol>?<opEndImage>
     }
 
-    rule block:sym<ignore> {<opBeginIgnore>: (<block:sym<ignore>>|.)*? <opEndIgnore>}
+    proto rule ignored {<...>}
+    rule ignored:sym<block> { <ignored_block> }
+    rule ignored:sym<guff>  { <guff> }
+    rule ignored:sym<char>  { . }
+    rule ignored_block { <opBeginIgnore> <ignored>*? <opEndIgnore> }
+    rule block:sym<ignore> { <ignored_block> }
 
     # ------------------------
     # Operators and Objects
@@ -138,8 +143,8 @@ grammar PDF::Grammar::Content is PDF::Grammar {
 
     rule op:sym<CurveTo2>            { <number>**4 (y) }
 
-    rule op:sym<MoveSetShowText>     { <number> <number> <string> ('"') } 
-    rule op:sym<MoveShowText>        { <string> ("'") }
+    rule op:sym<MoveSetShowText>     { <number> <number> <string> (\") } 
+    rule op:sym<MoveShowText>        { <string> (\') }
 
     # catchall for unknown opcodes and arguments
     token guff { <[a..zA..Z\*\"\']><[\w\*\"\']>* }
