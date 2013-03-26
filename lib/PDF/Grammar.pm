@@ -24,8 +24,7 @@ grammar PDF::Grammar:ver<0.0.6> {
     # ---------------
     token integer { ['+' | '-']? \d+ }
     # reals must have a decimal point and some digits before or after it.
-    # point
-    token real { ['+' | '-']? [\d+\.\d* | \d*\.\d+] }
+    token real { ['+' | '-']? [\d+\.\d* | \.\d+] }
 
     rule number { <real> | <integer> }
 
