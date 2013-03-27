@@ -7,7 +7,7 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     #
     # A Simple PDF grammar for parsing PDF content, i.e. Graphics and
     # Text operations as described in sections 8 and 9 of [PDF 1.7].
-    rule TOP {^ [<instruction>|<unknown>]* $}
+    rule TOP {^ [<instruction>||<unknown>]* $}
 
     proto rule instruction {<...>}
     rule instruction:sym<block> {<block>}
@@ -148,5 +148,5 @@ grammar PDF::Grammar::Content is PDF::Grammar {
 
     # catchall for unknown opcodes and arguments
     token guff { <[a..zA..Z\*\"\']><[\w\*\"\']>* }
-    rule unknown               { [<object>|<guff>] } 
+    rule unknown               { [<object>||<guff>] } 
 }
