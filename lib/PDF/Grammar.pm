@@ -11,10 +11,10 @@ grammar PDF::Grammar:ver<0.0.6> {
     # [PDF 1.7] 7.2.2 Character Set + 7.2.3 Comment characters
     # ---------------
     # Newlines, on various platforms.
-    proto token eol        {<...>}
-    token eol:sym<ms_dos>  {"\r\n"}
-    token eol:sym<nix>     {"\n"}
-    token eol:sym<mac_osx> {"\r"}
+    proto token eol    {<...>}
+    token eol:sym<dos> {"\r\n"}
+    token eol:sym<nix> {"\n"}
+    token eol:sym<mac> {"\r"}
 
     token comment {'%' <- eol>* <eol>?}
     token ws_char {' ' | "\t" | "\f" | <eol> | <comment>}
