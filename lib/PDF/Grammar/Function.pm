@@ -22,7 +22,6 @@ grammar PDF::Grammar::Function is PDF::Grammar {
     rule unexpected:sym<array> { <array> }
     rule unexpected:sym<name>  { <name> }
     rule unexpected:sym<null>  { <null> }
-    rule Xunexpected { <dict> | <array>| <name> | <null> }
 
     # extend <object> add <ps_op>
     rule object:sym<ps_op> {<ps_op>}
