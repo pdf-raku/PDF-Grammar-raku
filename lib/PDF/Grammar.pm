@@ -12,9 +12,9 @@ grammar PDF::Grammar:ver<0.0.6> {
     # ---------------
     # Newlines, on various platforms.
     proto token eol    {<...>}
-    token eol:sym<dos> {"\r\n"}
-    token eol:sym<nix> {"\n"}
-    token eol:sym<mac> {"\r"}
+    token eol:sym<dos> {\x0d\x0a} # cr lf
+    token eol:sym<nix> {\x0a}     # lf
+    token eol:sym<mac> {\x0d}     # cr
 
     token comment {'%' <- eol>* <eol>?}
     token ws_char {' ' | "\t" | "\f" | <eol> | <comment>}
