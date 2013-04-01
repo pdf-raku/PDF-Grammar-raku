@@ -4,14 +4,14 @@ use Test;
 use PDF::Grammar::PDF;
 use PDF::Grammar::PDF::Actions;
 
-my $pdf_header_version = 1.5;
-my $header = "%PDF-{$pdf_header_version}";
+my $pdf-header_version = 1.5;
+my $header = "%PDF-{$pdf-header_version}";
 
 for ('%PDF-1.0', $header) {
-     ok($_ ~~ /^<PDF::Grammar::PDF::pdf_header>$/, "pdf_header: $_");
+     ok($_ ~~ /^<PDF::Grammar::PDF::pdf-header>$/, "pdf-header: $_");
 }
 
-my $indirect_obj1 = '1 0 obj
+my $indirect-obj1 = '1 0 obj
 <<
 /Type /Catalog
 /Pages 3 0 R
@@ -20,7 +20,7 @@ my $indirect_obj1 = '1 0 obj
 endobj
 ';
 
-my $body = $indirect_obj1 ~
+my $body = $indirect-obj1 ~
 '2 0 obj
 <<
 /Type /Outlines
@@ -66,13 +66,13 @@ endobj
 >>
 endobj';
 
-for ($indirect_obj1) {
-    ok($_ ~~ /^<PDF::Grammar::PDF::indirect_obj>$/, "indirect object")
+for ($indirect-obj1) {
+    ok($_ ~~ /^<PDF::Grammar::PDF::indirect-obj>$/, "indirect object")
         or diag $_;
 }
 
-for ($indirect_obj1, $body) {
-    ok($_ ~~ /^<PDF::Grammar::PDF::indirect_obj>+$/, "body")
+for ($indirect-obj1, $body) {
+    ok($_ ~~ /^<PDF::Grammar::PDF::indirect-obj>+$/, "body")
         or diag $_;
 }
 
@@ -133,20 +133,20 @@ for (unix => $nix_pdf,
      ok($p, "pdf parse - " ~ $_.key)
        or diag $_.value;
 
-     my $pdf_ast = $p.ast;
-     is($pdf_ast<header>, $pdf_header_version, "pdf version - as expected");
-     ok($pdf_ast<body>, "pdf has body");
+     my $pdf-ast = $p.ast;
+     is($pdf-ast<header>, $pdf-header_version, "pdf version - as expected");
+     ok($pdf-ast<body>, "pdf has body");
 
 # ++To do
 #     # see if we can independently locate the trailer (parse)
-#     my $tail_p = PDF::Grammar::PDF.parse($_.value, :rule('pdf_tail'), :actions($actions));
+#     my $tail_p = PDF::Grammar::PDF.parse($_.value, :rule('pdf-tail'), :actions($actions));
 #     ok($tail_p, "pdf tail parse - " ~ $_.key)
 #       or diag substr($_.value, *-80) ~ '...';
 #     my $trailer = $tail_p.ast;
 # --To do
 
    # see of we can independently locate the trailer (regex)
-   ok($_.value ~~ /<PDF::Grammar::PDF::pdf_tail>/, "file_trailer match " ~ $_.key);
+   ok($_.value ~~ /<PDF::Grammar::PDF::pdf-tail>/, "file_trailer match " ~ $_.key);
 }
 
 done;

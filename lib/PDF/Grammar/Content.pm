@@ -38,25 +38,25 @@ grammar PDF::Grammar::Content is PDF::Grammar {
     # blocks have limited nesting capability and aren't fully recursive.
     # So theoretically, we only have to deal with a few combinations...
 
-    rule inner_text_block { <opBeginText> <op>* <opEndText> }
-    rule inner_marked_content_block { <opBeginMarkedContent> <op>* <opEndMarkedContent> }
+    rule inner-text-block { <opBeginText> <op>* <opEndText> }
+    rule inner-marked-content-block { <opBeginMarkedContent> <op>* <opEndMarkedContent> }
     proto rule block { <...> }
-    rule block:sym<text> { <opBeginText> [ <inner_marked_content_block> | <op> ]* <opEndText> }
-    rule block:sym<markedContent> { <opBeginMarkedContent> [ <inner_text_block> | <op> ]* <opEndMarkedContent> }
+    rule block:sym<text> { <opBeginText> [ <inner-marked-content-block> | <op> ]* <opEndText> }
+    rule block:sym<markedContent> { <opBeginMarkedContent> [ <inner-text-block> | <op> ]* <opEndMarkedContent> }
     rule imageAtts { [<name> <object>]* }
-    regex stream_chars{<PDF::Grammar::Stream::chars>}
+    regex stream-chars{<PDF::Grammar::Stream::chars>}
     regex block:sym<image> {
                       <opBeginImage>:
                       <imageAtts>
-                      <opImageData>(<stream_chars>?)<.eol>?<opEndImage>
+                      <opImageData>(<stream-chars>?)<.eol>?<opEndImage>
     }
 
     proto rule ignored {<...>}
-    rule ignored:sym<block> { <ignored_block> }
+    rule ignored:sym<block> { <ignored-block> }
     rule ignored:sym<guff>  { <guff> }
     rule ignored:sym<char>  { . }
-    rule ignored_block { <opBeginIgnore> <ignored>*? <opEndIgnore> }
-    rule block:sym<ignore> { <ignored_block> }
+    rule ignored-block { <opBeginIgnore> <ignored>*? <opEndIgnore> }
+    rule block:sym<ignore> { <ignored-block> }
 
     # ------------------------
     # Operators and Objects

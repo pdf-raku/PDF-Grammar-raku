@@ -22,14 +22,14 @@ class PDF::Grammar::Function::Actions is PDF::Grammar::Actions {
     method unexpected:sym<name>($/)  { make $<name>.ast }
     method unexpected:sym<null>($/)  { make $<null>.ast }
   
-    method object:sym<ps_op>($/) {make $.ast( $<ps_op>.ast, :pdf_type('ps_op') )};
+    method object:sym<ps-op>($/) {make $.ast( $<ps-op>.ast, :pdf-type<ps-op> )};
     # extended postcript operators
-    method ps_op:sym<arithmetic>($/) {make $<op>.Str }
-    method ps_op:sym<bitwise>($/)    {make $<op>.Str }
-    method ps_op:sym<stack>($/)      {make $<op>.Str }
+    method ps-op:sym<arithmetic>($/) {make $<op>.Str }
+    method ps-op:sym<bitwise>($/)    {make $<op>.Str }
+    method ps-op:sym<stack>($/)      {make $<op>.Str }
 
-    method if($/)     { make {if => $<if_expr>.ast} }
+    method if($/)     { make {if => $<if-expr>.ast} }
 
-    method ifelse($/) { make {if => $<if_expr>.ast,
-                              else => $<else_expr>.ast} }
+    method ifelse($/) { make {if => $<if-expr>.ast,
+                              else => $<else-expr>.ast} }
 }

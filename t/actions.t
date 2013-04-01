@@ -41,22 +41,22 @@ my @tests = (
     'bool',                    'true',             True,
     'bool',                    'false',            False,
 
-    'name_chars',              '##',               '#',
-    'hex_char',                '6D',               'm',
-    'name_chars',              '#6E',              'n',
-    'name_chars',              'snoopy',           'snoopy',
+    'name-chars',              '##',               '#',
+    'hex-char',                '6D',               'm',
+    'name-chars',              '#6E',              'n',
+    'name-chars',              'snoopy',           'snoopy',
     'name',                    '/snoopy',          'snoopy',
     'name',                    '/s#6Eo#6fpy',      'snoopy',
 
-    'hex_string',              '<736E6F6f7079>',   'snoopy',
+    'hex-string',              '<736E6F6f7079>',   'snoopy',
 
-    'literal_string',          '(hello world\41)',      'hello world!',
-    'literal_string',          '(hi\nagain)',           "hi\nagain",
-    'literal_string',          "(hi\r\nagain)",         "hi\nagain",
-    'literal_string',          '(perl(6) rocks! :-\))', 'perl(6) rocks! :-)',
-    'literal_string',          "(continued\\\n line)",  'continued line',
-    'literal_string',          '(stray back\-slash)',   'stray back-slash',
-    'literal_string',          "(try\\\n\\\n%this\\\n)",'try%this',
+    'literal-string',          '(hello world\41)',      'hello world!',
+    'literal-string',          '(hi\nagain)',           "hi\nagain",
+    'literal-string',          "(hi\r\nagain)",         "hi\nagain",
+    'literal-string',          '(perl(6) rocks! :-\))', 'perl(6) rocks! :-)',
+    'literal-string',          "(continued\\\n line)",  'continued line',
+    'literal-string',          '(stray back\-slash)',   'stray back-slash',
+    'literal-string',          "(try\\\n\\\n%this\\\n)",'try%this',
 
     'string',                  '(hi)',             'hi',
     'string',                  "<68\n69>",         'hi',
@@ -120,24 +120,24 @@ for @tests -> $_rule, $string, $expected_result {
 
     if ($expected_type) {
         my $test = "rule $rule: $string has type $expected_type";
-        if $result.can('pdf_type') {
-            is($result.pdf_type, $expected_type, $test);
+        if $result.can('pdf-type') {
+            is($result.pdf-type, $expected_type, $test);
         }
         else {
-            diag "$rule - doesn't do .pdf_type";
+            diag "$rule - doesn't do .pdf-type";
             fail( $test );
         }
     }
 
     if ($expected_subtype) {
         my $test = "rule $rule: $string has subtype $expected_subtype";
-        if $result.can('pdf_subtype') {
-            diag "type: " ~ $result.pdf_type;
-            diag "subtype: " ~ $result.pdf_subtype;
-            is($result.pdf_subtype, $expected_subtype, $test);
+        if $result.can('pdf-subtype') {
+            diag "type: " ~ $result.pdf-type;
+            diag "subtype: " ~ $result.pdf-subtype;
+            is($result.pdf-subtype, $expected_subtype, $test);
         }
         else {
-            diag "$rule - doesn't do .pdf_subtype";
+            diag "$rule - doesn't do .pdf-subtype";
             fail( $test );
         }
     }

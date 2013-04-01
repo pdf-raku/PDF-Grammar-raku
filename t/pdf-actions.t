@@ -25,16 +25,16 @@ my $ind_obj1_ast = "ind_obj" => [1, 0, {"Type" => "Catalog",
                                         "Pages" => $ind_ref1_ast,
                                         "Outlines" => 'ind_ref' => [2, 0]}];
 
-my $stream_content = 'BT
+my $stream-content = 'BT
   /F1 24 Tf  % useless comment
   100 100 Td (Hello, world!) Tj
 ET';
-my $stream_length = $stream_content.chars;
+my $stream-length = $stream-content.chars;
 
 my $ind_obj2 = "5 0 obj
-<< /Length $stream_length >>
+<< /Length $stream-length >>
 stream
-$stream_content
+$stream-content
 endstream
 endobj
 ";
@@ -72,8 +72,8 @@ my $xref = "xref
 0000000415 00000 n
 0000000445 00000 n
 ";
-my $xref_ast = [{"object_first_num" => 0,
-                 "object_count" => 8,
+my $xref-ast = [{"object-first-num" => 0,
+                 "object-count" => 8,
                  "entries" => [{"offset" => 0, "gen" => 65535, "status" => "f"},
                                {"offset" => 9, "gen" => 0, "status" => "n"},
                                {"offset" => 74, "gen" => 0, "status" => "n"},
@@ -95,7 +95,7 @@ startxref
 
 my $trailer_ast = {"dict" => {"Size" => 8,
                               "Root" => "ind_ref" => [1, 0]},
-                   "byte_offset" => 553};
+                   "byte-offset" => 553};
 
 my $body_trailer_ast = {objects => $body_objects_ast, trailer => $trailer_ast};
 
@@ -106,12 +106,12 @@ $xref$trailer%\%EOF";
 my $actions = PDF::Grammar::PDF::Actions.new;
 
 for (
-      pdf_header => {input => $header, ast => $header_ast},
-      indirect_ref => {input => $ind_ref1, ast => $ind_ref1_ast},
-      indirect_obj => {input => $ind_obj1, ast => $ind_obj1_ast},
-      indirect_obj => {input => $ind_obj2, ast => $ind_obj2_ast},
+      pdf-header => {input => $header, ast => $header_ast},
+      indirect-ref => {input => $ind_ref1, ast => $ind_ref1_ast},
+      indirect-obj => {input => $ind_obj1, ast => $ind_obj1_ast},
+      indirect-obj => {input => $ind_obj2, ast => $ind_obj2_ast},
       trailer => {input => $trailer, ast => $trailer_ast},
-      xref => {input => $xref, ast => $xref_ast},
+      xref => {input => $xref, ast => $xref-ast},
       body => {input => $body ~ "\n" ~ $trailer, ast => $body_trailer_ast},
       pdf => {input => $pdf, ast => Mu},
     ) {

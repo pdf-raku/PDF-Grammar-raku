@@ -16,10 +16,10 @@ else {
 my $fh = open $test_pdf, :bin
     or die "unable to open $fh: $!";
 
-my $pdf_body = join("\n", $fh.lines);
+my $pdf-body = join("\n", $fh.lines);
 $fh.close;
 
-my $p = PDF::Grammar::PDF.parse($pdf_body);
+my $p = PDF::Grammar::PDF.parse($pdf-body);
 
 ok($p, "parsed pdf content ($test_pdf)");
 

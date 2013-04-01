@@ -29,23 +29,23 @@ for ('true', 'false') {
 ok(''           !~~ /^<PDF::Grammar::PDF::bool>$/, 'not bool: blank');
 
 # hex strings
-ok('<Af309>'     ~~ /^<PDF::Grammar::PDF::hex_string>$/, 'hex: basic');
+ok('<Af309>'     ~~ /^<PDF::Grammar::PDF::hex-string>$/, 'hex: basic');
 ok('<Af309>'     ~~ /^<PDF::Grammar::PDF::object>$/, 'hex object: basic');
-ok('<4E6F762073686D6F7A206B6120706F702E>'     ~~ /^<PDF::Grammar::PDF::hex_string>$/, 'hex: example ');
-ok('<901FA3>'     ~~ /^<PDF::Grammar::PDF::hex_string>$/, 'hex: example 2a (90, 1F, A3)');
-ok('<901FA>'     ~~ /^<PDF::Grammar::PDF::hex_string>$/, 'hex: example 2b (90, 1F, A0)');
+ok('<4E6F762073686D6F7A206B6120706F702E>'     ~~ /^<PDF::Grammar::PDF::hex-string>$/, 'hex: example ');
+ok('<901FA3>'     ~~ /^<PDF::Grammar::PDF::hex-string>$/, 'hex: example 2a (90, 1F, A3)');
+ok('<901FA>'     ~~ /^<PDF::Grammar::PDF::hex-string>$/, 'hex: example 2b (90, 1F, A0)');
 # - multiline hex strings - found in the field
 ok('<304B66CBD3DCBEC4CA8EA2B66D8DACF1F6FBC1D2E2A4B2C052708FE9EBED4F62
-77BFD5EB7A99B8A4BBD26A7B8DDEE9F5B6CEE744586E8AA7C5C4D7EC97B4D2FF>'  ~~ /^<PDF::Grammar::PDF::hex_string>$/, 'hex: multiline');
+77BFD5EB7A99B8A4BBD26A7B8DDEE9F5B6CEE744586E8AA7C5C4D7EC97B4D2FF>'  ~~ /^<PDF::Grammar::PDF::hex-string>$/, 'hex: multiline');
 
 # - hex strings - counter examples
-ok('<x>'        !~~ /^<PDF::Grammar::PDF::hex_string>$/, 'not hex illegal char');
+ok('<x>'        !~~ /^<PDF::Grammar::PDF::hex-string>$/, 'not hex illegal char');
 
 # literal strings
 # -- escaped
 for ('\n', '\r', '\t', '\b', '\f', '\(', '\(', '\40', '\040') {
     ok(($_~'X') ~~ /^<PDF::Grammar::PDF::literal>X$/, "literal char escaped: $_");
-    ok("($_)"   ~~ /^<PDF::Grammar::PDF::literal_string>$/, "literal string: ($_)");
+    ok("($_)"   ~~ /^<PDF::Grammar::PDF::literal-string>$/, "literal string: ($_)");
 }
 
 # [pdf 1.7] section 7.2.4.2 example 5:
@@ -65,7 +65,7 @@ do {
 # -- regular
 for ('a', '}', ' ') {
     ok($_      ~~ /^<PDF::Grammar::PDF::literal>$/, "literal char regular: $_");
-    ok("($_)"  ~~ /^<PDF::Grammar::PDF::literal_string>$/, "literal string: ($_)");
+    ok("($_)"  ~~ /^<PDF::Grammar::PDF::literal-string>$/, "literal string: ($_)");
 }
 
 for (
@@ -90,7 +90,7 @@ for (
     '(These (two strings) are the same.)',       
     '(This \( is unmatched)',
     ) {
-    ok($_     ~~ /^<PDF::Grammar::PDF::literal_string>$/, "literal string: $_");
+    ok($_     ~~ /^<PDF::Grammar::PDF::literal-string>$/, "literal string: $_");
 }
 
 # name strings
@@ -185,7 +185,7 @@ endstream
 ";
 
 # hopefully always at least two newlines shouldn't have to handle this
-my $this_stream_is_invalid_I_think = "<< /Length 0 >>
+my $this_stream-is_invalid_I_think = "<< /Length 0 >>
 stream
 endstream
 ";
@@ -253,8 +253,8 @@ for (empty => $empty_stream, tiny => $stream1, content => $stream2,
      sizable => $stream6) {
     my $test = $_.key;
     my $val = $_.value;
-    ok($val ~~ /^<PDF::Grammar::PDF::dict> <PDF::Grammar::PDF::stream_head>/, "$test stream - head match");
-    ok($val ~~ /<PDF::Grammar::PDF::stream_tail>$/, "$test stream - tail match");
+    ok($val ~~ /^<PDF::Grammar::PDF::dict> <PDF::Grammar::PDF::stream-head>/, "$test stream - head match");
+    ok($val ~~ /<PDF::Grammar::PDF::stream-tail>$/, "$test stream - tail match");
     ok("$val endobj" ~~ /^<PDF::Grammar::PDF::dict> <PDF::Grammar::PDF::stream>'endobj'$/, "$test stream - full match")
     or diag $val;
 }
@@ -271,7 +271,7 @@ my $ind_obj3 = '13 0 obj<</BaseFont/Times-Roman/Type/Font/Subtype/Type1>>endobj'
 my $ind_ref3 = '13 0 R';
 
 for ($ind_ref1, $ind_ref2, $ind_ref3) {
-    ok($_ ~~ /^<PDF::Grammar::PDF::indirect_ref>$/, "indirect_ref: $_");
+    ok($_ ~~ /^<PDF::Grammar::PDF::indirect-ref>$/, "indirect-ref: $_");
     ok($_ ~~ /^<PDF::Grammar::PDF::object>$/, "object: $_");
 }
 
@@ -292,20 +292,20 @@ my $ind_obj5 = '8 0 obj
 % goodbye
 endobj';
 
-my $ind_obj_fdf = '1 0 obj
+my $ind_obj-fdf = '1 0 obj
 <</FDF
     << /F (empty.pdf) /Fields [] >>
 >>
 endobj';
 
-my $ind_obj_scrunched = '1 0 obj<</FDF<</F(Document.pdf)/ID[<7a0631678ed475f0898815f0a818cfa1><bef7724317b311718e8675b677ef9b4e>]/Fields[<</T(Street)/V(345 Park Ave.)>><</T(City)/V(San Jose)>>]>>>> 
+my $ind_obj-scrunched = '1 0 obj<</FDF<</F(Document.pdf)/ID[<7a0631678ed475f0898815f0a818cfa1><bef7724317b311718e8675b677ef9b4e>]/Fields[<</T(Street)/V(345 Park Ave.)>><</T(City)/V(San Jose)>>]>>>> 
 endobj';
 
 for (simple => $ind_obj1, empty => $ind_obj2, squashed1 => $ind_obj3,
-     squashed2 => $ind_obj_scrunched, stream => $ind_obj4,
-     comments => $ind_obj5, fdf => $ind_obj_fdf,
+     squashed2 => $ind_obj-scrunched, stream => $ind_obj4,
+     comments => $ind_obj5, fdf => $ind_obj-fdf,
      ) {
-    ok($_.value ~~ /^<PDF::Grammar::PDF::indirect_obj>$/, "indirect_obj - " ~ $_.key)
+    ok($_.value ~~ /^<PDF::Grammar::PDF::indirect-obj>$/, "indirect-obj - " ~ $_.key)
         or diag $_.value;
 }
 

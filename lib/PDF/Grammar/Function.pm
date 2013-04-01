@@ -23,26 +23,26 @@ grammar PDF::Grammar::Function is PDF::Grammar {
     rule unexpected:sym<name>  { <name> }
     rule unexpected:sym<null>  { <null> }
 
-    # extend <object> add <ps_op>
-    rule object:sym<ps_op> {<ps_op>}
+    # extend <object> add <ps-op>
+    rule object:sym<ps-op> {<ps-op>}
 
-    proto token ps_op { <...> }
+    proto token ps-op { <...> }
 
-    token ps_op:sym<arithmetic> {
+    token ps-op:sym<arithmetic> {
         $<op>=[abs|add|atan|ceiling|cos|cvi|cvr|div|exp|floor
         |idiv|ln|log|mod|mul|neg|round|sin|sqrt|sub|truncate]
     }
 
-    token ps_op:sym<bitwise> {
+    token ps-op:sym<bitwise> {
         $<op>=[and|bitshift|eq|false|ge|gt|le|lt|ne|not|or|true|xor]
     }
 
-    token ps_op:sym<stack> {
+    token ps-op:sym<stack> {
         $<op>=[copy|dup|exch|index|pop|roll]
     }
 
-    rule if { $<if_expr>=<expression> 'if' }
-    rule ifelse { $<if_expr>=<expression> $<else_expr>=<expression> 'ifelse' }
+    rule if { $<if-expr>=<expression> 'if' }
+    rule ifelse { $<if-expr>=<expression> $<else-expr>=<expression> 'ifelse' }
 
     token unknown { <[a..zA..Z]><[\w]>* }
 }

@@ -4,7 +4,7 @@ use Test;
 
 use PDF::Grammar::FDF;
 
-my $fdf_small = '%FDF-1.2
+my $fdf-small = '%FDF-1.2
 %âãÏÓ
 1 0 obj
 <</FDF
@@ -15,7 +15,7 @@ trailer
 <</Root 1 0 R>>
 %%EOF';
 
-my $fdf_medium = '%FDF-1.2
+my $fdf-medium = '%FDF-1.2
 %âãÏÓ
 1 0 obj<</FDF<</F(Document.pdf)
 /ID[<7a0631678ed475f0898815f0a818cfa1><bef7724317b311718e8675b677ef9b4e>]
@@ -25,7 +25,7 @@ trailer
 <</Root 1 0 R>>
 %%EOF';
 
-my $fdf_body = q:to/END_END_END/;
+my $fdf-body = q:to/END_END_END/;
 %FDF-1.2
 %âãÏÓ
 1 0 obj
@@ -36,7 +36,7 @@ trailer
 %%EOF
 END_END_END
 
-for (small => $fdf_small, medium => $fdf_medium, real => $fdf_body) {
+for (small => $fdf-small, medium => $fdf-medium, real => $fdf-body) {
     my $p = PDF::Grammar::FDF.parse($_.value);
 
     ok($p, "fdf parse " ~ $_.key)

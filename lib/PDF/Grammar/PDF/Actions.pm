@@ -11,7 +11,7 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
     method pdf($/) {
         my %pdf;
 
-        %pdf<header> = $<pdf_header>.ast;
+        %pdf<header> = $<pdf-header>.ast;
 
         my @contents = $<body>.map({$_.ast});
         %pdf<body> = @contents;
@@ -19,25 +19,25 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
         make %pdf;
     }
 
-    method pdf_header ($/) { make $<version>.Num }
-    method pdf_tail ($/) { make $<trailer>.ast }
+    method pdf-header ($/) { make $<version>.Num }
+    method pdf-tail ($/) { make $<trailer>.ast }
 
     method trailer ($/) {
         make { dict => $<dict>.ast,
-               byte_offset => $<byte_offset>.Int };
+               byte-offset => $<byte-offset>.Int };
     }
 
-    method indirect_ref($/) {
+    method indirect-ref($/) {
         my @ind_ref = $/.caps.map({ $_.value.ast });
         make (ind_ref => @ind_ref);
     }
 
-    method indirect_obj($/) {
+    method indirect-obj($/) {
         my @ind_obj = $/.caps.map({ $_.value.ast });
         make (ind_obj => @ind_obj);
     }
 
-    method object:sym<indirect_ref>($/)  { make $<indirect_ref>.ast }
+    method object:sym<indirect-ref>($/)  { make $<indirect-ref>.ast }
 
     method object:sym<dict>($/) {
 
@@ -56,8 +56,8 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
 
     method body($/) {
         my %body;
-        my @indirect_objs = $<indirect_obj>.map({ $_.ast });
-        %body<objects> = @indirect_objs;
+        my @indirect-objs = $<indirect-obj>.map({ $_.ast });
+        %body<objects> = @indirect-objs;
         %body<xref> = $_.ast
             for $<xref>;
         %body<trailer> = $_.ast
@@ -67,24 +67,24 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
     }
 
     method xref($/) {
-        my @sections = $<xref_section>.map({ $_.ast });
+        my @sections = $<xref-section>.map({ $_.ast });
         make @sections;
     }
 
-    method xref_section($/) {
+    method xref-section($/) {
         my %section;
-        %section<object_first_num> = $<object_first_num>.Int;
-        %section<object_count> = $<object_count>.Int;
-        my @entries = $<xref_entry>.map({$_.ast});
+        %section<object-first-num> = $<object-first-num>.Int;
+        %section<object-count> = $<object-count>.Int;
+        my @entries = $<xref-entry>.map({$_.ast});
         %section<entries> = @entries;
         make %section;
     }
 
-    method xref_entry($/) {
+    method xref-entry($/) {
         my %entry;
-        %entry<offset> = $<byte_offset>.Int;
-        %entry<gen> = $<generation_number>.Int;
-        %entry<status> = $<obj_status>.Str;
+        %entry<offset> = $<byte-offset>.Int;
+        %entry<gen> = $<gen-number>.Int;
+        %entry<status> = $<obj-status>.Str;
 
         make %entry;
     }
@@ -95,6 +95,6 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
    # caller to disseminate
 
     method stream($/) {
-        make (($<stream_head>.to + 1) => ($<stream_tail>.from - 1));
+        make (($<stream-head>.to + 1) => ($<stream-tail>.from - 1));
     }
 }
