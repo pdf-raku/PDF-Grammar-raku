@@ -2,7 +2,8 @@ use v6;
 
 use PDF::Grammar;
 
-grammar PDF::Grammar::Function is PDF::Grammar {
+grammar PDF::Grammar::Function
+    is PDF::Grammar {
     #
     # Simple PDF grammar extensions for parsing PDF Type 4 PostScript
     # Calculator Functions, as described in [PDF 1.7] section 7.10.5
@@ -41,8 +42,8 @@ grammar PDF::Grammar::Function is PDF::Grammar {
         $<op>=[copy|dup|exch|index|pop|roll]
     }
 
-    rule if { $<if-expr>=<expression> 'if' }
-    rule ifelse { $<if-expr>=<expression> $<else-expr>=<expression> 'ifelse' }
+    rule if { <if-expr=.expression> 'if' }
+    rule ifelse { <if-expr=.expression> <else-expr=.expression> 'ifelse' }
 
     token unknown { <[a..zA..Z]><[\w]>* }
 }

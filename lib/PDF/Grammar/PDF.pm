@@ -2,7 +2,8 @@ use v6;
 
 use PDF::Grammar;
 
-grammar PDF::Grammar::PDF is PDF::Grammar {
+grammar PDF::Grammar::PDF
+    is PDF::Grammar {
     #
     # An experimental Perl6  grammar for describing the basic block
     # structure of PDF documents.
@@ -28,7 +29,7 @@ grammar PDF::Grammar::PDF is PDF::Grammar {
 
     # stream parsing
     rule stream-head { stream<.eol>}
-    token stream-tail {<.eol>?endstream<.ws-char>+}
+    token stream-tail {<.eol>? endstream <.ws-char>+}
     rule stream {<stream-head>.*?<stream-tail>}
 
     # cross reference table
@@ -39,9 +40,9 @@ grammar PDF::Grammar::PDF is PDF::Grammar {
     rule  xref-entry {<byte-offset> <gen-number> <obj-status>' '?<.eol>}
     token byte-offset {\d+}
     token gen-number {\d+}
-    rule  obj-status {<obj-status-free>|<obj-status-inuse>}
-    token obj-status-free {f}
-    token obj-status-inuse {n}
+    proto token obj-status {<...>}
+    token obj-status:sym<free>  {f}
+    token obj-status:sym<inuse> {n}
 
     # the trailer contains the position of the cross reference
     # table plus the file trailer dictionary

@@ -3,7 +3,8 @@ use v6;
 use PDF::Grammar;
 use PDF::Grammar::Stream;
 
-grammar PDF::Grammar::Content is PDF::Grammar {
+grammar PDF::Grammar::Content
+    is PDF::Grammar {
     #
     # A Simple PDF grammar for parsing PDF content, i.e. Graphics and
     # Text operations as described in sections 8 and 9 of [PDF 1.7].
