@@ -24,7 +24,7 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
 
     method trailer ($/) {
         make { dict => $<dict>.ast,
-               byte-offset => $<byte-offset>.Int };
+               byte-offset => $<byte-offset>.ast };
     }
 
     method indirect-ref($/) {
@@ -71,10 +71,12 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
         make @sections;
     }
 
+    method digits($/) { make $/.Int }
+
     method xref-section($/) {
         my %section;
-        %section<object-first-num> = $<object-first-num>.Int;
-        %section<object-count> = $<object-count>.Int;
+        %section<object-first-num> = $<object-first-num>.ast;
+        %section<object-count> = $<object-count>.ast;
         my @entries = $<xref-entry>.map({$_.ast});
         %section<entries> = @entries;
         make %section;
@@ -82,8 +84,8 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
 
     method xref-entry($/) {
         my %entry;
-        %entry<offset> = $<byte-offset>.Int;
-        %entry<gen> = $<gen-number>.Int;
+        %entry<offset> = $<byte-offset>.ast;
+        %entry<gen> = $<gen-number>.ast;
         %entry<status> = $<obj-status>.Str;
 
         make %entry;

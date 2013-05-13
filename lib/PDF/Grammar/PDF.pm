@@ -33,13 +33,10 @@ grammar PDF::Grammar::PDF
     rule stream {<stream-head>.*?<stream-tail>}
 
     # cross reference table
-    rule  xref {xref<.eol><xref-section>+}
-    token object-first-num{\d+}
-    token object-count{\d+}
-    rule  xref-section {<object-first-num> <object-count><.eol><xref-entry>+}
-    rule  xref-entry {<byte-offset> <gen-number> <obj-status>' '?<.eol>}
-    token byte-offset {\d+}
-    token gen-number {\d+}
+    rule  xref         {xref<.eol><xref-section>+}
+    token digits       {\d+}
+    rule  xref-section {<object-first-num=.digits> <object-count=.digits><.eol><xref-entry>+}
+    rule  xref-entry   {<byte-offset=.digits> <gen-number=.digits> <obj-status>' '?<.eol>}
     proto token obj-status {<...>}
     token obj-status:sym<free>  {f}
     token obj-status:sym<inuse> {n}
@@ -47,7 +44,7 @@ grammar PDF::Grammar::PDF
     # the trailer contains the position of the cross reference
     # table plus the file trailer dictionary
     rule trailer {
-        trailer<.eol><dict><eol>startxref<.eol>$<byte-offset>=(\d+)<.eol>}
+        trailer<.eol><dict><eol>startxref<.eol><byte-offset=.digits><.eol>}
 
     # pdf-tail: special stand-alone regex for reverse matching
     # trailer information from the end of the file. Typically used

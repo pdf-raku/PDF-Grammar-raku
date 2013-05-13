@@ -46,11 +46,11 @@ grammar PDF::Grammar:ver<0.0.6> {
     token literal:sym<esc-tab>          {\\ t}
     token literal:sym<esc-continuation> {\\ <eol>?}
 
-    token literal-string {'('<literal>*')'}
+    token literal-string { '(' <literal>* ')' }
 
     # hex strings
-    token hex-char {<xdigit>**1..2}
-    token hex-string {\< [<xdigit>|<.ws-char>]* \>}
+    token hex-char   {<xdigit>**1..2}
+    token hex-string {\< [ <xdigit> | <.ws-char> ]* \>}
 
     token string {<hex-string>|<literal-string>}
 
@@ -66,8 +66,8 @@ grammar PDF::Grammar:ver<0.0.6> {
 
     # [PDF 1.7] 7.3.2  Boolean objects + Null object
     # ---------------
-    token bool  {true|false}
-    token null  {null}
+    token bool  { true | false }
+    token null  { null }
     rule array  {\[ <object>* \]}
     rule dict   {'<<' [<name> <object>]* '>>'}
 

@@ -14,6 +14,6 @@ grammar PDF::Grammar::FDF
     token fdf-header {'%FDF-'$<version>=(\d'.'\d)}
 
     rule trailer {
-        trailer<.eol><dict><.eol>(startxref<eol>$<byte-offset>=(\d+)<.eol>)?}
+        trailer<.eol><dict><.eol>(startxref<eol><byte-offset=.digits><.eol>)?}
 
 }
