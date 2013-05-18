@@ -4,7 +4,7 @@ PDF-Grammar
 Although PDF documents do not lend themselves to an overall BNF style grammar
 description; there are areas where these can be put to use, including:
 
-- The overall file structure (headers, objects, cross-reference tables and footers.
+- The overall file structure (headers, objects, cross-reference tables and footers).
 - The operands that make up content streams. These are used to markup text, forms,
 images and graphical elements.
 
