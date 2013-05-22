@@ -49,14 +49,13 @@ class PDF::Grammar::Actions:ver<0.0.1> {
     }
 
     method name ($/) {
-        make $.ast( $/.caps.map({ $_.value.ast }).join(''),
-                    :pdf-type<name> );
+        make $.ast( [~] $/.caps.map({ $_.value.ast }), :pdf-type<name> );
     }
 
     method hex-string ($/) {
-        my $xdigits = $<xdigit>.map({$_.Str}).join('');
+        my $xdigits = [~] $<xdigit>.map({$_.Str});
         my @hex-codes = $xdigits.comb(/..?/).map({ _from_hex ($_) });
-        my $string = @hex-codes.map({ chr($_) }).join('');
+        my $string = [~] @hex-codes.map({ chr($_) });
 
         make $.ast( $string, :pdf-subtype<hex> );
     }
@@ -79,7 +78,7 @@ class PDF::Grammar::Actions:ver<0.0.1> {
     method literal:sym<esc-continuation>($/) { make '' }
 
     method literal-string ($/) {
-        my $string = $<literal>.map({ $_.ast }).join('');
+        my $string = [~] $<literal>.map({ $_.ast });
         make $.ast( $string, :pdf-subtype<literal> );
     }
 
