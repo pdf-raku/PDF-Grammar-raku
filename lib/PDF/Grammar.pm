@@ -46,7 +46,7 @@ grammar PDF::Grammar:ver<0.0.6> {
     token literal:sym<esc-tab>          {\\ t}
     token literal:sym<esc-continuation> {\\ <eol>?}
 
-    token literal-string { '(' <literal>* ')' }
+    token literal-string { '(' ~ ')' <literal>* }
 
     # hex strings
     token hex-char   {<xdigit>**1..2}
@@ -68,8 +68,8 @@ grammar PDF::Grammar:ver<0.0.6> {
     # ---------------
     token bool  { true | false }
     token null  { null }
-    rule array  {\[ <object>* \]}
-    rule dict   {'<<' [<name> <object>]* '>>'}
+    rule array  {\[ ~ \] <object>*}
+    rule dict   {'<<' ~ '>>' [<name> <object>]*}
 
     # Define a core set of objects.
     proto rule object { <...> }

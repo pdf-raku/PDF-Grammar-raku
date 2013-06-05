@@ -9,7 +9,7 @@ grammar PDF::Grammar::Function
     # Calculator Functions, as described in [PDF 1.7] section 7.10.5
     rule TOP {^ <expression> $}
 
-    rule expression { '{' <statement>* '}' }
+    rule expression { '{' ~ '}' <statement>* }
 
     proto rule statement {<...>}
     rule statement:sym<ifelse>     { <ifelse> }
