@@ -16,9 +16,9 @@ grammar PDF::Grammar:ver<0.0.6> {
     token eol:sym<nix> {\x0a}     # lf
     token eol:sym<mac> {\x0d}     # cr
 
-    token comment {'%' <- eol>* <eol>?}
-    token ws-char {' ' | "\t" | "\f" | <eol> | <comment>}
-    token ws {<!ww><ws-char>*}
+    token comment {'%' <- eol>* <.eol>?}
+    token ws-char {' ' | "\t" | "\f" | <.eol> | <.comment>}
+    token ws {<!ww><.ws-char>*}
 
     # [PDF 1.7] 7.3.3  Numeric Objects
     # ---------------
@@ -34,7 +34,7 @@ grammar PDF::Grammar:ver<0.0.6> {
     # literal string components
     proto token literal {<...>}
     token literal:sym<regular>          {<-literal_delimiter>+}
-    token literal:sym<eol>              {<eol>}
+    token literal:sym<eol>              {<.eol>}
     token literal:sym<substring>        {<literal-string>}
     # literal string escape sequences
     token literal:sym<esc-octal>        {\\ <octal-code>}
@@ -44,7 +44,7 @@ grammar PDF::Grammar:ver<0.0.6> {
     token literal:sym<esc-newline>      {\\ n}
     token literal:sym<esc-cr>           {\\ r}
     token literal:sym<esc-tab>          {\\ t}
-    token literal:sym<esc-continuation> {\\ <eol>?}
+    token literal:sym<esc-continuation> {\\ <.eol>?}
 
     token literal-string { '(' ~ ')' <literal>* }
 

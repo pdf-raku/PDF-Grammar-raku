@@ -44,7 +44,7 @@ grammar PDF::Grammar::PDF
     # the trailer contains the position of the cross reference
     # table plus the file trailer dictionary
     rule trailer {
-        trailer<.eol><dict><eol>startxref<.eol><byte-offset=.digits><.eol>}
+        trailer<.eol><dict><.eol>startxref<.eol><byte-offset=.digits><.eol>}
 
     # pdf-tail: special stand-alone regex for reverse matching
     # trailer information from the end of the file. Typically used
