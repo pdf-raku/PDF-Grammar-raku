@@ -49,5 +49,5 @@ grammar PDF::Grammar::PDF
     # pdf-tail: special stand-alone regex for reverse matching
     # trailer information from the end of the file. Typically used
     # when reading last few KB of a PDF to locate root resources
-    regex pdf-tail {<trailer>'%%EOF'<.eol>?$}
+    regex pdf-tail {.*<trailer>'%%EOF'<.eol>?$}
 }

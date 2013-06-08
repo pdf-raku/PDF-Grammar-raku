@@ -137,13 +137,12 @@ for (unix => $nix_pdf,
      is($pdf-ast<header>, $pdf-header_version, "pdf version - as expected");
      ok($pdf-ast<body>, "pdf has body");
 
-# ++To do
-#     # see if we can independently locate the trailer (parse)
-#     my $tail_p = PDF::Grammar::PDF.parse($_.value, :rule('pdf-tail'), :actions($actions));
-#     ok($tail_p, "pdf tail parse - " ~ $_.key)
-#       or diag substr($_.value, *-80) ~ '...';
-#     my $trailer = $tail_p.ast;
-# --To do
+     # see if we can independently locate the trailer (parse)
+     my $tail = $_.value.substr(*-512);
+     my $tail_p = PDF::Grammar::PDF.parse($tail, :rule('pdf-tail'), :actions($actions));
+     ok($tail_p, "pdf tail parse - " ~ $_.key)
+       or note substr($tail, *-80) ~ '...';
+     my $trailer = $tail_p.ast;
 
    # see of we can independently locate the trailer (regex)
    ok($_.value ~~ /<PDF::Grammar::PDF::pdf-tail>/, "file_trailer match " ~ $_.key);
