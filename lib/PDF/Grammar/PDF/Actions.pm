@@ -13,7 +13,7 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
 
         %pdf<header> = $<pdf-header>.ast;
 
-        my @contents = $<body>.map({$_.ast});
+        my @contents = $<body>.map({ .ast });
         %pdf<body> = @contents;
 
         make %pdf;
@@ -28,12 +28,12 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
     }
 
     method indirect-ref($/) {
-        my @ind_ref = $/.caps.map({ $_.value.ast });
+        my @ind_ref = $/.caps.map({ .value.ast });
         make (ind_ref => @ind_ref);
     }
 
     method indirect-obj($/) {
-        my @ind_obj = $/.caps.map({ $_.value.ast });
+        my @ind_obj = $/.caps.map({ .value.ast });
         make (ind_obj => @ind_obj);
     }
 
@@ -56,18 +56,18 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
 
     method body($/) {
         my %body;
-        my @indirect-objs = $<indirect-obj>.map({ $_.ast });
+        my @indirect-objs = $<indirect-obj>.map({ .ast });
         %body<objects> = @indirect-objs;
-        %body<xref> = $_.ast
+        %body<xref> = .ast
             for $<xref>;
-        %body<trailer> = $_.ast
+        %body<trailer> = .ast
             for $<trailer>;
 
         make %body;
     }
 
     method xref($/) {
-        my @sections = $<xref-section>.map({ $_.ast });
+        my @sections = $<xref-section>.map({ .ast });
         make @sections;
     }
 
@@ -77,7 +77,7 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
         my %section;
         %section<object-first-num> = $<object-first-num>.ast;
         %section<object-count> = $<object-count>.ast;
-        my @entries = $<xref-entry>.map({$_.ast});
+        my @entries = $<xref-entry>.map({ .ast });
         %section<entries> = @entries;
         make %section;
     }

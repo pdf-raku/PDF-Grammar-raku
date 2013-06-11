@@ -5,7 +5,7 @@ use PDF::Grammar::Actions;
 class PDF::Grammar::Content::Actions is PDF::Grammar::Actions {
 
     method TOP($/) {
-        my @result = $/.caps.map({ $_.value.ast });
+        my @result = $/.caps.map({ .value.ast });
         make @result;
     }
 
@@ -67,14 +67,14 @@ class PDF::Grammar::Content::Actions is PDF::Grammar::Actions {
     }
 
     method unknown ($/) {
-        my @u =  $/.caps.map({ $_.value.ast });
+        my @u =  $/.caps.map({ .value.ast });
         make '??' => @u
     }
 
     method imageAtts ($/) {
 
-        my @names = @<name>.map({ $_.ast });
-        my @objects = @<object>.map({ $_.ast });
+        my @names = @<name>.map({ .ast });
+        my @objects = @<object>.map({ .ast });
 
         my %atts;
         %atts{ @names } = @objects;

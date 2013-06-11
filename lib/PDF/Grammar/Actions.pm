@@ -31,11 +31,11 @@ class PDF::Grammar::Actions:ver<0.0.1> {
     }
 
     method number ($/) {
-        make ($<real> || $<integer>).ast;
+        make ($<real> // $<integer>).ast;
     }
 
     method hex-char($/) {
-        make chr( _from_hex($/.Str) )
+        make chr( _hex-pair($/.Str) )
     }
 
     method name-chars:sym<number-symbol>($/) {
@@ -49,12 +49,12 @@ class PDF::Grammar::Actions:ver<0.0.1> {
     }
 
     method name ($/) {
-        make $.ast( [~] $/.caps.map({ $_.value.ast }), :pdf-type<name> );
+        make $.ast( [~] $/.caps.map({ .value.ast }), :pdf-type<name> );
     }
 
     method hex-string ($/) {
-        my $xdigits = [~] $<xdigit>.map({$_.Str});
-        my @hex-codes = $xdigits.comb(/..?/).map({ _from_hex ($_) });
+        my $xdigits = [~] $<xdigit>.map({ .Str });
+        my @hex-codes = $xdigits.comb(/..?/).map({ _hex-pair($_) });
         my $string = [~] @hex-codes.map({ chr($_) });
 
         make $.ast( $string, :pdf-subtype<hex> );
@@ -67,7 +67,7 @@ class PDF::Grammar::Actions:ver<0.0.1> {
     method literal:sym<regular>($/)      { make $/.Str }
     # literal escape sequences
     method literal:sym<esc-octal>($/)  {
-        make chr( _from_octal($<octal-code>) )
+        make chr( :8($<octal-code>.Str) )
     }
     method literal:sym<esc-delim>($/)        { make $<delim>.Str }
     method literal:sym<esc-backspace>($/)    { make "\b" }
@@ -78,23 +78,23 @@ class PDF::Grammar::Actions:ver<0.0.1> {
     method literal:sym<esc-continuation>($/) { make '' }
 
     method literal-string ($/) {
-        my $string = [~] $<literal>.map({ $_.ast });
+        my $string = [~] $<literal>.map({ .ast });
         make $.ast( $string, :pdf-subtype<literal> );
     }
 
     method string ($/) {
-        my $string = ($<literal-string> || $<hex-string>).ast;
+        my $string = ($<literal-string> // $<hex-string>).ast;
         make $.ast( $string, :pdf-type<string> );
     }
 
     method array ($/) {
-        my @objects = @<object>.map({ $_.ast });
+        my @objects = @<object>.map({ .ast });
         make $.ast( @objects, :pdf-type<array> );
     }
 
     method dict ($/) {
-        my @names = @<name>.map({ $_.ast });
-        my @objects = @<object>.map({ $_.ast });
+        my @names = @<name>.map({ .ast });
+        my @objects = @<object>.map({ .ast });
 
         my %dict;
         %dict{ @names } = @objects;
@@ -112,49 +112,9 @@ class PDF::Grammar::Actions:ver<0.0.1> {
 
     # utility subs
 
-    sub _from_octal($oct) {
-
-        my $result = 0;
-
-        for $oct.split('') {
-
-            # our grammar shouldn't allow this
-            die "illegal octal digit: $_"
-                unless $_ ge '0' && $_ le '7';
-
-            $result *= 8;
-            $result += $_;
-        }
-
-        return $result;
-    }
-
-    sub _from_hex($hex) {
-
-        my $result = 0;
-
-        for $hex.split('') {
-
-            my $hex-digit;
-
-            if ($_ ge '0' && $_ le '9') {
-                $hex-digit = $_;
-            }
-            elsif ($_ ge 'A' && $_ le 'F') {
-                $hex-digit = ord($_) - ord('A') + 10;
-            }
-            elsif ($_ ge 'a' && $_ le 'f') {
-                $hex-digit = ord($_) - ord('a') + 10;
-            }
-            else {
-                # our grammar shouldn't allow this
-                die "illegal hexidecimal digit: $_";
-            }
-
-            $result *= 16;
-            $result += $hex-digit;
-        }
-        $result *= 16 if $hex.chars < 2;
+    sub _hex-pair($hex) {
+        my $result = :16($hex);
+        $result *= 16 if $hex.chars % 2;
         return $result;
     }
 }
