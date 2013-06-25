@@ -7,7 +7,7 @@ class PDF::Grammar::Function::Actions is PDF::Grammar::Actions {
     method TOP($/) { make $<expression>.ast }
 
     method expression($/) {
-        my @result = $<statement>.map({ $_.ast });
+        my @result = $<statement>>>.ast;
         make (expr => @result);
     }
 

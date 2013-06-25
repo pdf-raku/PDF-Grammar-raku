@@ -53,7 +53,7 @@ class PDF::Grammar::Actions:ver<0.0.1> {
     }
 
     method hex-string ($/) {
-        my $xdigits = [~] $<xdigit>.map({ .Str });
+        my $xdigits = [~] $<xdigit>>>.Str;
         my @hex-codes = $xdigits.comb(/..?/).map({ _hex-pair($_) });
         my $string = [~] @hex-codes.map({ chr($_) });
 
@@ -78,7 +78,7 @@ class PDF::Grammar::Actions:ver<0.0.1> {
     method literal:sym<esc-continuation>($/) { make '' }
 
     method literal-string ($/) {
-        my $string = [~] $<literal>.map({ .ast });
+        my $string = [~] $<literal>>>.ast;
         make $.ast( $string, :pdf-subtype<literal> );
     }
 
@@ -88,13 +88,13 @@ class PDF::Grammar::Actions:ver<0.0.1> {
     }
 
     method array ($/) {
-        my @objects = @<object>.map({ .ast });
+        my @objects = @<object>>>.ast;
         make $.ast( @objects, :pdf-type<array> );
     }
 
     method dict ($/) {
-        my @names = @<name>.map({ .ast });
-        my @objects = @<object>.map({ .ast });
+        my @names = @<name>>>.ast;
+        my @objects = @<object>>>.ast;
 
         my %dict;
         %dict{ @names } = @objects;

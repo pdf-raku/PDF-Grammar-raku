@@ -72,9 +72,8 @@ class PDF::Grammar::Content::Actions is PDF::Grammar::Actions {
     }
 
     method imageAtts ($/) {
-
-        my @names = @<name>.map({ .ast });
-        my @objects = @<object>.map({ .ast });
+        my @names = @<name>>>.ast;
+        my @objects = @<object>>>.ast;
 
         my %atts;
         %atts{ @names } = @objects;
