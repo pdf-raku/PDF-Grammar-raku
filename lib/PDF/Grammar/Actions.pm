@@ -96,8 +96,7 @@ class PDF::Grammar::Actions:ver<0.0.1> {
         my @names = @<name>>>.ast;
         my @objects = @<object>>>.ast;
 
-        my %dict;
-        %dict{ @names } = @objects;
+        my %dict = @names Z=> @objects;
 
         make $.ast( %dict, :pdf-type<dict> );
     }
