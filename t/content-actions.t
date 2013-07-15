@@ -112,18 +112,25 @@ my $test_image_expected = [["BI" => {"W" => 17, "H" => 17, "CS" => "RGB", "BPC" 
 
 my $actions = PDF::Grammar::Content::Actions.new;
 
-for ([$sample_content1, $expected1], [$sample_content2, $expected2],
-     [$sample_content3], [$sample_content4, $expected4],
-     [$dud_content, $dud_expected], [$sample_content5], [$sample_content6],
-     [$test_image_block, $test_image_expected]) {
-    my ($str, $eqv) = @$_;
+for (trivial => [$sample_content1, $expected1],
+     basic => [$sample_content2, $expected2],
+     toc-entry => [$sample_content3],
+     text-block => [$sample_content4, $expected4],
+     image-block => [$test_image_block, $test_image_expected],
+     invalid => [$dud_content, $dud_expected],
+     pdf-ref-example => [$sample_content6],
+     real-word-example => [$sample_content5],
+     ) {
+    my ($test, $spec) = $_.kv;
+    my ($str, $eqv) = @$spec;
     my $p = PDF::Grammar::Content.parse($str, :actions($actions));
-    ok($p, "parsed pdf content")
-       or do {diag ("unable to parse: $str"); next}
-    my $result = $p.ast; 
+    ok($p, "$test - parsed pdf content")
+        or do {diag ("unable to parse: $str"); next};
+
     if ($eqv) {
-       is($result, $eqv, "result as expected")
-           or diag {expected => $eqv, actual => $result}.perl;
+        my $result = $p.ast; 
+        is($result, $eqv, "$test - result as expected")
+            or diag {expected => $eqv, actual => $result}.perl;
     }
 }
 
