@@ -4,7 +4,8 @@ use PDF::Grammar::Actions;
 
 # rules for constructing PDF::Grammar::PDF AST
 
-class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
+class PDF::Grammar::PDF::Actions
+    is PDF::Grammar::Actions {
 
     method TOP($/) { make $<pdf>.ast }
 
@@ -23,8 +24,12 @@ class PDF::Grammar::PDF::Actions is PDF::Grammar::Actions {
     method pdf-tail ($/) { make $<trailer>.ast }
 
     method trailer ($/) {
-        make { dict => $<dict>.ast,
-               byte-offset => $<byte-offset>.ast };
+	my %trailer = ( dict => $<dict>.ast );
+
+	%trailer<byte-offset> = $<byte-offset>.ast
+	    if  $<byte-offset>;
+
+        make %trailer;
     }
 
     method indirect-ref($/) {

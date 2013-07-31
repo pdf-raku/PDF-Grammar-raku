@@ -2,7 +2,8 @@ use v6;
 
 use PDF::Grammar::Actions;
 
-class PDF::Grammar::Function::Actions is PDF::Grammar::Actions {
+class PDF::Grammar::Function::Actions
+    is PDF::Grammar::Actions {
 
     method TOP($/) { make $<expression>.ast }
 
