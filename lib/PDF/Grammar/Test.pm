@@ -1,6 +1,6 @@
 # AST Testing - utility functions
 
-module t::AST {
+module PDF::Grammar::Test {
 
     use Test;
 

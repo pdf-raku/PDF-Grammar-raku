@@ -4,8 +4,7 @@ use Test;
 use PDF::Grammar::PDF;
 use PDF::Grammar::PDF::Actions;
 
-use lib '.';
-use t::AST;
+use PDF::Grammar::Test;
 
 my $header = '%PDF-1.3';
 my $header_ast = 1.3;
@@ -119,10 +118,9 @@ for (
      my %test = $_.value;
      my $input = %test<input>;
 
-     my $p = PDF::Grammar::PDF.parse($input, :rule($rule), :actions($actions)),
+     my $p = PDF::Grammar::PDF.parse($input, :rule($rule), :actions($actions));
 
-    t::AST::parse_tests($input, $p, :rule($rule), :suite('pdf doc'),
-                         :expected(%test) );
+     PDF::Grammar::Test::parse_tests($input, $p, :rule($rule), :suite('pdf doc'), :expected(%test) );
 }
 
 done;
