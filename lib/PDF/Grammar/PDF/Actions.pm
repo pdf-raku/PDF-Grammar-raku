@@ -20,7 +20,7 @@ class PDF::Grammar::PDF::Actions
         make %pdf;
     }
 
-    method pdf-header ($/) { make $<version>.Num }
+    method pdf-header ($/) { make $<version>.Rat }
     method pdf-tail ($/) { make $<trailer>.ast }
 
     method trailer ($/) {
