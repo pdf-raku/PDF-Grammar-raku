@@ -1,4 +1,4 @@
-# AST Testing - utility functions
+use v6;
 
 module PDF::Grammar::Test {
 
@@ -17,7 +17,7 @@ module PDF::Grammar::Test {
         }
 
         if defined (my $ast = %expected<ast>) {
-            is($parse.ast, $ast, "{$suite} - ast")
+            is($parse.ast.perl, $ast.perl, "{$suite} - ast")
                 or diag $parse.ast.perl;
         }
         else {

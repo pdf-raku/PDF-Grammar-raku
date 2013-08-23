@@ -8,7 +8,7 @@ class PDF::Grammar::Function::Actions
     method TOP($/) { make $<expression>.ast }
 
     method expression($/) {
-        my @result = $<statement>>>.ast;
+        my @result = $<statement>».ast;
         make (expr => @result);
     }
 

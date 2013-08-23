@@ -73,8 +73,8 @@ class PDF::Grammar::Content::Actions
     }
 
     method imageAtts ($/) {
-        my @names = @<name>>>.ast;
-        my @objects = @<object>>>.ast;
+        my @names = @<name>».ast;
+        my @objects = @<object>».ast;
 
         my %atts;
         %atts{ @names } = @objects;

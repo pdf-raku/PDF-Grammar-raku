@@ -14,7 +14,7 @@ class PDF::Grammar::PDF::Actions
 
         %pdf<header> = $<pdf-header>.ast;
 
-        my @contents = $<body>>>.ast;
+        my @contents = $<body>».ast;
         %pdf<body> = @contents;
 
         make %pdf;
@@ -50,7 +50,7 @@ class PDF::Grammar::PDF::Actions
             # <dict> is a just a header the following <stream>
             my %stream;
             %stream<dict> = $<dict>.ast;
-            (%stream<start>, %stream<end>) = $<stream>[0].ast.kv;
+            (%stream<start>, %stream<end>) = $<stream>.ast.kv;
             make (stream => %stream)
         }
         else {
@@ -61,10 +61,10 @@ class PDF::Grammar::PDF::Actions
 
     method body($/) {
         my %body;
-        my @indirect-objs = $<indirect-obj>>>.ast;
+        my @indirect-objs = $<indirect-obj>».ast;
         %body<objects> = @indirect-objs;
-        %body<xref> = .ast
-            for $<xref>;
+        %body<xref> = $<xref>.ast
+            if $<xref>;
         %body<trailer> = .ast
             for $<trailer>;
 
@@ -72,7 +72,7 @@ class PDF::Grammar::PDF::Actions
     }
 
     method xref($/) {
-        my @sections = $<xref-section>>>.ast;
+        my @sections = $<xref-section>».ast;
         make @sections;
     }
 
@@ -82,7 +82,7 @@ class PDF::Grammar::PDF::Actions
         my %section;
         %section<object-first-num> = $<object-first-num>.ast;
         %section<object-count> = $<object-count>.ast;
-        my @entries = $<xref-entry>>>.ast;
+        my @entries = $<xref-entry>».ast;
         %section<entries> = @entries;
         make %section;
     }
@@ -96,10 +96,10 @@ class PDF::Grammar::PDF::Actions
         make %entry;
     }
 
-   # we don't actually capture streams, which can be huge and represent
-   # the majority of data in a typical PDF. Rather we just return the byte
-   # offsets of the start and the end of the stream and leave it up to the
-   # caller to disseminate
+   # don't actually capture streams, which can be huge and represent
+   # the majority of data in a typical PDF. Rather just return the byte
+   # offsets of the start and the end of the stream and leave it up to
+   # the caller to disseminate
 
     method stream($/) {
         make (($<stream-head>.to + 1) => ($<stream-tail>.from - 1));
