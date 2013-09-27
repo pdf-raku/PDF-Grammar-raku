@@ -19,7 +19,7 @@ class PDF::Grammar::Actions:ver<0.0.1> {
 
     method null($/) { make Any }
     method bool($/) {
-        make $.ast( $/.Str eq 'true', :pdf-type<bool> );
+        make $.ast( ~$/ eq 'true', :pdf-type<bool> );
     }
 
     method real($/) {
@@ -35,7 +35,7 @@ class PDF::Grammar::Actions:ver<0.0.1> {
     }
 
     method hex-char($/) {
-        make chr( _hex-pair($/.Str) )
+        make chr( _hex-pair(~$/) )
     }
 
     method name-chars:sym<number-symbol>($/) {
@@ -45,7 +45,7 @@ class PDF::Grammar::Actions:ver<0.0.1> {
         make $<hex-char>.ast;
     }
     method name-chars:sym<regular>($/) {
-        make $/.Str;
+        make ~$/;
     }
 
     method name ($/) {
@@ -64,12 +64,12 @@ class PDF::Grammar::Actions:ver<0.0.1> {
     method literal:sym<substring>($/)    {
         make '(' ~ $<literal-string>.ast ~ ')'
     }
-    method literal:sym<regular>($/)      { make $/.Str }
+    method literal:sym<regular>($/)      { make ~$/ }
     # literal escape sequences
     method literal:sym<esc-octal>($/)  {
-        make chr( :8($<octal-code>.Str) )
+        make chr( :8(~$<octal-code>) )
     }
-    method literal:sym<esc-delim>($/)        { make $<delim>.Str }
+    method literal:sym<esc-delim>($/)        { make ~$<delim> }
     method literal:sym<esc-backspace>($/)    { make "\b" }
     method literal:sym<esc-formfeed>($/)     { make "\f" }
     method literal:sym<esc-newline>($/)      { make "\n" }

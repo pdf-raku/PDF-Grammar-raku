@@ -16,7 +16,7 @@ class PDF::Grammar::Content::Actions
 
         for $op.caps -> $cap {
             if $cap.key eq '0' {
-                $operator = $cap.value.Str;
+                $operator = ~$cap.value;
             }
             else {
                 push @objects, $cap.value.ast;
@@ -64,7 +64,7 @@ class PDF::Grammar::Content::Actions
     }
 
     method guff ($/) {
-        make $/.Str;
+        make ~$/;
     }
 
     method unknown ($/) {

@@ -88,10 +88,11 @@ class PDF::Grammar::PDF::Actions
     }
 
     method xref-entry($/) {
-        my %entry;
-        %entry<offset> = $<byte-offset>.ast;
-        %entry<gen> = $<gen-number>.ast;
-        %entry<status> = $<obj-status>.Str;
+        my %entry = (
+            offset => $<byte-offset>.ast,
+            gen    => $<gen-number>.ast,
+            status => ~$<obj-status>,
+            );
 
         make %entry;
     }

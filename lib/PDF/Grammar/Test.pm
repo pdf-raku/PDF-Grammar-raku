@@ -10,10 +10,10 @@ module PDF::Grammar::Test {
         my $parsed = %expected<parse> // $input;
 
         if (defined $input) {
-            is($parse.Str, $parsed, "{$suite}: " ~ $rule ~ " parse: " ~ $input)
+            is(~$parse, $parsed, "{$suite}: " ~ $rule ~ " parse: " ~ $input)
         }
         else {
-            ok($parse.Str, "{$suite}: " ~ $rule ~ " parsed")
+            ok(~$parse, "{$suite}: " ~ $rule ~ " parsed")
         }
 
         if defined (my $ast = %expected<ast>) {
