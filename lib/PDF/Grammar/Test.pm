@@ -23,7 +23,7 @@ module PDF::Grammar::Test {
         else {
             if defined $parse.ast {
                 note {untested_ast =>  $parse.ast}.perl
-                    unless %expected.exists('ast');
+                    unless %expected<ast>:exists;
             }
             else {
                 diag "no {$suite} ast: " ~ ($input // '');
