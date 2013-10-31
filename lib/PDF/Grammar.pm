@@ -18,11 +18,11 @@ grammar PDF::Grammar:ver<0.0.6> {
 
     token comment {'%' <- eol>* <.eol>?}
     token ws-char {' ' | "\t" | "\f" | <.eol> | <.comment>}
-    token ws {<!ww><.ws-char>*}
+    token ws      {<!ww><.ws-char>*}
 
     # [PDF 1.7] 7.3.3  Numeric Objects
     # ---------------
-    token integer { ['+' | '-']? \d+ }
+    token integer { ['+' |'-']? \d+ }
     # reals must have a decimal point and some digits before or after it.
     token real { ['+' | '-']? [\d+\.\d* | \.\d+] }
 
@@ -46,7 +46,7 @@ grammar PDF::Grammar:ver<0.0.6> {
     token literal:sym<esc-tab>          {\\ t}
     token literal:sym<esc-continuation> {\\ <.eol>?}
 
-    token literal-string { '(' ~ ')' <literal>* }
+    token literal-string { '(' <literal>* ')' }
 
     # hex strings
     token hex-char   {<xdigit>**1..2}
@@ -68,8 +68,8 @@ grammar PDF::Grammar:ver<0.0.6> {
     # ---------------
     token bool  { true | false }
     token null  { null }
-    rule array  {\[ ~ \] <object>*}
-    rule dict   {'<<' ~ '>>' [<name> <object>]*}
+    rule array  {'[' <object>* ']'}
+    rule dict   {'<<' [ <name> <object> ]* '>>'}
 
     # Define a core set of objects.
     proto rule object { <...> }
