@@ -111,6 +111,12 @@ my $bin_commented_pdf = "$header
 $body
 $xref$trailer%\%EOF";
 
+my $edited_pdf_small = "$header
+$indirect-obj1
+$xref$trailer
+{$indirect-obj1.subst(/0/, '9'):g}
+{$xref.subst(/0/, '9'):g}$trailer%\%EOF";
+
 my $edited_pdf = "$header
 $body
 $xref$trailer
@@ -126,12 +132,16 @@ my $actions = PDF::Grammar::PDF::Actions.new;
 
 for (unix => $nix_pdf,
      bin_comments => $bin_commented_pdf,
+     edit_history_small => $edited_pdf_small,
      edit_history => $edited_pdf,
      mac_osx_formatted => $mac_osx_pdf,
-     ms_dos_formatted => $ms_dos_pdf) {
+     ms_dos_formatted => $ms_dos_pdf,
+     ) {
+
      my $p = PDF::Grammar::PDF.parse($_.value, :actions($actions));
      ok($p, "pdf parse - " ~ $_.key)
        or diag $_.value;
+next;
 
      my $pdf-ast = $p.ast;
      is($pdf-ast<header>, $pdf-header_version, "pdf version - as expected");
@@ -139,9 +149,9 @@ for (unix => $nix_pdf,
 
      # see if we can independently locate the trailer (parse)
      my $tail = $_.value.substr(*-512);
-     my $tail_p = PDF::Grammar::PDF.parse($tail, :rule('pdf-tail'), :actions($actions));
+     my $tail_p = PDF::Grammar::PDF.parse($tail, :rule<pdf-tail>, :actions($actions));
      ok($tail_p, "pdf tail parse - " ~ $_.key)
-       or note substr($tail, *-80) ~ '...';
+       or note '...' ~ substr($tail, *-80);
      my $trailer = $tail_p.ast;
 
    # see of we can independently locate the trailer (regex)

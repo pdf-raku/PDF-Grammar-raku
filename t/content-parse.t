@@ -3,6 +3,103 @@ use v6;
 use Test;
 
 use PDF::Grammar::Content;
+use PDF::Grammar::Content::Actions;
+
+my $sample_content1 = '/RGB CS';
+my $ast1 = [["CS" => ["RGB"]]];
+
+my $sample_content2 = '100 125 m 9 0 0 9 476.48 750 Tm';
+my $ast2 = [["m" => [100, 125]], ["Tm" => [9, 0, 0, 9, 476.48e0, 750]]];
+
+my $sample_content2a = '[(Hello)(World)]TJ';
+my $ast2a = [["TJ" => ['Hello','World']]];
+
+my $sample_content3 = 'BT 100 350 Td [(Using this Guide)-13.5( . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .)-257.1( xiii)]TJ ET';
+
+my $sample_content4 = '/foo <</xKey /yVal>> BDC 50 50 m BT 200 200 Td ET EMC'; 
+my $ast4 = [["BDC" => ["foo", {"xKey" => "yVal"}], "m" => [50, 50], "BT" => [], "Td" => [200, 200], "ET" => [], "EMC" => []]];
+
+my $sample_content5 = q:to/END4/;
+/GS1 gs
+BT
+  /TT6 1 Tf
+  9 0 0 9 476.48 750 Tm
+  0 g
+  0 Tc
+  0 Tw
+  (Some random test opcodes)Tj
+  1.6111 -1.2222 TD
+  (version 10.0)Tj
+  -42.5533 -77.3778 TD
+  (Doc. Revision 1.0)Tj
+  45.04 0 TD
+  (Page i)Tj
+ET
+.25 .085 0 .25 K
+2 J 0 j .51 w 3.86 M [] 0 d
+1 i 
+q 1 0 0 1 540 54 cm 0 0 m
+-432 0 l
+S
+Q
+/EmbeddedDocument /MC3 BDC
+  q
+  66.184 0 0 29 474.55 705.39 cm
+  /Im3 Do
+  Q
+EMC
+BT
+  /TT2 1 Tf
+  22 0 0 22 108 676.53 Tm
+  -.01 Tc
+  (Contents)Tj
+  12 0 0 12 108 641.2 Tm
+  0 Tc
+  [(Using this Guide)-13.5( . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .)-257.1( xiii)]TJ
+  /TT8 1 Tf
+  .0909 Tw
+  [( ...almost there)]TJ
+  -37.9318 -1.2727 TD
+  0 Tw
+ET
+END4
+
+my $sample_content6 = q:to/END5/;    # example from [PDF 1.7] Section 7.8
+0.0 G                                   % Set stroking colour to black
+1.0 1.0 0.0 rg                          % Set nonstroking colour to yellow
+25 175 175 -150 re                      % Construct rectangular path
+f                                       % Fill path
+/Cs12 cs                                % Set pattern colour space
+0.77 0.20 0.00 /P1 scn                  % Set nonstroking colour and pattern
+99.92 49.92 m                           % Start new path
+99.92 77.52 77.52 99.92 49.92 99.92 c   % Construct lower-left circle
+22.32 99.92 -0.08 77.52 -0.08 49.92 c
+-0.08 22.32 22.32 -0.08 49.92 -0.08 c
+77.52 -0.08 99.92 22.32 99.92 49.92 c
+B                                       % Fill and stroke path
+0.2 0.8 0.4 /P1 scn                     % Change nonstroking colour
+224.96 49.92 m                          % Start new path
+224.96 77.52 202.56 99.92 174.96 99.92 c% Construct lower-right circle
+147.36 99.92 124.96 77.52 124.96 49.92 c
+124.96 22.32 147.36 -0.08 174.96 -0.08 c
+202.56 -0.08 224.96 22.32 224.96 49.92 c
+B                                       % Fill and stroke path
+0.3 0.7 1.0 /P1 scn                     % Change nonstroking colour
+87.56 201.70 m                          % Start new path
+63.66 187.90 55.46 157.30 69.26 133.4 c % Construct upper circle
+83.06 109.50 113.66 101.30 137.56 115.10 c
+161.46 128.90 169.66 159.50 155.86 183.40 c
+142.06 207.30 111.46 215.50 87.56 201.70 c
+B                                       % Fill and Stroke path
+0.5 0.2 1.0 /P1 scn                     % Change nonstroking colour
+50 50 m                                 % Start new path
+175 50 l                                % Construct triangular path
+112.5 158.253 l
+b                                       % Close, fill, and stroke path
+END5
+
+my $dud_content = '10 10 Td 42 dud';
+my $dud_expected = [["Td" => [10, 10]], "??" => [42], "??" => ["dud"]];
 
 my $test_image_block = 'BI                  % Begin inline image object
     /W 17           % Width in samples
@@ -12,149 +109,33 @@ my $test_image_block = 'BI                  % Begin inline image object
     /F [/A85 /LZW]  % Filters
 ID                  % Begin image data
 J1/gKA>.]AN&J?]-<HW]aRVcg*bb.\eKAdVV%/PcZ
-%…Omitted data…
 %R.s(4KE3&d&7hb*7[%Ct2HCqC~>
 EI';
+my $test_image_expected = [["BI" => {"W" => 17, "H" => 17, "CS" => "RGB", "BPC" => 8, "F" => ["A85", "LZW"]}, "ID" => "J1/gKA>.]AN\&J?]-<HW]aRVcg*bb.\\eKAdVV\%/PcZ\n\%R.s(4KE3\&d\&7hb*7[\%Ct2HCqC~>\n", "EI" => []]];
 
-# test individual ops
-for (
-    text_block_empty               => 'BT ET',
-    text_block_populated           => 'BT B* ET',
+my $actions = PDF::Grammar::Content::Actions.new;
 
-    BDC_marked_content_empty_text  =>'/foo <</MP /yup>> BDC BT ET EMC',
-    BDC_marked_content_with_op     => '/foo <</MP /yup>> BDC (hello) Tj EMC',
-    BDC_content_dict_ref           => '/EmbeddedDocument /MC3 BDC q EMC',      # optional content - named dict
-    BMC_marked_content_empty_text  => '/foo BMC BT ET EMC',     # Marked content - empty
-    BMC_marked_content_with_text   => '/bar BMC BT B* ET EMC',  # Marked content + text block - empty
-    BMC_marked_content_with_op     => '/baz BMC B* EMC',        # BT .. ET  Text block - with valid content
+for (trivial => [$sample_content1, $ast1],
+     basic => [$sample_content2, $ast2],
+     basic-array => [$sample_content2a, $ast2a],
+     toc-entry => [$sample_content3],
+     text-block => [$sample_content4, $ast4],
+     image-block => [$test_image_block, $test_image_expected],
+     invalid => [$dud_content, $dud_expected],
+     pdf-ref-example => [$sample_content6],
+     real-word-example => [$sample_content5],
+     ) {
+    my ($test, $spec) = $_.kv;
+    my ($str, $eqv) = @$spec;
+    my $p = PDF::Grammar::Content.parse($str, :actions($actions));
+    ok($p, "$test - parsed pdf content")
+        or do {diag ("unable to parse: $str"); next};
 
-    'BI .. ID .. EI image_block'   => $test_image_block,
-
-    'BX .. EX ignored text'        => 'BX this stuff gets ignored EX',
-    'BX .. BX .. EX .. EX nesting' => 'BX this stuff gets BX doubly EX ignored EX',
-
-    CloseFileStroke => 'b',
-    CloseEOFillStroke => 'b*',
-    FillStroke => 'B',
-    EOFillStroke => 'B*',
-
-    CurveTo           => '.1 .2 .3 4. 5. 6.0 c',
-    'Concat (Matrix)' => '.1 .2 .3 4. 5. 6.0 cm',
-    SetFillColorSpace => '/RGB cs',
-    SetStrokeColorSpace => '/CMYK CS',
-
-    Dash => '[1 2] 2 d',
-    SetCharWidth => '.67 1.2 d0',
-    SetCacheDevice => '.1 .2 .3 4. 5. 6.0 d1',
-    XObject => '/MyForm Do',
-    'MarkPoint (inline dict)' => '/foo <</bar 42>> DP',
-    'MarkPoint (dict ref)' => '/foo /baz DP',
-
-    Fill => 'F', 'Fill (Obsolete)' => 'f', 'EOFill' => 'f*',
-
-    SetStrokeGray => '.7 G',
-    SetFillGray => '.5 g',
-    SetExtState => '/Gs1 gs',
-
-    ClosePath => 'h',
-
-    SetFlat => '2 i',
-
-    SetLineJoin => '3 j',
-    SetLineCap => '2 J',
-
-    SetFillCMYK => '.7 .3 .2 .05 k',
-    SetStrokeCMYK => '.1  0.2  0.30  .400  K',
-
-    LineTo => '20 30 l',
-
-    moveTo => '100 125 m',
-    setMiterLimit => '0.35 M',
-    MarkPoint => '/here MP',
-
-    EndPath => 'n',
-
-    Save => 'q',
-    Restore => 'Q',
-
-    Rectangle => '20 50 30 60 re',
-    SetStrokeRGB =>  '.3 .5 .7 RG',
-    SetFilLRGB => '.7 2. .5 rg',
-    SetRenderingIntent => '/foo ri',
- 
-    CloseStroke => 's',
-    SetFillColor => '.2 .35 .7 .9 sc',
-    SetFillColorN => '0.30 0.75 0.21 /P2 scn',
-    Stroke => 'S',
-    SetStrokeColor => '.1  0.2  0.30  .400  SC',
-    SetStrokeColorN => '0.30 0.75 0.21 /P2 SCN',
-    shFill => '/bar sh',
-
-    TextNewLine => 'T*',
-    SetCharSpacing => '4.5 Tc',
-    TextMove => '20 15 Td',
-    TextMoveSet => '200 100 TD',
-    SetFont => '/TimesRoman 12 Tf',
-    ShowText => '(hello world) Tj',
-    ShowSpaceText => '[(hello) -10.5 (world)] TJ',
-    SetTextLeading => '13 TL',
-    SetTextMatrix => '9 0 0 9 476.48 750 Tm',
-    SetTextRender => '2 Tr',
-    SetTextRise => '1.7 Ts',
-    SetTextWordSpacing => '2.5 Tw',
-    SetHorizScaling => '0.7 Tz',
-
-    CurveTo => '.1 .2 .3 .4 v',
-
-    EOClip => 'W',
-    Clip => 'W*',
-    SetLineWidth => '1.35 w',
-
-    CurveTo2 => '.1 .2 .3 .4 y',
-
-    MoveSetShowText => '10 20 (hi) "',      # "         moveShow
-    MoveShowText => "(hello) '",            # '         show
-
-    ) {
-    ok($_.value ~~ /^<PDF::Grammar::Content::instruction>$/, "instruction " ~ $_.key)
-        or do {
-            diag "failed instruction: " ~ $_.value;
-            if ($_.value ~~ /^(.*?)(<PDF::Grammar::Content::instruction>)(.*?)$/) {
-
-                my $p = $0 && $0.join(',');
-                note "(preceeding: $p)" if $p;
-                my $m = $1 && $1.join(',');
-                note "(best match: $m)" if $m;
-                my $f = $2 && $2.join(',');
-                note "(following: $f)" if $f;
-            }
+    if ($eqv) {
+        my $result = $p.ast; 
+        is($result, $eqv, "$test - result as expected")
+            or diag {expected => $eqv, actual => $result}.perl;
     }
-}
-
-# invalid cases
-for (
-    'too few args' =>'20 (hi) "',      
-    'type mismatch (wrong order)' =>'10 (hi) 20 "',   
-    'unknown operator' =>'crud',           
-    'Text block - unclosed' =>'BT B',           
-    'Text block - unopened' =>'B ET',           
-    'Text block - extra end' =>'BT B ET ET',     
-    'Text block - incomplete content' =>'BT 42 ET',       
-    'Text block - nested' =>'BT BT ET ET',    
-    'Marked content - incorrect text nesting' =>'/foo BMC BT EMC ET',     
-    'Marked content - nested' =>'/bar BMC /baz BMC B* EMC EMC',  
-    'Marked content - extra end' =>'/foo BMC BT ET EMC EMC',   
-    'Marked content - mising arg' =>'/BMC BT B* ET EMC',        
-    'Marked content - incomplete contents' =>'/baz BMC (hi) EMC',        
-    'BX ... EX incorrect nesting (extra BX)' => 'BX BX EX',
-    'BX ... EX incorrect nesting (extra EX)' =>'BX EX EX',                 
-    ) {
-    # test our parser's resilience
-    ok($_.value !~~ /^<PDF::Grammar::Content::instruction>$/,
-       "invalid instruction: " ~ $_.key)
-        or diag $_.value;
-    ok($_ ~~ /<PDF::Grammar::Content::unknown>/,
-       "parsed as unknown: " ~ $_.key);
 }
 
 done;

@@ -36,7 +36,10 @@ trailer
 %%EOF
 END_END_END
 
-for (small => $fdf-small, medium => $fdf-medium, real => $fdf-body) {
+for (small => $fdf-small,
+     medium => $fdf-medium,
+     large => $fdf-body
+    ) {
     my $p = PDF::Grammar::FDF.parse($_.value);
 
     ok($p, "fdf parse " ~ $_.key)
