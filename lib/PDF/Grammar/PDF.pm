@@ -17,7 +17,7 @@ grammar PDF::Grammar::PDF
 
     # xref section is optional - document could have a cross reference stream
     # quite likely if linearized [PDF 1.7] 7.5.8 & Annex F (Linearized PDF)
-    rule body         { <.ws-char>* <indirect-obj>+ <xref>? <trailer>}
+    rule body         { <indirect-obj>+ <xref>? <trailer>}
     rule indirect-obj { <integer> <integer> obj <object>* endobj }
     rule indirect-ref { <integer> <integer> R }
 
@@ -48,6 +48,7 @@ grammar PDF::Grammar::PDF
         <dict><.eol>
         startxref<.eol>
         <byte-offset=.digits><.eol>
+	[<!before '%%EOF'><.ws-char>]*
     }
 
     # pdf-tail: special stand-alone regex for reverse matching
