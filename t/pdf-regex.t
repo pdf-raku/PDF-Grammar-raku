@@ -205,7 +205,8 @@ ET
 endstream
 ";
 
-my $content3 = "abc123\n"~chr(255)~chr(0)~'z endstream - not';
+# pushing spec boundaries
+my $content3 = "abc123\n"~chr(0xFF)~chr(0)~'z endstream! - not really!';
 
 my $stream3 = sprintf "<< /Length %d >>
 stream
@@ -253,11 +254,12 @@ for (empty => $empty_stream, tiny => $stream1, content => $stream2,
      sizable => $stream6) {
     my $test = $_.key;
     my $val = $_.value;
-diag $val;
+
     ok($val ~~ /^<PDF::Grammar::PDF::dict> <PDF::Grammar::PDF::stream-head>/, "$test stream - head match");
     ok($val ~~ /<PDF::Grammar::PDF::stream-tail>$/, "$test stream - tail match");
-    ok("$val endobj" ~~ /^<PDF::Grammar::PDF::dict> <PDF::Grammar::PDF::stream>'endobj'$/, "$test stream - full match")
-    or diag $val;
+    my $ind_obj = "42 0 obj $val endobj";
+    ok($ind_obj ~~ /^<PDF::Grammar::PDF::indirect-obj>$/, "$test stream - embedded in object")
+    or diag $ind_obj;
 }
 
 my $ind_obj1 = "10 0 obj
