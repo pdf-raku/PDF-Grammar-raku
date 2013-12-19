@@ -3,5 +3,20 @@
     "version"     : "*",
     "description" : "Perl 6 grammars for parsing PDF Content Streams and File Structure",
     "depends"     : [  ],
-    "source-url"  : "git://github.com/dwarring/PDF-Grammar.git"
+    "source-url"  : "git://github.com/dwarring/PDF-Grammar.git",
+    "provides"    : {
+        "PDF::Grammar" : "lib/PDF/Grammar.pm",
+        "PDF::Grammar::Actions" : "lib/PDF/Grammar/Actions.pm",
+        "PDF::Grammar::Attributes" : "lib/PDF/Grammar/Attributes.pm",
+        "PDF::Grammar::Content" : "lib/PDF/Grammar/Content.pm",
+        "PDF::Grammar::Content::Actions" : "lib/PDF/Grammar/Content/Actions.pm",
+        "PDF::Grammar::FDF" : "lib/PDF/Grammar/FDF.pm",
+        "PDF::Grammar::FDF::Actions" : "lib/PDF/Grammar/PDF/Actions.pm",
+        "PDF::Grammar::Function" : "lib/PDF/Grammar/Function.pm",
+        "PDF::Grammar::Function::Actions" : "lib/PDF/Grammar/Function/Actions.pm",
+        "PDF::Grammar::PDF" : "lib/PDF/Grammar/PDF.pm",
+        "PDF::Grammar::PDF::Actions" : "lib/PDF/Grammar/PDF/Actions.pm",
+        "PDF::Grammar::Stream" : "lib/PDF/Grammar/Stream.pm",
+        "PDF::Grammar::Test" : "lib/PDF/Grammar/Test.pm"
+    }
 }
