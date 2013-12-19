@@ -114,8 +114,8 @@ for (
       body => {input => $body ~ "\n" ~ $trailer, ast => $body_trailer_ast},
       pdf => {input => $pdf, ast => Mu},
     ) {
-     my $rule = $_.key;
-     my %test = $_.value;
+     my $rule = .key;
+     my %test = .value;
      my $input = %test<input>;
 
      my $p = PDF::Grammar::PDF.parse($input, :rule($rule), :actions($actions));

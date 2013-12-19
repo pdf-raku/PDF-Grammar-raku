@@ -3,6 +3,8 @@ use v6;
 use Test;
 
 use PDF::Grammar::FDF;
+use PDF::Grammar::FDF::Actions;
+use PDF::Grammar::Test;
 
 my $fdf-small = '%FDF-1.2
 %âãÏÓ
@@ -14,6 +16,11 @@ endobj
 trailer
 <</Root 1 0 R>>
 %%EOF';
+
+my $fdf-small-ast = {"header" => 1.2,
+		     "body" => [{"objects" => ["ind_obj" => [1, 0, {"FDF" => {"F" => "small.pdf", "Fields" => [{"T" => "barcode", "V" => "*TEST-1234*"}]}}]],
+				 "trailer" => {"dict" => {"Root" => "ind_ref" => [1, 0]}}}]
+                    };
 
 my $fdf-medium = '%FDF-1.2
 %âãÏÓ
@@ -36,14 +43,18 @@ trailer
 %%EOF
 END_END_END
 
-for (small => $fdf-small,
-     medium => $fdf-medium,
-     large => $fdf-body
-    ) {
-    my $p = PDF::Grammar::FDF.parse($_.value);
+my $actions = PDF::Grammar::FDF::Actions.new;
 
-    ok($p, "fdf parse " ~ $_.key)
-        or diag $_.value; 
+for (small => {input => $fdf-small, "ast" => $fdf-small-ast},
+     medium => {input => $fdf-medium},
+     large => {input => $fdf-body},
+    ) {
+    my $test-name = .key;	
+    my %test = .value;
+    %test<ast> //= Mu;
+
+    my $p = PDF::Grammar::FDF.parse(%test<input>, :actions($actions));
+    PDF::Grammar::Test::parse_tests(%test<input>, $p, :suite("fdf {$test-name}"), :expected(%test) );
 }
 
 done;
