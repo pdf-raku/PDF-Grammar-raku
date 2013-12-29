@@ -23,7 +23,7 @@ class PDF::Grammar::Function::Actions
     method unexpected:sym<name>($/)  { make $<name>.ast }
     method unexpected:sym<null>($/)  { make $<null>.ast }
   
-    method object:sym<ps-op>($/) {make $.ast( $<ps-op>.ast, :pdf-type<ps-op> )};
+    method object:sym<ps-op>($/) {make $.node( $<ps-op>.ast, :pdf-type<ps-op> )};
     # extended postcript operators
     method ps-op:sym<arithmetic>($/) {make ~$<op> }
     method ps-op:sym<bitwise>($/)    {make ~$<op> }
