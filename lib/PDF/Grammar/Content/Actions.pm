@@ -6,7 +6,7 @@ class PDF::Grammar::Content::Actions
     is PDF::Grammar::Actions {
 
     method TOP($/) {
-        my @result = $/.caps.map({ .value.ast });
+        my @result = $/<op>».ast;
         make @result;
     }
 
@@ -26,12 +26,10 @@ class PDF::Grammar::Content::Actions
         return $operator => @objects;
      }
 
-    sub _image_block_data($image_block) {
+    sub _image_block_data($/) {
 
-        my ($bi, $image_atts, $image_data_op, $image_data) = $image_block.caps;
-
-        return (BI => $image_atts.value.ast,
-                ID => $image_data.value.Str,
+        return (BI => $<imageAtts>.ast,
+                ID => ~$0,
                 EI => [],
             );
     }
@@ -39,19 +37,17 @@ class PDF::Grammar::Content::Actions
     sub _block_data($block) {
 
         if ($block.caps[0].key eq 'opBeginImage') {
-            return _image_block_data($block);
+            return _image_block_data($block)
         }
 
-        my @result = ( $block.caps.map({
-
-            my $token = $_;
-
+        my @result = map -> $token {
             given $token.key {
                 when /^op/ {_op_data( $token.value )}
                 when /inner.*block/ { _block_data( $token.value ) }
                 default {'tba: ' ~ $token.key ~ ' = '  ~ $token.value};
             }
-        }) );
+        }, $block.caps;
+
         return @result;
     }
 
