@@ -3,10 +3,11 @@ use v6;
 use Test;
 
 use PDF::Grammar;
+use PDF::Grammar::Test;
 use PDF::Grammar::Actions;
 use PDF::Grammar::Attributes;
 
-my %escape_char_mappings = (
+my %escapes = (
     '\n'   => "\n", 
     '\r'   => "\r", 
     '\t'   => "\t", 
@@ -19,7 +20,7 @@ my %escape_char_mappings = (
 
 my $actions = PDF::Grammar::Actions.new;
 
-for %escape_char_mappings.kv -> $escape_seq, $expected_result {
+for %escapes.kv -> $escape_seq, $expected_result {
     my $p = PDF::Grammar.parse($escape_seq, :rule('literal'), :actions($actions));
     die ("unable to parse escape_seq: $escape_seq")
         unless $p;
@@ -28,117 +29,101 @@ for %escape_char_mappings.kv -> $escape_seq, $expected_result {
 }
 
 my @tests = (
-#    rule                      input               result
+    ws =>              {input => ' ',                ast => Mu},
+    ws =>              {input => "  \r\n \t",        ast => Mu},
+    ws =>              {input => " %hi\r",           ast => Mu},
+    ws =>              {input => "\%XX\n \%\%YYY\n", ast => Mu},
+    ws =>              {input => '%bye',             ast => Mu},
 
-    'ws',                      ' ',                Any,
-    'ws',                      "  \r\n \t",        Any,
-    'ws',                      " %hi\r",           Any,
-    'ws',                      "\%XX\n \%\%YYY\n", Any,
-    'ws',                      '\%bye',            Any,
+    null =>            {input => 'null',             ast => Mu},
 
-    'null',                    'null',             Any,
+    bool =>            {input => 'true',             ast => True},
+    bool =>            {input =>  'false',           ast => False},
 
-    'bool',                    'true',             True,
-    'bool',                    'false',            False,
+    name-chars =>      {input => '##',               ast => '#'},
+    hex-char =>        {input => '6D',               ast => 'm'},
+    name-chars =>      {input => '#6E',              ast => 'n'},
+    name-chars =>      {input => 'snoopy',           ast => 'snoopy'},
+    name =>            {input => '/snoopy',          ast => 'snoopy'},
+    name =>            {input => '/s#6Eo#6fpy',      ast => 'snoopy'},
 
-    'name-chars',              '##',               '#',
-    'hex-char',                '6D',               'm',
-    'name-chars',              '#6E',              'n',
-    'name-chars',              'snoopy',           'snoopy',
-    'name',                    '/snoopy',          'snoopy',
-    'name',                    '/s#6Eo#6fpy',      'snoopy',
+    hex-string =>      {input => '<736E6F6f7079>',   ast => 'snoopy'},
 
-    'hex-string',              '<736E6F6f7079>',   'snoopy',
+    literal-string =>  {input => '(hello world\41)',      ast => 'hello world!'},
+    literal-string =>  {input => '(hi\nagain)',           ast => "hi\nagain"},
+    literal-string =>  {input => "(hi\r\nagain)",         ast => "hi\nagain"},
+    literal-string =>  {input => '(perl(6) rocks! :-\))', ast => 'perl(6) rocks! :-)'},
+    literal-string =>  {input => "(continued\\\n line)",  ast => 'continued line'},
+    literal-string =>  {input => '(stray back\-slash)',   ast => 'stray back-slash'},
+    literal-string =>  {input => "(try\\\n\\\n%this\\\n)",ast => 'try%this'},
 
-    'literal-string',          '(hello world\41)',      'hello world!',
-    'literal-string',          '(hi\nagain)',           "hi\nagain",
-    'literal-string',          "(hi\r\nagain)",         "hi\nagain",
-    'literal-string',          '(perl(6) rocks! :-\))', 'perl(6) rocks! :-)',
-    'literal-string',          "(continued\\\n line)",  'continued line',
-    'literal-string',          '(stray back\-slash)',   'stray back-slash',
-    'literal-string',          "(try\\\n\\\n%this\\\n)",'try%this',
+    string =>          {input => '(hi)',             ast => 'hi'},
+    string =>          {input => "<68\n69>",         ast => 'hi'},
+    string =>          {input => "<6\n869>",         ast => 'hi'},
+    string =>          {input => "<68\n7>",          ast => 'hp'},
 
-    'string',                  '(hi)',             'hi',
-    'string',                  "<68\n69>",         'hi',
-    'string',                  "<6\n869>",         'hi',
-    'string',                  "<68\n7>",          'hp',
+    integer =>         {input => '42',               ast => 42},
+    real =>            {input => '12.5',             ast => 12.5e0},
+    number =>          {input => '42',               ast => 42},
+    number =>          {input => '12.5',             ast => 12.5e0},
 
-    'integer',                 '42',                42,
-    'real',                    '12.5',              12.5,
-    'number',                  '42',                42,
-    'number',                  '12.5',              12.5,
+    object => {type => 'string',
+	       subtype => 'literal',  input => '(hi)',            ast => 'hi'},
 
-    'object' => ['string',
-                  'literal'],  '(hi)',              'hi',
+    object => {type => 'string',
+	       subtype => 'hex',      input => '<6869>',          ast => 'hi'},
 
-    'object' => ['string',
-                  'hex'],      '<6869>',            'hi',
+    object => {type => 'number',
+                  subtype => 'integer',  input => '-042',         ast => -42},
 
-    'object' => ['number',
-                  'integer'],  '-042',             -42,
+    object => {type => 'number',
+                  subtype => 'real',     input => '+3.50',        ast => 3.5e0},
 
-    'object' => ['number',
-                  'real'],     '+3.50',             3.5,
+    object => {type => 'dict',     input => '<</Length 42>>',     ast => {Length => 42}},
 
-    'object' => ['dict'],     '<</Length 42>>',    {Length => 42},
+    object => {type => 'array',    input => '[/Apples(oranges)]', ast => ['Apples', 'oranges']},
 
-    'object' => ['array'],    '[/Apples(oranges)]',['Apples', 'oranges'],
-
-    'object' => ['bool'],     'true',              True,
-    'object' => ['bool'],     'false',             False,
-    'object' => ['dict'],     '<</Length 42>>',    {Length => 42},
+    object => {type => 'bool',     input => 'true',              ast => True},
+    object => {type => 'bool',     input => 'false',             ast => False},
+    object => {type => 'dict',     input => '<</Length 42>>',    ast => {Length => 42}},
 
     );
 
-for @tests -> $_rule, $string, $expected_result {
-    my $expected_type;
-    my $expected_subtype;
-    my $rule;
+for @tests {
+    my $rule = .key;
+    my %test = .value;
+    my $input = %test<input>;
 
-    if $_rule.isa('Pair') {
-        ($rule, my $type) = $_rule.kv;
-        ($expected_type, $expected_subtype) = @$type;
-    }
-    else {
-        $rule = $_rule;
-    }
-
-    my $p = PDF::Grammar.parse($string, :rule($rule), :actions($actions));
-    die ("unable to parse as $rule: $string")
-        unless $p;
-    my $result = $p.ast;
-    if defined $expected_result {
-        is($result, $expected_result, "rule $rule: $string => $expected_result")
-            || do {
-                diag "expected: " ~ $expected_result.split('').map({$_.ord});
-                diag "actual: " ~ $result.split('').map({$_.ord});
-        };
-    }
-    else {
-        ok(! defined($result), "rule $rule: $string => (undef)");
-    }
-
-    if ($expected_type) {
-        my $test = "rule $rule: $string has type $expected_type";
-        if $result.can('pdf-type') {
-            is($result.pdf-type, $expected_type, $test);
-        }
-        else {
-            diag "$rule - doesn't do .pdf-type";
-            fail( $test );
-        }
-    }
-
-    if ($expected_subtype) {
-        my $test = "rule $rule: $string has subtype $expected_subtype";
-        if $result.can('pdf-subtype') {
+    my $p = PDF::Grammar.parse($input, :rule($rule), :actions($actions));
+    PDF::Grammar::Test::parse_tests($input, $p, :rule($rule), :suite($rule), :expected(%test) );
+    
+    my $type = %test<type>;
+ 
+    if $p && $type {
+    
+       my $result = $p.ast;
+       if $result.can('pdf-type') {
             diag "type: " ~ $result.pdf-type;
-            diag "subtype: " ~ $result.pdf-subtype;
-            is($result.pdf-subtype, $expected_subtype, $test);
+            is($result.pdf-type, $type, $rule ~ ' - type');
         }
         else {
             diag "$rule - doesn't do .pdf-subtype";
-            fail( $test );
+            fail( $rule ~ ' - type' );
+        }
+    }
+
+    my $subtype = %test<subtype>;
+
+    if $p && $subtype {
+       
+       my $result = $p.ast;
+       if $result.can('pdf-subtype') {
+            diag "subtype: " ~ $result.pdf-subtype;
+            is($result.pdf-subtype, $subtype, $rule ~ ' - subtype');
+        }
+        else {
+            diag "$rule - doesn't do .pdf-subsubtype";
+            fail( $rule ~ ' - subtype' );
         }
     }
 }

@@ -25,9 +25,6 @@ module PDF::Grammar::Test {
                 note {untested_ast =>  $parse.ast}.perl
                     unless %expected<ast>:exists;
             }
-            else {
-                diag "no {$suite} ast: " ~ ($input // '');
-            }
         }
     }
 }
