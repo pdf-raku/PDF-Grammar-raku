@@ -10,14 +10,10 @@ class PDF::Grammar::FDF::Actions
     method TOP($/) { make $<fdf>.ast }
     method fdf-header ($/) { make $<version>.Rat }
     method fdf($/) {
-        my %fdf;
-
-        %fdf<header> = $<fdf-header>.ast;
-
-        my @contents = $<body>».ast;
-        %fdf<body> = @contents;
-
-        make %fdf;
-    }
-
+	my $body = [ $<body>>>.ast ];
+        make {
+	    header => $<fdf-header>.ast,
+	    body => $body,
+        }
+     }
 };

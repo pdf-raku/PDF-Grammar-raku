@@ -17,7 +17,7 @@ module PDF::Grammar::Test {
         }
 
         if (my $ast = %expected<ast>).defined {
-            is($parse.ast.perl, $ast.perl, "{$suite} - ast")
+            is($parse.ast.perl, $ast.perl, "{$suite} $rule - ast")
                 or diag $parse.ast.perl;
         }
         else {

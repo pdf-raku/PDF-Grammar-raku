@@ -10,26 +10,21 @@ class PDF::Grammar::PDF::Actions
     method TOP($/) { make $<pdf>.ast }
 
     method pdf($/) {
-        my %pdf;
-
-        %pdf<header> = $<pdf-header>.ast;
-
-        my @contents = $<body>».ast;
-        %pdf<body> = @contents;
-
-        make %pdf;
+	my $body = [ $<body>>>.ast ];
+        make {
+	    header => $<pdf-header>.ast,
+	    body => $body,
+        }
     }
 
     method pdf-header ($/) { make $<version>.Rat }
     method pdf-tail ($/) { make $<trailer>.ast }
 
     method trailer ($/) {
-	my %trailer = ( dict => $<dict>.ast );
-
-	%trailer<byte-offset> = $<byte-offset>.ast
-	    if  $<byte-offset>;
-
-        make %trailer;
+	make {
+	    dict => $<dict>.ast,
+	    ( $<byte-offset> ??  byte-offset => $<byte-offset>.ast !! () ),
+	};
     }
 
     method indirect-ref($/) {
@@ -39,7 +34,7 @@ class PDF::Grammar::PDF::Actions
 
     method indirect-obj($/) {
         my @ind_obj = $/.caps.map({ .value.ast });
-        make (ind_obj => @ind_obj);
+	make (ind_obj => @ind_obj);
     }
 
     method object:sym<indirect-ref>($/)  { make $<indirect-ref>.ast }
@@ -60,41 +55,36 @@ class PDF::Grammar::PDF::Actions
     }
 
     method body($/) {
-        my %body;
-        my @indirect-objs = $<indirect-obj>».ast;
-        %body<objects> = @indirect-objs;
-        %body<xref> = $<xref>.ast
-            if $<xref>;
-        %body<trailer> = .ast
-            for $<trailer>;
-
-        make %body;
+	my $objects = [ $<indirect-obj>>>.ast ];
+        make {
+	    objects => $objects,
+            trailer => $<trailer>.ast,
+	    ($<xref> ?? xref => $<xref>.ast !! () ),
+       }
     }
 
     method xref($/) {
-        my @sections = $<xref-section>».ast;
-        make @sections;
+	my $sections = [ $<xref-section>>>.ast ];
+	make $sections;
     }
 
     method digits($/) { make $/.Int }
 
     method xref-section($/) {
-        my %section;
-        %section<object-first-num> = $<object-first-num>.ast;
-        %section<object-count> = $<object-count>.ast;
         my @entries = $<xref-entry>».ast;
-        %section<entries> = @entries;
-        make %section;
+        make {
+	    object-first-num => $<object-first-num>.ast,
+	    object-count => $<object-count>.ast,
+	    entries => @entries,
+        }
     }
 
     method xref-entry($/) {
-        my %entry = (
+        make {
             offset => $<byte-offset>.ast,
             gen    => $<gen-number>.ast,
             status => ~$<obj-status>,
-            );
-
-        make %entry;
+            };
     }
 
    # don't actually capture streams, which can be huge and represent
