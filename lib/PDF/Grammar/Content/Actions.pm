@@ -64,7 +64,7 @@ class PDF::Grammar::Content::Actions
     }
 
     method unknown ($/) {
-        my @u =  $/.caps.map({ .value.ast });
+        my @u =  $/.caps.map( *.value.ast );
         make '??' => @u
     }
 

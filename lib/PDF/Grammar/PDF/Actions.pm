@@ -28,12 +28,12 @@ class PDF::Grammar::PDF::Actions
     }
 
     method indirect-ref($/) {
-        my @ind_ref = $/.caps.map({ .value.ast });
+        my @ind_ref = $/.caps.map( *.value.ast );
         make (ind_ref => @ind_ref);
     }
 
     method indirect-obj($/) {
-        my @ind_obj = $/.caps.map({ .value.ast });
+        my @ind_obj = $/.caps.map( *.value.ast );
 	make (ind_obj => @ind_obj);
     }
 
