@@ -16,12 +16,12 @@ class PDF::Grammar::Function::Actions
     method statement:sym<if>($/)         { make $<if>.ast; }
     method statement:sym<object>($/)     { make $<object>.ast}
     method statement:sym<unexpected>($/) { make ('??' => $<unexpected>.ast); }
-    method statement:sym<unknown>($/)    { make ('??' => ~$<unknown>); }
+    method unknown($/)    { make ('??' => ~$/); }
 
-    method unexpected:sym<dict>($/)  { make $<dict>.ast }
-    method unexpected:sym<array>($/) { make $<array>.ast }
-    method unexpected:sym<name>($/)  { make $<name>.ast }
-    method unexpected:sym<null>($/)  { make $<null>.ast }
+    method illegal-object:sym<dict>($/)  { make '??' => $<dict>.ast }
+    method illegal-object:sym<array>($/) { make '??' => $<array>.ast }
+    method illegal-object:sym<name>($/)  { make '??' => $<name>.ast }
+    method illegal-object:sym<null>($/)  { make '??' => $<null>.ast }
   
     method object:sym<ps-op>($/) {make $.node( $<ps-op>.ast, :pdf-type<ps-op> )};
     # extended postcript operators

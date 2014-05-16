@@ -9,20 +9,18 @@ grammar PDF::Grammar::Function
     # Calculator Functions, as described in [PDF 1.7] section 7.10.5
     rule TOP {^ <expression> $}
 
-    rule expression { '{' <statement>* '}' }
+    rule expression { '{' [<statement>||<statement=.unknown>]* '}' }
 
     proto rule statement {<...>}
     rule statement:sym<ifelse>     { <ifelse> }
     rule statement:sym<if>         { <if> }
-    rule statement:sym<unexpected> { <unexpected> }
-    rule statement:sym<object>     { <object> }
-    rule statement:sym<unknown>    { <unknown> }
+    rule statement:sym<object>     { <object=.illegal-object>||<object> }
 
-    proto rule unexpected {<...>}
-    rule unexpected:sym<dict>  { <dict> }
-    rule unexpected:sym<array> { <array> }
-    rule unexpected:sym<name>  { <name> }
-    rule unexpected:sym<null>  { <null> }
+    proto rule illegal-object {<...>}
+    rule illegal-object:sym<dict>  { <dict> }
+    rule illegal-object:sym<array> { <array> }
+    rule illegal-object:sym<name>  { <name> }
+    rule illegal-object:sym<null>  { <null> }
 
     # extend <object> add <ps-op>
     rule object:sym<ps-op> {<ps-op>}
@@ -45,5 +43,5 @@ grammar PDF::Grammar::Function
     rule if { <if-expr=.expression> 'if' }
     rule ifelse { <if-expr=.expression> <else-expr=.expression> 'ifelse' }
 
-    token unknown { <[a..zA..Z]><[\w]>* }
+    token unknown { <alpha><[\w]>* }
 }
