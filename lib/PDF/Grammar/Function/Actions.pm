@@ -21,7 +21,7 @@ class PDF::Grammar::Function::Actions
     method illegal-object:sym<dict>($/)  { make '??' => $<dict>.ast }
     method illegal-object:sym<array>($/) { make '??' => $<array>.ast }
     method illegal-object:sym<name>($/)  { make '??' => $<name>.ast }
-    method illegal-object:sym<null>($/)  { make '??' => $<null>.ast }
+    method illegal-object:sym<null>($/)  { make '??' => Any }
   
     method object:sym<ps-op>($/) {make $.node( $<ps-op>.ast, :pdf-type<ps-op> )};
     # extended postcript operators

@@ -23,10 +23,9 @@ for ('', '123A', '.', '. 42', '16#FFFE', '6.02E23') {
 
 # bool
 for ('true', 'false') {
-    ok($_ ~~ /^<PDF::Grammar::PDF::bool>$/, "bool: $_");
     ok($_ ~~ /^<PDF::Grammar::PDF::object>$/, "object: $_");
 }
-ok(''           !~~ /^<PDF::Grammar::PDF::bool>$/, 'not bool: blank');
+ok(''           !~~ /^<PDF::Grammar::PDF::object>$/, 'not object: blank');
 
 # hex strings
 ok('<Af309>'     ~~ /^<PDF::Grammar::PDF::hex-string>$/, 'hex: basic');
@@ -314,7 +313,6 @@ for (simple => $ind_obj1, empty => $ind_obj2, squashed1 => $ind_obj3,
 
 # null
 for ('null') {
-    ok($_ ~~ /^<PDF::Grammar::PDF::null>$/, "null: $_");
     ok($_ ~~ /^<PDF::Grammar::PDF::object>$/, "object: $_");
 }
 

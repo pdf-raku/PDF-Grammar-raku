@@ -35,11 +35,6 @@ my @tests = (
     ws =>              {input => "\%XX\n \%\%YYY\n", ast => Mu},
     ws =>              {input => '%bye',             ast => Mu},
 
-    null =>            {input => 'null',             ast => Mu},
-
-    bool =>            {input => 'true',             ast => True},
-    bool =>            {input =>  'false',           ast => False},
-
     name-chars =>      {input => '##',               ast => '#'},
     hex-char =>        {input => '6D',               ast => 'm'},
     name-chars =>      {input => '#6E',              ast => 'n'},
@@ -66,6 +61,10 @@ my @tests = (
     real =>            {input => '12.5',             ast => 12.5e0},
     number =>          {input => '42',               ast => 42},
     number =>          {input => '12.5',             ast => 12.5e0},
+
+    object =>          {input => 'true',   type => 'bool',             ast => True},
+    object =>          {input =>  'false', type => 'bool',           ast => False},
+    object =>          {input => 'null',             ast => Mu},
 
     object => {type => 'string',
 	       subtype => 'literal',  input => '(hi)',            ast => 'hi'},

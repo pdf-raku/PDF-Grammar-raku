@@ -66,18 +66,17 @@ grammar PDF::Grammar:ver<0.0.6> {
 
     # [PDF 1.7] 7.3.2  Boolean objects + Null object
     # ---------------
-    token bool  { true | false }
-    token null  { null }
     rule array  {'[' <object>* ']'}
     rule dict   {'<<' [ <name> <object> ]* '>>'}
 
     # Define a core set of objects.
     proto rule object { <...> }
     rule object:sym<number>  { <number> }
-    rule object:sym<bool>    { <bool> }
+    rule object:sym<true>    { <sym> }
+    rule object:sym<false>   { <sym> }
     rule object:sym<string>  { <string> }
     rule object:sym<name>    { <name> }
     rule object:sym<array>   { <array> }
     rule object:sym<dict>    { <dict> }
-    rule object:sym<null>    { <null> }
+    rule object:sym<null>    { <sym> }
 };

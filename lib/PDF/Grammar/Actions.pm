@@ -17,11 +17,6 @@ class PDF::Grammar::Actions:ver<0.0.1> {
         return $node;
     }
 
-    method null($/) { make Any }
-    method bool($/) {
-        make $.node( ~$/ eq 'true', :pdf-type<bool> );
-    }
-
     method real($/) {
         make $.node( $/.Num, :pdf-type<number>, :pdf-subtype<real> );
     }
@@ -102,12 +97,18 @@ class PDF::Grammar::Actions:ver<0.0.1> {
     }
 
     method object:sym<number>($/)  { make $<number>.ast }
+    method object:sym<true>($/)    {
+        make $.node( True, :pdf-type<bool> );
+    }
+    method object:sym<false>($/)   {
+        make $.node( False, :pdf-type<bool> );
+    }
     method object:sym<bool>($/)    { make $<bool>.ast }
     method object:sym<string>($/)  { make $<string>.ast }
     method object:sym<name>($/)    { make $<name>.ast }
     method object:sym<array>($/)   { make $<array>.ast }
     method object:sym<dict>($/)    { make $<dict>.ast }
-    method object:sym<null>($/)    { make $<null>.ast }
+    method object:sym<null>($/)    { make Any }
 
     # utility subs
 
