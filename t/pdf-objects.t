@@ -115,7 +115,7 @@ for (
       pdf => {input => $pdf, ast => Mu},
     ) {
      my $rule = .key;
-     my %test = .value;
+     my %test = %( .value );
      my $input = %test<input>;
 
      my $p = PDF::Grammar::PDF.parse($input, :rule($rule), :actions($actions));

@@ -50,7 +50,7 @@ for (small => {input => $fdf-small, "ast" => $fdf-small-ast},
      large => {input => $fdf-body},
     ) {
     my $test-name = .key;	
-    my %test = .value;
+    my %test = %( .value );
     %test<ast> //= Mu;
 
     my $p = PDF::Grammar::FDF.parse(%test<input>, :actions($actions));

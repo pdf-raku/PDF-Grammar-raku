@@ -34,7 +34,7 @@ for (trivial =>    {input => $trivial_expr,   ast => $trivial_ast},
      if_else =>    {input => $if_else-expr,   ast => $if_else_ast},
      unexpected => {input => $restricted_ops, ast => $restricted_ast},
     ) {
-    my %test = $_.value;
+    my %test = %( .value );
     my $input = %test<input> // die "malformed test";
     my $p = PDF::Grammar::Function.parse($input, :actions($actions));
 

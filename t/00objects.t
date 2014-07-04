@@ -90,7 +90,7 @@ my @tests = (
 
 for @tests {
     my $rule = .key;
-    my %test = .value;
+    my %test = %( .value );
     my $input = %test<input>;
 
     my $p = PDF::Grammar.parse($input, :rule($rule), :actions($actions));
@@ -129,7 +129,7 @@ for @tests {
 
 my $p = PDF::Grammar.parse('<</MoL 42>>', :rule('dict'), :actions($actions));
 
-my %dict = $p.ast;
+my %dict = %( $p.ast );
 my $dict_eqv = {'MoL' => 42};
 
 is(%dict, $dict_eqv, "dict structure")
