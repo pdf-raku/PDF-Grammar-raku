@@ -45,11 +45,11 @@ Examples
 
 - parse some markup content:
 
-    % perl6 -MPDF::Grammar::Content -e"say PDF::Grammar::Content.parse('(Hello, world\041) Tj')"
+    ```% perl6 -MPDF::Grammar::Content -e"say PDF::Grammar::Content.parse('(Hello, world\041) Tj')"```
 
 - parse a PDF file:
 
-   % perl6 -MPDF::Grammar::PDF -e"say PDF::Grammar::PDF.parse( slurp($f) )"
+   ```% perl6 -MPDF::Grammar::PDF -e"say PDF::Grammar::PDF.parse( slurp($f) )"```
 
 - dump the contents of a PDF
 
