@@ -53,18 +53,20 @@ Examples
 
 - dump the contents of a PDF
 
-    use v6;
-    use PDF::Grammar::PDF;
-    use PDF::Grammar::PDF::Actions;
+```
+use v6;
+use PDF::Grammar::PDF;
+use PDF::Grammar::PDF::Actions;
 
-    sub MAIN(Str $pdf-file) {
-        my $pdf-body = slurp( $pdf-file );
-        my $pdf-actions = PDF::Grammar::PDF::Actions.new;
+sub MAIN(Str $pdf-file) {
+    my $pdf-body = slurp( $pdf-file );
+    my $pdf-actions = PDF::Grammar::PDF::Actions.new;
 
-        if PDF::Grammar::PDF.parse( $pdf-body, :actions($pdf-actions) ) {
-            say $/.ast.perl;
-        }
-        else {
-            say "failed to parse PDF: $pdf-file";
-        }
+    if PDF::Grammar::PDF.parse( $pdf-body, :actions($pdf-actions) ) {
+        say $/.ast.perl;
     }
+    else {
+        say "failed to parse PDF: $pdf-file";
+    }
+}
+```
