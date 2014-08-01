@@ -40,6 +40,31 @@ You can then use `panda` to test and install `PDF::Grammar`:
 
     % panda install PDF::Grammar
 
-To try parsing some content:
+Examples
+--------
+
+- parse some markup content:
 
     % perl6 -MPDF::Grammar::Content -e"say PDF::Grammar::Content.parse('(Hello, world\041) Tj')"
+
+- parse a PDF file:
+
+   % perl6 -MPDF::Grammar::PDF -e"say PDF::Grammar::PDF.parse( slurp($f) )"
+
+- dump the contents of a PDF
+
+    use v6;
+    use PDF::Grammar::PDF;
+    use PDF::Grammar::PDF::Actions;
+
+    sub MAIN(Str $pdf-file) {
+        my $pdf-body = slurp( $pdf-file );
+        my $pdf-actions = PDF::Grammar::PDF::Actions.new;
+
+        if PDF::Grammar::PDF.parse( $pdf-body, :actions($pdf-actions) ) {
+            say $/.ast.perl;
+        }
+        else {
+            say "failed to parse PDF: $pdf-file";
+        }
+    }
