@@ -25,8 +25,7 @@ including headers, trailers, top-level objects and the cross-reference table.
 PDF-Grammar has so far been tested against a limited sample of PDF documents
 and has not yet been put to use for any serious PDF processing. The grammar is still evolving and is likely to change.
 
-I have been working off the PDF 1.7 reference manual (http://wwwimages.adobe.com/www.adobe.com/content/dam/Adobe/en/devnet/pdf/pdfs/PDF32000_2008.pdf). I've
-relaxed rules, when needed, to handle real-world examples.
+I have been working off the PDF 1.7 reference manual (http://wwwimages.adobe.com/www.adobe.com/content/dam/Adobe/en/devnet/pdf/pdfs/PDF32000_2008.pdf). I've relaxed rules, when needed, to handle real-world examples.
 
 Rakudo Star
 -----------
@@ -43,15 +42,17 @@ You can then use `panda` to test and install `PDF::Grammar`:
 Usage Notes
 -----------
 
-- PDF input files typically contain a mixture of ascii and binary data with byte-orientated addressing. For this
-reason **`latin1` encoding is recommended on all input/output data and files**. For example:
+- PDF input files typically contain a mixture of ascii directives and binary data, plus byte-orientated addressing. For this
+reason **`latin1` encoding is recommended **. For example:
 
    ```% perl6 -MPDF::Grammar::PDF -e"say PDF::Grammar::PDF.parse( slurp($f, :enc<latin1>) )"```
 
 - `pdftk` is a useful utility for preprocessing pdfs, including uncompression and decryption:
 
-   ```% pdftk flyer.pdf output flyer.unc.pdf uncompress```
-   ```% perl6 -MPDF::Grammar::PDF -e"say PDF::Grammar::PDF.parsefile( 'flyer.unc.pdf' )"```
+   ```
+    % pdftk flyer.pdf output flyer.unc.pdf uncompress
+    % perl6 -MPDF::Grammar::PDF -e"say PDF::Grammar::PDF.parsefile( 'flyer.unc.pdf' )"
+    ```
 
 Examples
 --------
@@ -62,26 +63,23 @@ Examples
 
 - parse a PDF file:
 
-
-   or, using PDF::Grammars, built-in `parsefile` method:
-
    ```% perl6 -MPDF::Grammar::PDF -e"say PDF::Grammar::PDF.parsefile( $f )"```
 
 - dump the contents of a PDF
 
-```
-use v6;
-use PDF::Grammar::PDF;
-use PDF::Grammar::PDF::Actions;
+    ```
+    use v6;
+    use PDF::Grammar::PDF;
+    use PDF::Grammar::PDF::Actions;
 
-sub MAIN(Str $pdf-file) {
-    my $pdf-actions = PDF::Grammar::PDF::Actions.new;
+    sub MAIN(Str $pdf-file) {
+        my $pdf-actions = PDF::Grammar::PDF::Actions.new;
 
-    if PDF::Grammar::PDF.parsefile( $pdf-file, :actions($pdf-actions) ) {
-        say $/.ast.perl;
+        if PDF::Grammar::PDF.parsefile( $pdf-file, :actions($pdf-actions) ) {
+            say $/.ast.perl;
+        }
+        else {
+            say "failed to parse PDF: $pdf-file";
+        }
     }
-    else {
-        say "failed to parse PDF: $pdf-file";
-    }
-}
-```
+    ```
