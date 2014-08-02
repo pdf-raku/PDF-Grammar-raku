@@ -69,19 +69,19 @@ Examples
 
 - dump the contents of a PDF
 
-```
-use v6;
-use PDF::Grammar::PDF;
-use PDF::Grammar::PDF::Actions;
+    ```
+    use v6;
+    use PDF::Grammar::PDF;
+    use PDF::Grammar::PDF::Actions;
 
-sub MAIN(Str $pdf-file) {
-    my $pdf-actions = PDF::Grammar::PDF::Actions.new;
+    sub MAIN(Str $pdf-file) {
+        my $pdf-actions = PDF::Grammar::PDF::Actions.new;
 
-    if PDF::Grammar::PDF.parsefile( $pdf-file, :actions($pdf-actions) ) {
-        say $/.ast.perl;
+        if PDF::Grammar::PDF.parsefile( $pdf-file, :actions($pdf-actions) ) {
+            say $/.ast.perl;
+        }
+        else {
+            say "failed to parse PDF: $pdf-file";
+        }
     }
-    else {
-        say "failed to parse PDF: $pdf-file";
-    }
-}
-```
+    ```
