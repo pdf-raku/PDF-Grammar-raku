@@ -40,6 +40,19 @@ You can then use `panda` to test and install `PDF::Grammar`:
 
     % panda install PDF::Grammar
 
+Usage Notes
+-----------
+
+- PDF input files typically contain a mixture of ascii and binary data with byte-orientated addressing. For this
+reason **`latin1` encoding is recommended on all input/output data and files**. For example:
+
+   ```% perl6 -MPDF::Grammar::PDF -e"say PDF::Grammar::PDF.parse( slurp($f, :enc<latin1>) )"```
+
+- `pdftk` is a useful utility for preprocessing pdfs, including uncompression and decryption:
+
+    ```% pdftk flyer.pdf output flyer.unc.pdf uncompress``
+   ```% perl6 -MPDF::Grammar::PDF -e"say PDF::Grammar::PDF.parsefile( 'flyer.unc.pdf' )"```
+
 Examples
 --------
 
@@ -49,7 +62,10 @@ Examples
 
 - parse a PDF file:
 
-   ```% perl6 -MPDF::Grammar::PDF -e"say PDF::Grammar::PDF.parse( slurp($f) )"```
+
+   or, using PDF::Grammars, built-in `parsefile` method:
+
+   ```% perl6 -MPDF::Grammar::PDF -e"say PDF::Grammar::PDF.parsefile( $f )"```
 
 - dump the contents of a PDF
 
@@ -59,10 +75,9 @@ use PDF::Grammar::PDF;
 use PDF::Grammar::PDF::Actions;
 
 sub MAIN(Str $pdf-file) {
-    my $pdf-body = slurp( $pdf-file );
     my $pdf-actions = PDF::Grammar::PDF::Actions.new;
 
-    if PDF::Grammar::PDF.parse( $pdf-body, :actions($pdf-actions) ) {
+    if PDF::Grammar::PDF.parsefile( $pdf-file, :actions($pdf-actions) ) {
         say $/.ast.perl;
     }
     else {

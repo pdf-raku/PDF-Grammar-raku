@@ -13,8 +13,7 @@ else {
     diag "loading $pdf-file (set \$TEST_PDF to override)";
 }
 
-my $pdf-body = slurp( $pdf-file );
-my $p = PDF::Grammar::PDF.parse($pdf-body);
+my $p = PDF::Grammar::PDF.parsefile($pdf-file);
 
 ok($p, "parsed pdf content ($pdf-file)");
 
