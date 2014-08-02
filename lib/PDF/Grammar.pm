@@ -17,19 +17,19 @@ grammar PDF::Grammar:ver<0.0.6> {
     token eol:sym<mac> {\x0d}     # cr
 
     token comment {'%' <- eol>* <.eol>?}
-    token ws-char {' ' | "\t" | "\f" | <.eol> | <.comment>}
+    token ws-char {' ' | \t | \f | <.eol> | <.comment>}
     token ws      {<!ww><.ws-char>*}
 
     # [PDF 1.7] 7.3.3  Numeric Objects
     # ---------------
-    token integer { ['+' |'-']? \d+ }
+    token integer { < + - >? \d+ }
     # reals must have a decimal point and some digits before or after it.
-    token real { ['+' | '-']? [\d+\.\d* | \.\d+] }
+    token real { < + - >? [\d+\.\d* | \.\d+] }
 
     rule number { <real> | <integer> }
 
     token octal-code {<[0..7]> ** 1..3}
-    token literal_delimiter {<[ \( \) \\ \n \r ]>}
+    token literal_delimiter {<[ ( ) \\ \n \r ]>}
 
     # literal string components
     proto token literal {<...>}
@@ -38,7 +38,7 @@ grammar PDF::Grammar:ver<0.0.6> {
     token literal:sym<substring>        {<literal-string>}
     # literal string escape sequences
     token literal:sym<esc-octal>        {\\ <octal-code>}
-    token literal:sym<esc-delim>        {\\ $<delim>=[\( | \) | \\]}
+    token literal:sym<esc-delim>        {\\ $<delim>=<[ ( ) \\ ]>}
     token literal:sym<esc-backspace>    {\\ b}
     token literal:sym<esc-formfeed>     {\\ f}
     token literal:sym<esc-newline>      {\\ n}
@@ -55,7 +55,7 @@ grammar PDF::Grammar:ver<0.0.6> {
     token string {<hex-string>|<literal-string>}
 
     # [PDF 1.7] 7.2.2 Character Set
-    regex char_delimiter {<[ \( \) \< \> \[ \] \{ \} \/ \% \# ]>}
+    regex char_delimiter {<[ ( ) < > \[ \] { } / % \# ]>}
 
     proto token name-chars {<...>}
     token name-chars:sym<number-symbol> {'##'}
