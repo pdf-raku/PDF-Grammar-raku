@@ -50,7 +50,7 @@ reason **`latin1` encoding is recommended on all input/output data and files**. 
 
 - `pdftk` is a useful utility for preprocessing pdfs, including uncompression and decryption:
 
-    ```% pdftk flyer.pdf output flyer.unc.pdf uncompress``
+   ```% pdftk flyer.pdf output flyer.unc.pdf uncompress```
    ```% perl6 -MPDF::Grammar::PDF -e"say PDF::Grammar::PDF.parsefile( 'flyer.unc.pdf' )"```
 
 Examples
