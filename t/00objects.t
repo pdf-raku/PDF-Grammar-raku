@@ -102,7 +102,6 @@ for @tests {
     
        my $result = $p.ast;
        if $result.can('pdf-type') {
-            diag "type: " ~ $result.pdf-type;
             is($result.pdf-type, $type, $rule ~ ' - type');
         }
         else {
@@ -117,7 +116,6 @@ for @tests {
        
        my $result = $p.ast;
        if $result.can('pdf-subtype') {
-            diag "subtype: " ~ $result.pdf-subtype;
             is($result.pdf-subtype, $subtype, $rule ~ ' - subtype');
         }
         else {
