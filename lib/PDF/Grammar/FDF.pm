@@ -14,10 +14,10 @@ grammar PDF::Grammar::FDF
     token fdf-header {'%FDF-'$<version>=(\d'.'\d)}
 
     token trailer {
-        trailer<.eol>
-        <dict><.eol>
-        [ startxref<.eol>
-          <byte-offset=.digits><.eol>
+        trailer\n
+        <dict>\n
+        [ startxref\n
+          <byte-offset=.digits>\n
         ]?
     }
 

@@ -49,7 +49,7 @@ grammar PDF::Grammar::Content
     regex block:sym<image> {
                       <opBeginImage>:
                       <imageAtts>
-                      <opImageData>(<stream-chars>?)<.eol>?<opEndImage>
+                      <opImageData>(<stream-chars>?)\n?<opEndImage>
     }
 
     proto rule ignored {<...>}

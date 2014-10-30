@@ -173,10 +173,6 @@ for ('/BaseFont/Times-Roman', '/Producer(AFPL Ghostscript 8.51)', '/X<</Y(42)>>'
     ok($_ ~~ /^<PDF::Grammar::PDF::name><PDF::Grammar::PDF::object>$/, "name + object: $_");
 }
 
-for (nix => "\n", dos => "\r\n", mac => "\r") {
-    ok($_.value ~~ /^<PDF::Grammar::PDF::eol>$/, "newline: " ~ $_.key);
-}
-
 my $empty_stream = "<< /Length 0 >>
 stream
 

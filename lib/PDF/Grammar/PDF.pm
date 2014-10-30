@@ -28,15 +28,15 @@ grammar PDF::Grammar::PDF
     rule object:sym<indirect-ref>  { <indirect-ref> }
 
     # stream parsing
-    token stream-head  {<.ws>stream<.eol>}
-    token stream-tail  {<.eol>? endstream <.ws-char>+}
+    token stream-head  {<.ws>stream\n}
+    token stream-tail  {\n? endstream <.ws-char>+}
     rule stream        {<stream-head>.*?<stream-tail> }
 
     # cross reference table
-    rule  xref         { xref<.eol><xref-section>+ }
+    rule  xref         { xref\n<xref-section>+ }
     token digits       {\d+}
-    rule  xref-section {<object-first-num=.digits> <object-count=.digits><.eol><xref-entry>+}
-    rule  xref-entry   {<byte-offset=.digits> <gen-number=.digits> <obj-status>' '?<.eol>}
+    rule  xref-section {<object-first-num=.digits> <object-count=.digits>\n<xref-entry>+}
+    rule  xref-entry   {<byte-offset=.digits> <gen-number=.digits> <obj-status>' '?\n}
     proto token obj-status      {<...>}
     token obj-status:sym<free>  {f}
     token obj-status:sym<inuse> {n}
@@ -44,15 +44,15 @@ grammar PDF::Grammar::PDF
     # the trailer contains the position of the cross reference
     # table plus the file trailer dictionary
     token trailer {
-        trailer<.eol>
-        <dict><.eol>
-        startxref<.eol>
-        <byte-offset=.digits><.eol>
+        trailer\n
+        <dict>\n
+        startxref\n
+        <byte-offset=.digits>\n
 	[<!before '%%EOF'><.ws-char>]*
     }
 
     # pdf-tail: special stand-alone regex for reverse matching
     # trailer information from the end of the file. Typically used
     # when reading last few KB of a PDF to locate root resources
-    token pdf-tail {.*?<trailer>'%%EOF'<.eol>?$}
+    token pdf-tail {.*?<trailer>'%%EOF'\n?$}
 }
