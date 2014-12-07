@@ -17,7 +17,7 @@ grammar PDF::Grammar::FDF
         trailer\n
         <dict>\n
         [ startxref\n
-          <byte-offset=.digits>\n
+          <byte-offset=.integer>\n
         ]?
     }
 

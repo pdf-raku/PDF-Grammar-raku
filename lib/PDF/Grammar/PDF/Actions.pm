@@ -68,8 +68,6 @@ class PDF::Grammar::PDF::Actions
 	make $sections;
     }
 
-    method digits($/) { make $/.Int }
-
     method xref-section($/) {
         my @entries = $<xref-entry>».ast;
         make {

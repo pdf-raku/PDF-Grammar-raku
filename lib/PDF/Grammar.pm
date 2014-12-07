@@ -50,11 +50,12 @@ grammar PDF::Grammar:ver<0.0.6> {
 
     # [PDF 1.7] 7.2.2 Character Set
     regex char_delimiter {<[ ( ) < > \[ \] { } / % \# ]>}
+    regex name-reg-char  {<[\! .. \~] -char_delimiter>}
 
     proto token name-chars {<...>}
     token name-chars:sym<number-symbol> {'##'}
     token name-chars:sym<escaped>       {'#'<hex-char> }
-    token name-chars:sym<regular>       {[<[\! .. \~] -char_delimiter>]+}
+    token name-chars:sym<regular>       {<name-reg-char>+}
 
     rule name { '/'<name-chars>+ }
 

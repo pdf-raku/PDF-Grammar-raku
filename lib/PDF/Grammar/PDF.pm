@@ -34,9 +34,8 @@ grammar PDF::Grammar::PDF
 
     # cross reference table
     rule  xref         { xref\n<xref-section>+ }
-    token digits       {\d+}
-    rule  xref-section {<object-first-num=.digits> <object-count=.digits>\n<xref-entry>+}
-    rule  xref-entry   {<byte-offset=.digits> <gen-number=.digits> <obj-status>' '?\n}
+    rule  xref-section {<object-first-num=.integer> <object-count=.integer>\n<xref-entry>+}
+    rule  xref-entry   {<byte-offset=.integer> <gen-number=.integer> <obj-status>' '?\n}
     proto token obj-status      {<...>}
     token obj-status:sym<free>  {f}
     token obj-status:sym<inuse> {n}
@@ -47,7 +46,7 @@ grammar PDF::Grammar::PDF
         trailer\n
         <dict>\n
         startxref\n
-        <byte-offset=.digits>\n
+        <byte-offset=.integer>\n
 	[<!before '%%EOF'><.ws-char>]*
     }
 
