@@ -22,19 +22,19 @@ class PDF::Grammar::PDF::Actions
 
     method trailer ($/) {
 	make {
-	    dict => $<dict>.ast,
-	    ( $<byte-offset> ??  byte-offset => $<byte-offset>.ast !! () ),
+	    dict => $<dict>.ast.value,
+	    ( $<byte-offset> ??  offset => $<byte-offset>.ast.value !! () ),
 	};
     }
 
     method indirect-ref($/) {
         my @ind_ref = $/.caps.map( *.value.ast );
-        make (ind_ref => @ind_ref);
+        make 'ind-ref' => [ $<obj-num>.ast.value, $<gen-num>.ast.value ];
     }
 
     method indirect-obj($/) {
         my @ind_obj = $/.caps.map( *.value.ast );
-	make (ind_obj => @ind_obj);
+        make 'ind-obj' => [ $<obj-num>.ast.value, $<gen-num>.ast.value, $<object>>>.ast ];
     }
 
     method object:sym<indirect-ref>($/)  { make $<indirect-ref>.ast }
@@ -44,7 +44,7 @@ class PDF::Grammar::PDF::Actions
         if ($<stream>) {
             # <dict> is a just a header the following <stream>
             my %stream;
-            %stream<dict> = $<dict>.ast;
+            %stream<dict> = $<dict>.ast.value;
             (%stream<start>, %stream<end>) = $<stream>.ast.kv;
             make (stream => %stream)
         }
@@ -79,9 +79,9 @@ class PDF::Grammar::PDF::Actions
 
     method xref-entry($/) {
         make {
-            offset => $<byte-offset>.ast,
-            gen    => $<gen-number>.ast,
-            status => ~$<obj-status>,
+            offset => $<byte-offset>.ast.value,
+            gen    => $<gen-number>.ast.value,
+            status => $<obj-status>.lc,
             };
     }
 

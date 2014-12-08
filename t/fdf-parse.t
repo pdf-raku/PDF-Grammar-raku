@@ -17,10 +17,19 @@ trailer
 <</Root 1 0 R>>
 %%EOF';
 
-my $fdf-small-ast = {"header" => 1.2,
-		     "body" => [{"objects" => ["ind_obj" => [1, 0, {"FDF" => {"F" => "small.pdf", "Fields" => [{"T" => "barcode", "V" => "*TEST-1234*"}]}}]],
-				 "trailer" => {"dict" => {"Root" => "ind_ref" => [1, 0]}}}]
-                    };
+my $fdf-small-ast = {
+    :header(1.2),
+    :body[{
+        :trailer{ :dict{"Root" => :ind-ref[ 1, 0]}},
+        :objects[ :ind-obj[ 1, 0,
+                            :dict{FDF => :dict{F => :literal("small.pdf"),
+                                               Fields => :array[ :dict{T => :literal<barcode>, 
+                                                                       V => :literal("*TEST-1234*")
+                                                                       }]
+                            }}
+                  ]]
+     }],
+};
 
 my $fdf-medium = '%FDF-1.2
 %âãÏÓ

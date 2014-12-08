@@ -6,18 +6,18 @@ use PDF::Grammar::Content;
 use PDF::Grammar::Content::Actions;
 
 my $sample_content1 = '/RGB CS';
-my $ast1 = [["CS" => ["RGB"]]];
+my $ast1 = [ :CS[ :name<RGB> ]];
 
 my $sample_content2 = '100 125 m 9 0 0 9 476.48 750 Tm';
-my $ast2 = [["m" => [100, 125]], ["Tm" => [9, 0, 0, 9, 476.48e0, 750]]];
+my $ast2 = [ :m[ :int(100), :int(125) ], :Tm[ :int(9), :int(0), :int(0), :int(9), :real(476.48e0), :int(750)]];
 
 my $sample_content2a = '[(Hello)(World)]TJ';
-my $ast2a = [["TJ" => ['Hello','World']]];
+my $ast2a = [ TJ => [ :array[ :literal<Hello>, :literal<World> ]] ];
 
 my $sample_content3 = 'BT 100 350 Td [(Using this Guide)-13.5( . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .)-257.1( xiii)]TJ ET';
 
 my $sample_content4 = '/foo <</xKey /yVal>> BDC 50 50 m BT 200 200 Td ET EMC'; 
-my $ast4 = [["BDC" => ["foo", {"xKey" => "yVal"}], "m" => [50, 50], "BT" => [], "Td" => [200, 200], "ET" => [], "EMC" => []]];
+my $ast4 = [:BDC[ :name<foo>, :dict{xKey => :name<yVal>}], :m[ :int(50), :int(50)], :BT[], :Td[ :int(200), :int(200) ], :ET[], :EMC[] ];
 
 my $sample_content5 = q:to/END4/;
 /GS1 gs
@@ -99,7 +99,7 @@ b                                       % Close, fill, and stroke path
 END5
 
 my $dud_content = '10 10 Td 42 dud';
-my $dud_expected = [["Td" => [10, 10]], "??" => [42], "??" => ["dud"]];
+my $dud_expected = ["Td" => ["int" => 10, "int" => 10], "??" => ["int" => 42], "??" => ["dud"]];
 
 my $test_image_block = 'BI                  % Begin inline image object
     /W 17           % Width in samples
@@ -111,7 +111,7 @@ ID                  % Begin image data
 J1/gKA>.]AN&J?]-<HW]aRVcg*bb.\eKAdVV%/PcZ
 %R.s(4KE3&d&7hb*7[%Ct2HCqC~>
 EI';
-my $test_image_expected = [["BI" => {"W" => 17, "H" => 17, "CS" => "RGB", "BPC" => 8, "F" => ["A85", "LZW"]}, "ID" => "J1/gKA>.]AN\&J?]-<HW]aRVcg*bb.\\eKAdVV\%/PcZ\n\%R.s(4KE3\&d\&7hb*7[\%Ct2HCqC~>\n", "EI" => []]];
+my $test_image_expected = ["BI" => {"name\tBPC" => "int" => 8, "name\tF" => "array" => ["name" => "A85", "name" => "LZW"], "name\tH" => "int" => 17, "name\tW" => "int" => 17, "name\tCS" => "name" => "RGB"}, "ID" => "J1/gKA>.]AN\&J?]-<HW]aRVcg*bb.\\eKAdVV\%/PcZ\n\%R.s(4KE3\&d\&7hb*7[\%Ct2HCqC~>\n", "EI" => []];
 
 my $actions = PDF::Grammar::Content::Actions.new;
 
@@ -133,8 +133,7 @@ for (trivial => [$sample_content1, $ast1],
 
     if ($eqv) {
         my $result = $p.ast; 
-        is($result, $eqv, "$test - result as expected")
-            or diag {expected => $eqv, actual => $result}.perl;
+        is_deeply($result, $eqv, "$test - result as expected");
     }
 }
 

@@ -7,14 +7,16 @@ use PDF::Grammar::Attributes;
 class PDF::Grammar::Actions:ver<0.0.1> {
 
     method node(Mu $node, :$pdf-type, :$pdf-subtype) {
-        $node
-            does PDF::Grammar::Attributes
-            unless $node.can('pdf-type');
+##        $node
+##            does PDF::Grammar::Attributes
+##            unless $node.can('pdf-type');
 
-        $node.pdf-type = $pdf-type if defined $pdf-type;
-        $node.pdf-subtype = $pdf-subtype if defined $pdf-subtype;
+##        $node.pdf-type = $pdf-type if defined $pdf-type;
+##        $node.pdf-subtype = $pdf-subtype if defined $pdf-subtype;
 
-        return $node;
+        my $type = $pdf-subtype // $pdf-type;
+
+        return $type => $node;
     }
 
     method real($/) {
@@ -22,7 +24,7 @@ class PDF::Grammar::Actions:ver<0.0.1> {
     }
 
     method integer($/) {
-        make $.node( $/.Int, :pdf-type<number>, :pdf-subtype<integer> );
+        make $.node( $/.Int, :pdf-type<number>, :pdf-subtype<int> );
     }
 
     method number ($/) {
@@ -43,8 +45,8 @@ class PDF::Grammar::Actions:ver<0.0.1> {
         make ~$/;
     }
 
-    method name ($/) {
-        make $.node( [~] $<name-chars>».ast, :pdf-type<name> );
+    method name($/) {
+        make 'name' => [~] $<name-chars>».ast;
     }
 
     method hex-string ($/) {
@@ -52,12 +54,12 @@ class PDF::Grammar::Actions:ver<0.0.1> {
         my @hex-codes = $xdigits.comb(/..?/).map({ _hex-pair($_) });
         my $string = [~] @hex-codes.map({ chr($_) });
 
-        make $.node( $string, :pdf-subtype<hex> );
+        make $.node( $string, :pdf-subtype<hex-string> );
     }
 
     method literal:sym<eol>($/) { make "\n" }
     method literal:sym<substring>($/)    {
-        make '(' ~ $<literal-string>.ast ~ ')'
+        make '(' ~ $<literal-string>.ast.value ~ ')'
     }
     method literal:sym<regular>($/)      { make ~$/ }
     # literal escape sequences
@@ -78,22 +80,21 @@ class PDF::Grammar::Actions:ver<0.0.1> {
     }
 
     method string ($/) {
-        my $string = ($<literal-string> // $<hex-string>).ast;
-        make $.node( $string, :pdf-type<string> );
+        make ($<literal-string> // $<hex-string>).ast;
     }
 
     method array ($/) {
         my @objects = @<object>».ast;
-        make $.node( @objects, :pdf-type<array> );
+        make 'array' => @objects;
     }
 
     method dict ($/) {
-        my @names = @<name>».ast;
+        my @names = @<name>».ast.map: *.value;
         my @objects = @<object>».ast;
 
         my %dict = @names Z=> @objects;
 
-        make $.node( %dict, :pdf-type<dict> );
+        make 'dict' => %dict;
     }
 
     method object:sym<number>($/)  { make $<number>.ast }
@@ -108,13 +109,13 @@ class PDF::Grammar::Actions:ver<0.0.1> {
     method object:sym<name>($/)    { make $<name>.ast }
     method object:sym<array>($/)   { make $<array>.ast }
     method object:sym<dict>($/)    { make $<dict>.ast }
-    method object:sym<null>($/)    { make Any }
+    method object:sym<null>($/)    { make 'null' => Any }
 
     # utility subs
 
     sub _hex-pair($hex) {
         my $result = :16($hex);
-        $result *= 16 if $hex.chars % 2;
+        $result *= 16 unless $hex.chars %% 2;
         return $result;
     }
 }

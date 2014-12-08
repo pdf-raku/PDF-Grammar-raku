@@ -39,53 +39,48 @@ my @tests = (
     hex-char =>        {input => '6D',               ast => 'm'},
     name-chars =>      {input => '#6E',              ast => 'n'},
     name-chars =>      {input => 'snoopy',           ast => 'snoopy'},
-    name =>            {input => '/snoopy',          ast => 'snoopy'},
-    name =>            {input => '/s#6Eo#6fpy',      ast => 'snoopy'},
+    name =>            {input => '/snoopy',          ast => :name<snoopy>},
+    name =>            {input => '/s#6Eo#6fpy',      ast => :name<snoopy>},
 
-    hex-string =>      {input => '<736E6F6f7079>',   ast => 'snoopy'},
+    hex-string =>      {input => '<736E6F6f7079>',   ast => :hex-string<snoopy>},
 
-    literal-string =>  {input => '(hello world\41)',      ast => 'hello world!'},
-    literal-string =>  {input => '(hi\nagain)',           ast => "hi\nagain"},
-    literal-string =>  {input => "(hi\r\nagain)",         ast => "hi\nagain"},
-    literal-string =>  {input => '(perl(6) rocks! :-\))', ast => 'perl(6) rocks! :-)'},
-    literal-string =>  {input => "(continued\\\n line)",  ast => 'continued line'},
-    literal-string =>  {input => '(stray back\-slash)',   ast => 'stray back-slash'},
-    literal-string =>  {input => "(try\\\n\\\n%this\\\n)",ast => 'try%this'},
+    literal-string =>  {input => '(hello world\41)',      ast => :literal('hello world!')},
+    literal-string =>  {input => '(hi\nagain)',           ast => :literal("hi\nagain")},
+    literal-string =>  {input => "(hi\r\nagain)",         ast => :literal("hi\nagain")},
+    literal-string =>  {input => '(perl(6) rocks! :-\))', ast => :literal('perl(6) rocks! :-)')},
+    literal-string =>  {input => "(continued\\\n line)",  ast => :literal('continued line')},
+    literal-string =>  {input => '(stray back\-slash)',   ast => :literal('stray back-slash')},
+    literal-string =>  {input => "(try\\\n\\\n%this\\\n)",ast => :literal('try%this')},
 
-    string =>          {input => '(hi)',             ast => 'hi'},
-    string =>          {input => "<68\n69>",         ast => 'hi'},
-    string =>          {input => "<6\n869>",         ast => 'hi'},
-    string =>          {input => "<68\n7>",          ast => 'hp'},
+    string =>          {input => '(hi)',             ast => :literal<hi>},
+    string =>          {input => "<68\n69>",         ast => :hex-string<hi>},
+    string =>          {input => "<6\n869>",         ast => :hex-string<hi>},
+    string =>          {input => "<68\n7>",          ast => :hex-string<hp>},
 
-    integer =>         {input => '42',               ast => 42},
-    real =>            {input => '12.5',             ast => 12.5e0},
-    number =>          {input => '42',               ast => 42},
-    number =>          {input => '12.5',             ast => 12.5e0},
+    integer =>         {input => '42',               ast => :int(42)},
+    real =>            {input => '12.5',             ast => :real(12.5e0)},
+    number =>          {input => '42',               ast => :int(42)},
+    number =>          {input => '12.5',             ast => :real(12.5e0)},
 
-    object =>          {input => 'true',   type => 'bool',             ast => True},
-    object =>          {input =>  'false', type => 'bool',           ast => False},
-    object =>          {input => 'null',             ast => Mu},
+    object =>          {input => 'true',             ast => :bool},
+    object =>          {input => 'false',            ast => :!bool},
+    object =>          {input => 'null',             ast => :null(Any)},
 
-    object => {type => 'string',
-	       subtype => 'literal',  input => '(hi)',            ast => 'hi'},
+    object =>          {input => '(hi)',             ast => :literal<hi>},
 
-    object => {type => 'string',
-	       subtype => 'hex',      input => '<6869>',          ast => 'hi'},
+    object => {input => '<6869>',                    ast => :hex-string<hi>},
 
-    object => {type => 'number',
-                  subtype => 'integer',  input => '-042',         ast => -42},
+    object => {input => '-042',                      ast => int => -42},
 
-    object => {type => 'number',
-                  subtype => 'real',     input => '+3.50',        ast => 3.5e0},
+    object => {input => '+3.50',                     ast => real => 3.5e0},
 
-    object => {type => 'dict',     input => '<</Length 42>>',     ast => {Length => 42}},
+    object => {input => 'true',              ast => :bool},
+    object => {input => 'false',             ast => :!bool},
 
-    object => {type => 'array',    input => '[/Apples(oranges)]', ast => ['Apples', 'oranges']},
-
-    object => {type => 'bool',     input => 'true',              ast => True},
-    object => {type => 'bool',     input => 'false',             ast => False},
-    object => {type => 'dict',     input => '<</Length 42>>',    ast => {Length => 42}},
-
+    object => {input => '<</Length 42>>',    ast => :dict{ Length => :int(42)}},
+    object => {input => '[/Apples(oranges)]', ast => :array[ :name<Apples>, :literal<oranges> ]},
+    object => {input => '<</MoL 42>>',        ast => :dict{ :MoL( :int(42) )} },
+    object => {input => '[ 42 (snoopy) <</foo (bar)>>]', ast => :array[:int(42), :literal<snoopy>, :dict{foo => :literal<bar>}]},
     );
 
 for @tests {
@@ -95,50 +90,6 @@ for @tests {
 
     my $p = PDF::Grammar.parse($input, :rule($rule), :actions($actions));
     PDF::Grammar::Test::parse_tests($input, $p, :rule($rule), :suite($rule), :expected(%test) );
-    
-    my $type = %test<type>;
- 
-    if $p && $type {
-    
-       my $result = $p.ast;
-       if $result.can('pdf-type') {
-            is($result.pdf-type, $type, $rule ~ ' - type');
-        }
-        else {
-            diag "$rule - doesn't do .pdf-subtype";
-            fail( $rule ~ ' - type' );
-        }
-    }
-
-    my $subtype = %test<subtype>;
-
-    if $p && $subtype {
-       
-       my $result = $p.ast;
-       if $result.can('pdf-subtype') {
-            is($result.pdf-subtype, $subtype, $rule ~ ' - subtype');
-        }
-        else {
-            diag "$rule - doesn't do .pdf-subsubtype";
-            fail( $rule ~ ' - subtype' );
-        }
-    }
 }
-
-my $p = PDF::Grammar.parse('<</MoL 42>>', :rule('dict'), :actions($actions));
-
-my %dict = %( $p.ast );
-my $dict_eqv = {'MoL' => 42};
-
-is(%dict, $dict_eqv, "dict structure")
-    or diag {dict => %dict, eqv => $dict_eqv}.perl;
-
-$p = PDF::Grammar.parse('[ 42 (snoopy) <</foo (bar)>>]', :rule('array'), :actions($actions));
-my $array = $p.ast;
-
-my $array_eqv = [42, 'snoopy', {foo => 'bar'}];
-
-is($array, $array_eqv, "array structure")
-    or diag {array => $array, eqv => $array_eqv}.perl;
 
 done;
