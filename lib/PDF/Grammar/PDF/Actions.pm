@@ -59,20 +59,20 @@ class PDF::Grammar::PDF::Actions
         make {
 	    objects => $objects,
             trailer => $<trailer>.ast.value,
-	    ($<xref> ?? xref => $<xref>.ast !! () ),
+	    ($<xref> ?? $<xref>.ast !! () ),
        }
     }
 
     method xref($/) {
 	my $sections = [ $<xref-section>>>.ast ];
-	make $sections;
+	make 'xref' => $sections;
     }
 
     method xref-section($/) {
         my @entries = $<xref-entry>».ast;
         make {
-	    object-first-num => $<object-first-num>.ast,
-	    object-count => $<object-count>.ast,
+	    object-first-num => $<object-first-num>.ast.value,
+	    object-count => $<object-count>.ast.value,
 	    entries => @entries,
         }
     }

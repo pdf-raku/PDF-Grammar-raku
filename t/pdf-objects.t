@@ -72,8 +72,8 @@ my $xref = "xref
 0000000415 00000 n
 0000000445 00000 n
 ";
-my $xref-ast = [{object-first-num => :int(0),
-                 object-count => :int(8),
+my $xref-ast = [{object-first-num => 0,
+                 object-count => 8,
                  entries => [{:offset(0), :gen(65535),  :status<f>},
                              {:offset(9), :gen(0), :status<n>},
                              {:offset(74), :gen(0), :status<n>},
@@ -111,7 +111,7 @@ for (
       ind-obj => {input => $ind-obj1, ast => $ind-obj1_ast},
       ind-obj => {input => $ind-obj2, ast => $ind-obj2_ast},
       trailer => {input => $trailer, ast => :trailer($trailer_ast)},
-      xref => {input => $xref, ast => $xref-ast},
+      xref => {input => $xref, ast => :xref($xref-ast)},
       body => {input => $body ~ "\n" ~ $trailer, ast => $body_trailer_ast},
       pdf => {input => $pdf, ast => Mu},
     ) {
