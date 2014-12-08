@@ -21,23 +21,23 @@ class PDF::Grammar::PDF::Actions
     method pdf-tail ($/) { make $<trailer>.ast }
 
     method trailer ($/) {
-	make {
+	make 'trailer' => {
 	    dict => $<dict>.ast.value,
 	    ( $<byte-offset> ??  offset => $<byte-offset>.ast.value !! () ),
 	};
     }
 
-    method indirect-ref($/) {
+    method ind-ref($/) {
         my @ind_ref = $/.caps.map( *.value.ast );
         make 'ind-ref' => [ $<obj-num>.ast.value, $<gen-num>.ast.value ];
     }
 
-    method indirect-obj($/) {
+    method ind-obj($/) {
         my @ind_obj = $/.caps.map( *.value.ast );
         make 'ind-obj' => [ $<obj-num>.ast.value, $<gen-num>.ast.value, $<object>>>.ast ];
     }
 
-    method object:sym<indirect-ref>($/)  { make $<indirect-ref>.ast }
+    method object:sym<ind-ref>($/)  { make $<ind-ref>.ast }
 
     method object:sym<dict>($/) {
 
@@ -45,7 +45,7 @@ class PDF::Grammar::PDF::Actions
             # <dict> is a just a header the following <stream>
             my %stream;
             %stream<dict> = $<dict>.ast.value;
-            (%stream<start>, %stream<end>) = $<stream>.ast.kv;
+            (%stream<start>, %stream<end>) = $<stream>.ast.flat;
             make (stream => %stream)
         }
         else {
@@ -55,10 +55,10 @@ class PDF::Grammar::PDF::Actions
     }
 
     method body($/) {
-	my $objects = [ $<indirect-obj>>>.ast ];
+	my $objects = [ $<ind-obj>>>.ast ];
         make {
 	    objects => $objects,
-            trailer => $<trailer>.ast,
+            trailer => $<trailer>.ast.value,
 	    ($<xref> ?? xref => $<xref>.ast !! () ),
        }
     }
@@ -91,6 +91,6 @@ class PDF::Grammar::PDF::Actions
    # the caller to disseminate
 
     method stream($/) {
-        make (($<stream-head>.to + 1) => ($<stream-tail>.from - 1));
+        make [ $<stream-head>.to + 1, $<stream-tail>.from + 1 ];
     }
 }

@@ -253,7 +253,7 @@ for (empty => $empty_stream, tiny => $stream1, content => $stream2,
     ok($val ~~ /^<PDF::Grammar::PDF::dict> <PDF::Grammar::PDF::stream-head>/, "$test stream - head match");
     ok($val ~~ /<PDF::Grammar::PDF::stream-tail>$/, "$test stream - tail match");
     my $ind_obj = "42 0 obj $val endobj";
-    ok($ind_obj ~~ /^<PDF::Grammar::PDF::indirect-obj>$/, "$test stream - embedded in object")
+    ok($ind_obj ~~ /^<PDF::Grammar::PDF::ind-obj>$/, "$test stream - embedded in object")
     or diag $ind_obj;
 }
 
@@ -269,7 +269,7 @@ my $ind_obj3 = '13 0 obj<</BaseFont/Times-Roman/Type/Font/Subtype/Type1>>endobj'
 my $ind_ref3 = '13 0 R';
 
 for ($ind_ref1, $ind_ref2, $ind_ref3) {
-    ok($_ ~~ /^<PDF::Grammar::PDF::indirect-ref>$/, "indirect-ref: $_");
+    ok($_ ~~ /^<PDF::Grammar::PDF::ind-ref>$/, "ind-ref: $_");
     ok($_ ~~ /^<PDF::Grammar::PDF::object>$/, "object: $_");
 }
 
@@ -303,7 +303,7 @@ for (simple => $ind_obj1, empty => $ind_obj2, squashed1 => $ind_obj3,
      squashed2 => $ind_obj-scrunched, stream => $ind_obj4,
      comments => $ind_obj5, fdf => $ind_obj-fdf,
      ) {
-    ok($_.value ~~ /^<PDF::Grammar::PDF::indirect-obj>$/, "indirect-obj - " ~ $_.key)
+    ok($_.value ~~ /^<PDF::Grammar::PDF::ind-obj>$/, "ind-obj - " ~ $_.key)
         or diag $_.value;
 }
 

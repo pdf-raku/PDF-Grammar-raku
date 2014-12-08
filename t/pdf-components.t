@@ -11,7 +11,7 @@ for ('%PDF-1.0', $header) {
      ok($_ ~~ /^<PDF::Grammar::PDF::pdf-header>$/, "pdf-header: $_");
 }
 
-my $indirect-obj1 = '1 0 obj
+my $ind-obj1 = '1 0 obj
 <<
 /Type /Catalog
 /Pages 3 0 R
@@ -20,7 +20,7 @@ my $indirect-obj1 = '1 0 obj
 endobj
 ';
 
-my $body = $indirect-obj1 ~
+my $body = $ind-obj1 ~
 '2 0 obj
 <<
 /Type /Outlines
@@ -66,13 +66,13 @@ endobj
 >>
 endobj';
 
-for ($indirect-obj1) {
-    ok($_ ~~ /^<PDF::Grammar::PDF::indirect-obj>$/, "indirect object")
+for ($ind-obj1) {
+    ok($_ ~~ /^<PDF::Grammar::PDF::ind-obj>$/, "indirect object")
         or diag $_;
 }
 
-for ($indirect-obj1, $body) {
-    ok($_ ~~ /^<PDF::Grammar::PDF::indirect-obj>+$/, "body")
+for ($ind-obj1, $body) {
+    ok($_ ~~ /^<PDF::Grammar::PDF::ind-obj>+$/, "body")
         or diag $_;
 }
 
@@ -112,9 +112,9 @@ $body
 $xref$trailer%\%EOF";
 
 my $edited_pdf_small = "$header
-$indirect-obj1
+$ind-obj1
 $xref$trailer
-{$indirect-obj1.subst(/0/, '9'):g}
+{$ind-obj1.subst(/0/, '9'):g}
 {$xref.subst(/0/, '9'):g}$trailer%\%EOF";
 
 my $edited_pdf = "$header

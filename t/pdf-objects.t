@@ -39,7 +39,7 @@ endobj
 ";
 my $ind-obj2_ast = :ind-obj[ 5, 0,
                              :stream{
-                                 :dict{Length => :int(68)}, :start(33), :end(99)
+                                 :dict{Length => :int(68)}, :start(33), :end(101)
                              }];
 
 my $body = $ind-obj1 ~
@@ -57,7 +57,7 @@ endobj';
 my $body_objects_ast = [$ind-obj1_ast,
                         :ind-obj[ 5, 0, :stream{ :dict{Length => :int(68)},
                                                  :start(98),
-                                                 :end(164)}],
+                                                 :end(166)}],
                         :ind-obj[ 3, 0, :dict{Type => :name<Outlines>, Count => :int(0) }],
                         :ind-obj[ 4, 2, :array[ :name<PDF>, :name<Text> ]]];
 
@@ -107,10 +107,10 @@ my $actions = PDF::Grammar::PDF::Actions.new;
 
 for (
       pdf-header => {input => $header, ast => $header_ast},
-      indirect-ref => {input => $ind-ref1, ast => $ind-ref1_ast},
-      indirect-obj => {input => $ind-obj1, ast => $ind-obj1_ast},
-      indirect-obj => {input => $ind-obj2, ast => $ind-obj2_ast},
-      trailer => {input => $trailer, ast => $trailer_ast},
+      ind-ref => {input => $ind-ref1, ast => $ind-ref1_ast},
+      ind-obj => {input => $ind-obj1, ast => $ind-obj1_ast},
+      ind-obj => {input => $ind-obj2, ast => $ind-obj2_ast},
+      trailer => {input => $trailer, ast => :trailer($trailer_ast)},
       xref => {input => $xref, ast => $xref-ast},
       body => {input => $body ~ "\n" ~ $trailer, ast => $body_trailer_ast},
       pdf => {input => $pdf, ast => Mu},

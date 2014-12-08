@@ -17,15 +17,15 @@ grammar PDF::Grammar::PDF
 
     # xref section is optional - document could have a cross reference stream
     # quite likely if linearized [PDF 1.7] 7.5.8 & Annex F (Linearized PDF)
-    rule body         { <indirect-obj>+ <xref>? <trailer>}
-    rule indirect-obj { <obj-num=.integer> <gen-num=.integer> obj <object>* endobj }
-    rule indirect-ref { <obj-num=.integer> <gen-num=.integer> R }
+    rule body         { <ind-obj>+ <xref>? <trailer>}
+    rule ind-obj { <obj-num=.integer> <gen-num=.integer> obj <object>* endobj }
+    rule ind-ref { <obj-num=.integer> <gen-num=.integer> R }
 
     # Object extensions:
     # modify <dict> - allow trailing stream anywhere
     rule object:sym<dict>  { <dict> <stream>? }
     # add <indirect-ref> to the list of permitted objects
-    rule object:sym<indirect-ref>  { <indirect-ref> }
+    rule object:sym<ind-ref>  { <ind-ref> }
 
     # stream parsing
     token stream-head  {<.ws>stream\n}
