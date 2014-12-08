@@ -34,12 +34,11 @@ for (trivial =>    {input => $trivial_expr,   ast => $trivial_ast},
      if_else =>    {input => $if_else-expr,   ast => $if_else_ast},
      unexpected => {input => $restricted_ops, ast => $restricted_ast},
     ) {
-    my %test = %( .value );
-    my $input = %test<input> // die "malformed test";
-    my $p = PDF::Grammar::Function.parse($input, :actions($actions));
+    my %expected = %( .value );
+    my $input = %expected<input> // die "malformed test";
 
-    PDF::Grammar::Test::parse_tests($input, $p, :rule('TOP'), :suite('functions'),
-                         :expected(%test) );
+    PDF::Grammar::Test::parse-tests(PDF::Grammar::Function, $input, :$actions, :rule('TOP'),
+                                    :suite('functions'), :%expected );
 }
 
 done;

@@ -116,12 +116,12 @@ for (
       pdf => {input => $pdf, ast => Mu},
     ) {
      my $rule = .key;
-     my %test = %( .value );
-     my $input = %test<input>;
+     my %expected = %( .value );
+     my $input = %expected<input>;
 
-     my $p = PDF::Grammar::PDF.parse($input, :rule($rule), :actions($actions));
+     note to-json($rule => %expected<ast>) if %expected<ast>.defined;
 
-     PDF::Grammar::Test::parse_tests($input, $p, :rule($rule), :suite('pdf doc'), :expected(%test) );
+     PDF::Grammar::Test::parse-tests(PDF::Grammar::PDF, $input, :$rule, :$actions, :suite('pdf doc'), :%expected );
 }
 
 done;

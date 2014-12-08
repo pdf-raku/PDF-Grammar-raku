@@ -85,11 +85,10 @@ my @tests = (
 
 for @tests {
     my $rule = .key;
-    my %test = %( .value );
-    my $input = %test<input>;
+    my %expected = %( .value );
+    my $input = %expected<input>;
 
-    my $p = PDF::Grammar.parse($input, :rule($rule), :actions($actions));
-    PDF::Grammar::Test::parse_tests($input, $p, :rule($rule), :suite($rule), :expected(%test) );
+    PDF::Grammar::Test::parse-tests(PDF::Grammar, $input, :$rule, :$actions, :suite($rule), :%expected );
 }
 
 done;

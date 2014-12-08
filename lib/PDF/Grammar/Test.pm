@@ -3,9 +3,13 @@ use v6;
 module PDF::Grammar::Test {
 
     use Test;
-
-    our sub parse_tests($input, $parse,
+    use JSON::Tiny;
+    our sub parse-tests($class, $input, :$parse is copy, :$actions,
 			:$rule = 'TOP', :$suite, :%expected) {
+
+        $parse //= do { 
+            $class.subparse( $input, :$rule, :$actions)
+        };
 
         my $parsed = %expected<parse> // $input;
 
@@ -17,7 +21,7 @@ module PDF::Grammar::Test {
         }
 
         if (my $ast = %expected<ast>).defined {
-            is_deeply(EVAL($parse.ast.perl), $ast, "{$suite} $rule - ast");
+            is(to-json($parse.ast), to-json($ast), "{$suite} $rule - ast");
         }
         else {
             if defined $parse.ast {

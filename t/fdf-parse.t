@@ -20,14 +20,14 @@ trailer
 my $fdf-small-ast = {
     :header(1.2),
     :body[{
-        :trailer{ :dict{"Root" => :ind-ref[ 1, 0]}},
-        :objects[ :ind-obj[ 1, 0,
+        objects => [ :ind-obj[ 1, 0,
                             :dict{FDF => :dict{F => :literal("small.pdf"),
                                                Fields => :array[ :dict{T => :literal<barcode>, 
                                                                        V => :literal("*TEST-1234*")
                                                                        }]
                             }}
-                  ]]
+                  ]],
+        trailer => { :dict{ Root => :ind-ref[ 1, 0] }},
      }],
 };
 
@@ -59,11 +59,10 @@ for (small => {input => $fdf-small, "ast" => $fdf-small-ast},
      large => {input => $fdf-body},
     ) {
     my $test-name = .key;	
-    my %test = %( .value );
-    %test<ast> //= Mu;
+    my %expected = %( .value );
+    %expected<ast> //= Mu;
 
-    my $p = PDF::Grammar::FDF.parse(%test<input>, :actions($actions));
-    PDF::Grammar::Test::parse_tests(%test<input>, $p, :suite("fdf {$test-name}"), :expected(%test) );
+    PDF::Grammar::Test::parse-tests(PDF::Grammar::FDF, %expected<input>, :$actions, :suite("fdf {$test-name}"), :%expected );
 }
 
 done;
