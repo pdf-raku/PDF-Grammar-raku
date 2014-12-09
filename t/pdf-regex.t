@@ -5,13 +5,13 @@ use PDF::Grammar::PDF;
 
 # integers
 for ('123', '43445', '+17', '-98', '0') {
-    ok($_ ~~ /^<PDF::Grammar::PDF::integer>$/, "integer: $_");
+    ok($_ ~~ /^<PDF::Grammar::PDF::int>$/, "int: $_");
     ok($_ ~~ /^<PDF::Grammar::PDF::number>$/, "number: $_");
     ok($_ ~~ /^<PDF::Grammar::PDF::object>$/, "object: $_");
 }
 # reals
 for ('1234567890.', '.0', '34.5', '-3.62', '+123.6', '4.', '-.002', '0.0') {
-    ok($_ !~~ /^<PDF::Grammar::PDF::integer>$/, "not integer: $_");
+    ok($_ !~~ /^<PDF::Grammar::PDF::int>$/, "not int: $_");
     ok($_  ~~ /^<PDF::Grammar::PDF::number>$/, "number: $_");
     ok($_ ~~ /^<PDF::Grammar::PDF::object>$/, "object: $_");
 }

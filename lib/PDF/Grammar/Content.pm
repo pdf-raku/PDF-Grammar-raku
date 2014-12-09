@@ -92,8 +92,8 @@ grammar PDF::Grammar::Content
 
     rule op:sym<SetFlat>             { <number> (i) }
 
-    rule op:sym<SetLineJoin>         { <integer> (j) }
-    rule op:sym<SetLineCap>          { <integer> (J) }
+    rule op:sym<SetLineJoin>         { <int> (j) }
+    rule op:sym<SetLineCap>          { <int> (J) }
 
     rule op:sym<SetFillCMYK>         { <number>**4 (k) }
     rule op:sym<SetStrokeCMYK>       { <number>**4 (K) }
@@ -131,7 +131,7 @@ grammar PDF::Grammar::Content
     rule op:sym<ShowSpaceText>       { <array> (TJ) }
     rule op:sym<SetTextLeading>      { <number> (TL) }
     rule op:sym<SetTextMatrix>       { <number>**6 (Tm) }
-    rule op:sym<SetTextRender>       { <integer> (Tr) }
+    rule op:sym<SetTextRender>       { <int> (Tr) }
     rule op:sym<SetTextRise>         { <number> (Ts) }
     rule op:sym<SetWordSpacing>      { <number> (Tw) }
     rule op:sym<SetHorizScaling>     { <number> (Tz) }

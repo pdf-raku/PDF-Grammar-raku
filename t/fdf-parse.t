@@ -18,7 +18,7 @@ trailer
 %%EOF';
 
 my $fdf-small-ast = {
-    header => :pdf-version(1.2),
+    header => :version(1.2),
     body => [{
         objects => [ :ind-obj[ 1, 0,
                             :dict{FDF => :dict{F => :literal("small.pdf"),

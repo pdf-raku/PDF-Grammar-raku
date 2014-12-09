@@ -9,17 +9,17 @@ grammar PDF::Grammar::PDF
     # structure of PDF documents.
     #
     rule TOP {^<pdf>$}
-    rule pdf {<pdf-header> [<body>+]'%%EOF' }
+    rule pdf {<header> [<body>+]'%%EOF' }
 
     # [PDF 1.7] 7.5.2 File Header
     # ---------------
-    token pdf-header {'%PDF-'$<pdf-version>=(\d'.'\d)}
+    token header {'%PDF-'$<version>=(\d'.'\d)}
 
     # xref section is optional - document could have a cross reference stream
     # quite likely if linearized [PDF 1.7] 7.5.8 & Annex F (Linearized PDF)
     rule body         { <ind-obj>+ <xref>? <trailer>}
-    rule ind-obj { <obj-num=.integer> <gen-num=.integer> obj <object>* endobj }
-    rule ind-ref { <obj-num=.integer> <gen-num=.integer> R }
+    rule ind-obj { <obj-num=.int> <gen-num=.int> obj <object>* endobj }
+    rule ind-ref { <obj-num=.int> <gen-num=.int> R }
 
     # Object extensions:
     # modify <dict> - allow trailing stream anywhere
@@ -34,8 +34,8 @@ grammar PDF::Grammar::PDF
 
     # cross reference table
     rule  xref         { xref\n<xref-section>+ }
-    rule  xref-section {<object-first-num=.integer> <object-count=.integer>\n<xref-entry>+}
-    rule  xref-entry   {<byte-offset=.integer> <gen-number=.integer> <obj-status>' '?\n}
+    rule  xref-section {<object-first-num=.int> <object-count=.int>\n<xref-entry>+}
+    rule  xref-entry   {<byte-offset=.int> <gen-number=.int> <obj-status>' '?\n}
     proto token obj-status      {<...>}
     token obj-status:sym<free>  {f}
     token obj-status:sym<inuse> {n}
@@ -46,7 +46,7 @@ grammar PDF::Grammar::PDF
         trailer\n
         <dict>\n
         startxref\n
-        <byte-offset=.integer>\n
+        <byte-offset=.int>\n
 	[<!before '%%EOF'><.ws-char>]*
     }
 

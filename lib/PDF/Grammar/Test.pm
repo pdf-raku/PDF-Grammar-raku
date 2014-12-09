@@ -7,16 +7,16 @@ module PDF::Grammar::Test {
 
     # allow only json compatible data
     multi sub json-eqv (EnumMap:D $a, EnumMap:D $b) {
-	if +$a != +$b { return False }
+        if +$a != +$b { return False }
 	for $a.kv -> $k, $v {
-	    unless $b.exists_key($k) && json-eqv($a{$k}, $b{$k}) {
-		return False;
-	    }
+            unless $b.exists_key($k) && json-eqv($a{$k}, $b{$k}) {
+                return False;
+            }
 	}
 	return True;
     }
     multi sub json-eqv (List:D $a, List:D $b) {
-	if +$a != +$b { return Bool::False }
+        if +$a != +$b { return False }
 	for (0 .. +$a-1) {
 	    return False
 		unless (json-eqv($a[$_], $b[$_]));
@@ -31,8 +31,8 @@ module PDF::Grammar::Test {
         return json-eqv( $a, %$b) if $b.isa(Pair);
         return True if !$a.defined && !$b.defined;
 	note "data type mismatch";
-	note "    - expected: {$b.perl}";
-	note "    - got: {$a.perl}";
+	note "  - expected: {$b.perl}";
+	note "  -      got: {$a.perl}";
 	return False;
     }
 
@@ -53,10 +53,10 @@ module PDF::Grammar::Test {
             ok(~$parse, "{$suite}: " ~ $rule ~ " parsed")
         }
 
-        if (my $ast = %expected<ast>).defined {
-            unless ok(json-eqv($parse.ast, $ast), "{$suite} $rule - ast") {
-                diag "expected: " ~ to-json(%expected<ast>);
-                diag "got: " ~ to-json($ast)
+        if (my $expected-ast = %expected<ast>).defined {
+            unless ok(json-eqv($parse.ast, $expected-ast), "{$suite} $rule - ast") {
+                diag "expected: " ~ to-json($expected-ast);
+                diag "got     : " ~ to-json($parse.ast)
             };
         }
         else {

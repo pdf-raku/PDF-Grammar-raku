@@ -23,12 +23,12 @@ class PDF::Grammar::Actions:ver<0.0.1> {
         make $.node( $/.Num, :pdf-type<number>, :pdf-subtype<real> );
     }
 
-    method integer($/) {
+    method int($/) {
         make $.node( $/.Int, :pdf-type<number>, :pdf-subtype<int> );
     }
 
     method number ($/) {
-        make ($<real> // $<integer>).ast;
+        make ($<real> // $<int>).ast;
     }
 
     method hex-char($/) {

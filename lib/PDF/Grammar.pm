@@ -16,11 +16,11 @@ grammar PDF::Grammar:ver<0.0.6> {
 
     # [PDF 1.7] 7.3.3  Numeric Objects
     # ---------------
-    token integer { < + - >? \d+ }
+    token int { < + - >? \d+ }
     # reals must have a decimal point and some digits before or after it.
     token real { < + - >? [\d+\.\d* | \.\d+] }
 
-    rule number { <real> | <integer> }
+    rule number { <real> | <int> }
 
     token octal-code {<[0..7]> ** 1..3}
     token literal_delimiter {<[ ( ) \\ \n \r ]>}

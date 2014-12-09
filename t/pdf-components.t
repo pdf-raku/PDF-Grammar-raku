@@ -8,7 +8,7 @@ my $pdf-header_version = 1.5;
 my $header = "%PDF-{$pdf-header_version}";
 
 for ('%PDF-1.0', $header) {
-     ok($_ ~~ /^<PDF::Grammar::PDF::pdf-header>$/, "pdf-header: $_");
+     ok($_ ~~ /^<PDF::Grammar::PDF::header>$/, "pdf header: $_");
 }
 
 my $ind-obj1 = '1 0 obj
@@ -144,7 +144,7 @@ for (unix => $nix_pdf,
 next;
 
      my $pdf-ast = $p.ast;
-     is($pdf-ast<header><pdf-version>, $pdf-header_version, "pdf version - as expected");
+     is($pdf-ast<header><version>, $pdf-header_version, "pdf version - as expected");
      ok($pdf-ast<body>, "pdf has body");
 
      # see if we can independently locate the trailer (parse)

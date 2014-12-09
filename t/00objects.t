@@ -57,8 +57,8 @@ my @tests = (
     string =>          {input => "<6\n869>",         ast => :hex-string<hi>},
     string =>          {input => "<68\n7>",          ast => :hex-string<hp>},
 
-    integer =>         {input => '42',               ast => :int(42)},
-    real =>            {input => '12.5',             ast => :real(12.5e0)},
+    int    =>          {input => '42',               ast => :int(42)},
+    real   =>          {input => '12.5',             ast => :real(12.5e0)},
     number =>          {input => '42',               ast => :int(42)},
     number =>          {input => '12.5',             ast => :real(12.5e0)},
 

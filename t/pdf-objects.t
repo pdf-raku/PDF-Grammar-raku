@@ -7,7 +7,7 @@ use PDF::Grammar::PDF::Actions;
 use PDF::Grammar::Test;
 
 my $header = '%PDF-1.3';
-my $header-ast = :pdf-version(1.3);
+my $header-ast = :version(1.3);
 
 my $ind-ref1 =  '3 0 R';
 my $ind-ref1-ast = :ind-ref[ 3, 0 ];
@@ -106,7 +106,7 @@ $xref$trailer%\%EOF";
 my $actions = PDF::Grammar::PDF::Actions.new;
 
 for (
-      pdf-header => {input => $header, ast => $header-ast},
+      header => {input => $header, ast => $header-ast},
       ind-ref => {input => $ind-ref1, ast => $ind-ref1-ast},
       ind-obj => {input => $ind-obj1, ast => $ind-obj1-ast},
       ind-obj => {input => $ind-obj2, ast => $ind-obj2-ast},

@@ -12,28 +12,26 @@ class PDF::Grammar::PDF::Actions
     method pdf($/) {
 	my $bodies-ast = [ $<body>>>.ast.map({ .value.item }) ];
         make 'pdf' => {
-	    header => $<pdf-header>.ast,
+	    header => $<header>.ast,
 	    body => $bodies-ast,
         }
     }
 
-    method pdf-header ($/) { make 'pdf-version' => $<pdf-version>.Rat }
+    method header ($/) { make 'version' => $<version>.Rat }
     method pdf-tail ($/) { make $<trailer>.ast }
 
     method trailer ($/) {
 	make 'trailer' => {
 	    dict => $<dict>.ast.value,
-	    ( $<byte-offset> ??  offset => $<byte-offset>.ast.value !! () ),
+	    ( $<byte-offset> ?? offset => $<byte-offset>.ast.value !! () ),
 	};
     }
 
     method ind-ref($/) {
-        my @ind_ref = $/.caps.map( *.value.ast );
         make 'ind-ref' => [ $<obj-num>.ast.value, $<gen-num>.ast.value ];
     }
 
     method ind-obj($/) {
-        my @ind_obj = $/.caps.map( *.value.ast );
         make 'ind-obj' => [ $<obj-num>.ast.value, $<gen-num>.ast.value, $<object>>>.ast ];
     }
 
