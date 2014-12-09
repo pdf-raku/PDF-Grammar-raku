@@ -7,10 +7,10 @@ use PDF::Grammar::PDF::Actions;
 use PDF::Grammar::Test;
 
 my $header = '%PDF-1.3';
-my $header_ast = 1.3;
+my $header-ast = :pdf-version(1.3);
 
 my $ind-ref1 =  '3 0 R';
-my $ind-ref1_ast = :ind-ref[ 3, 0 ];
+my $ind-ref1-ast = :ind-ref[ 3, 0 ];
 
 my $ind-obj1 = "1 0 obj
 <<
@@ -20,8 +20,8 @@ my $ind-obj1 = "1 0 obj
 >>
 endobj
 ";
-my $ind-obj1_ast = :ind-obj[ 1, 0, :dict{ Type => :name<Catalog>,
-                                         Pages => $ind-ref1_ast,
+my $ind-obj1-ast = :ind-obj[ 1, 0, :dict{ Type => :name<Catalog>,
+                                         Pages => $ind-ref1-ast,
                                          Outlines => :ind-ref[ 2, 0 ]}];
 
 my $stream-content = 'BT
@@ -37,7 +37,7 @@ $stream-content
 endstream
 endobj
 ";
-my $ind-obj2_ast = :ind-obj[ 5, 0,
+my $ind-obj2-ast = :ind-obj[ 5, 0,
                              :stream{
                                  :dict{Length => :int(68)}, :start(33), :end(101)
                              }];
@@ -54,7 +54,7 @@ endobj
 [/PDF /Text]
 endobj';
 
-my $body_objects_ast = [$ind-obj1_ast,
+my $body-objects-ast = [$ind-obj1-ast,
                         :ind-obj[ 5, 0, :stream{ :dict{Length => :int(68)},
                                                  :start(98),
                                                  :end(166)}],
@@ -93,11 +93,11 @@ startxref
 553
 ';
 
-my $trailer_ast = { :dict{ Size => :int(8),
+my $trailer-ast = { :dict{ Size => :int(8),
                            Root => :ind-ref[ 1, 0 ]},
                     :offset(553) };
 
-my $body_trailer_ast = {objects => $body_objects_ast, trailer => $trailer_ast};
+my $body-trailer-ast = :body{objects => $body-objects-ast, trailer => $trailer-ast};
 
 my $pdf = "$header
 $body
@@ -106,13 +106,13 @@ $xref$trailer%\%EOF";
 my $actions = PDF::Grammar::PDF::Actions.new;
 
 for (
-      pdf-header => {input => $header, ast => $header_ast},
-      ind-ref => {input => $ind-ref1, ast => $ind-ref1_ast},
-      ind-obj => {input => $ind-obj1, ast => $ind-obj1_ast},
-      ind-obj => {input => $ind-obj2, ast => $ind-obj2_ast},
-      trailer => {input => $trailer, ast => :trailer($trailer_ast)},
+      pdf-header => {input => $header, ast => $header-ast},
+      ind-ref => {input => $ind-ref1, ast => $ind-ref1-ast},
+      ind-obj => {input => $ind-obj1, ast => $ind-obj1-ast},
+      ind-obj => {input => $ind-obj2, ast => $ind-obj2-ast},
+      trailer => {input => $trailer, ast => :trailer($trailer-ast)},
       xref => {input => $xref, ast => :xref($xref-ast)},
-      body => {input => $body ~ "\n" ~ $trailer, ast => $body_trailer_ast},
+      body => {input => $body ~ "\n" ~ $trailer, ast => $body-trailer-ast},
       pdf => {input => $pdf, ast => Mu},
     ) {
      my $rule = .key;

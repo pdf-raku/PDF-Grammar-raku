@@ -18,8 +18,8 @@ trailer
 %%EOF';
 
 my $fdf-small-ast = {
-    :header(1.2),
-    :body[{
+    header => :pdf-version(1.2),
+    body => [{
         objects => [ :ind-obj[ 1, 0,
                             :dict{FDF => :dict{F => :literal("small.pdf"),
                                                Fields => :array[ :dict{T => :literal<barcode>, 

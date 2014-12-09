@@ -7,13 +7,13 @@ use PDF::Grammar::PDF::Actions;
 class PDF::Grammar::FDF::Actions
     is PDF::Grammar::PDF::Actions {
 
-    method TOP($/) { make $<fdf>.ast }
-    method fdf-header ($/) { make $<version>.Rat }
+    method TOP($/) { make $<fdf>.ast.value }
+    method fdf-header ($/) { make 'pdf-version' => $<pdf-version>.Rat }
     method fdf($/) {
-	my $body = [ $<body>>>.ast ];
-        make {
+	my $bodies-ast = [ $<body>>>.ast.map({ .value.item }) ];
+        make 'fdf' => {
 	    header => $<fdf-header>.ast,
-	    body => $body,
+	    body => $bodies-ast,
         }
      }
 };

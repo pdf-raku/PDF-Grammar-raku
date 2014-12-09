@@ -7,17 +7,17 @@ use PDF::Grammar::Actions;
 class PDF::Grammar::PDF::Actions
     is PDF::Grammar::Actions {
 
-    method TOP($/) { make $<pdf>.ast }
+    method TOP($/) { make $<pdf>.ast.value }
 
     method pdf($/) {
-	my $body = [ $<body>>>.ast ];
-        make {
+	my $bodies-ast = [ $<body>>>.ast.map({ .value.item }) ];
+        make 'pdf' => {
 	    header => $<pdf-header>.ast,
-	    body => $body,
+	    body => $bodies-ast,
         }
     }
 
-    method pdf-header ($/) { make $<version>.Rat }
+    method pdf-header ($/) { make 'pdf-version' => $<pdf-version>.Rat }
     method pdf-tail ($/) { make $<trailer>.ast }
 
     method trailer ($/) {
@@ -56,10 +56,10 @@ class PDF::Grammar::PDF::Actions
 
     method body($/) {
 	my $objects = [ $<ind-obj>>>.ast ];
-        make {
+        make 'body' => {
 	    objects => $objects,
-            trailer => $<trailer>.ast.value,
 	    ($<xref> ?? $<xref>.ast !! () ),
+            trailer => $<trailer>.ast.value,
        }
     }
 

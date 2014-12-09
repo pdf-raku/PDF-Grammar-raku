@@ -11,7 +11,7 @@ grammar PDF::Grammar::FDF
     rule TOP {^<fdf>$}
     rule fdf {<fdf-header> [<body>+]'%%EOF' }
 
-    token fdf-header {'%FDF-'$<version>=(\d'.'\d)}
+    token fdf-header {'%FDF-'$<pdf-version>=(\d'.'\d)}
 
     token trailer {
         trailer\n
