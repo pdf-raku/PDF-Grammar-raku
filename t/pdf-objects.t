@@ -119,8 +119,6 @@ for (
      my %expected = %( .value );
      my $input = %expected<input>;
 
-     note to-json($rule => %expected<ast>) if %expected<ast>.defined;
-
      PDF::Grammar::Test::parse-tests(PDF::Grammar::PDF, $input, :$rule, :$actions, :suite('pdf doc'), :%expected );
 }
 

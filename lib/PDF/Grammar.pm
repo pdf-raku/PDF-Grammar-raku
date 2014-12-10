@@ -76,7 +76,6 @@ grammar PDF::Grammar:ver<0.0.6> {
     rule object:sym<null>    { <sym> }
 
     method parsefile( $pdf-file, :$actions ) {
-        note "I'ma parsing $actions";
         my $pdf-body = slurp( $pdf-file, :enc<latin1> );
         $.parse($pdf-body, :$actions );
     }
