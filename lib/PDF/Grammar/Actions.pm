@@ -2,29 +2,14 @@ use v6;
 
 # base rules for constructing AST from PDF::Grammar.
 
-use PDF::Grammar::Attributes;
-
 class PDF::Grammar::Actions:ver<0.0.1> {
 
-    method node(Mu $node, :$pdf-type, :$pdf-subtype) {
-##        $node
-##            does PDF::Grammar::Attributes
-##            unless $node.can('pdf-type');
-
-##        $node.pdf-type = $pdf-type if defined $pdf-type;
-##        $node.pdf-subtype = $pdf-subtype if defined $pdf-subtype;
-
-        my $type = $pdf-subtype // $pdf-type;
-
-        return $type => $node;
-    }
-
     method real($/) {
-        make $.node( $/.Num, :pdf-type<number>, :pdf-subtype<real> );
+        make 'real' => $/.Num;
     }
 
     method int($/) {
-        make $.node( $/.Int, :pdf-type<number>, :pdf-subtype<int> );
+        make 'int' => $/.Int;
     }
 
     method number ($/) {
@@ -54,7 +39,7 @@ class PDF::Grammar::Actions:ver<0.0.1> {
         my @hex-codes = $xdigits.comb(/..?/).map({ _hex-pair($_) });
         my $string = [~] @hex-codes.map({ chr($_) });
 
-        make $.node( $string, :pdf-subtype<hex-string> );
+        make 'hex-string' => $string;
     }
 
     method literal:sym<eol>($/) { make "\n" }
@@ -76,7 +61,7 @@ class PDF::Grammar::Actions:ver<0.0.1> {
 
     method literal-string ($/) {
         my $string = [~] $<literal>».ast;
-        make $.node( $string, :pdf-subtype<literal> );
+        make 'literal' => $string;
     }
 
     method string ($/) {
@@ -99,10 +84,10 @@ class PDF::Grammar::Actions:ver<0.0.1> {
 
     method object:sym<number>($/)  { make $<number>.ast }
     method object:sym<true>($/)    {
-        make $.node( True, :pdf-type<bool> );
+        make 'bool' => True;
     }
     method object:sym<false>($/)   {
-        make $.node( False, :pdf-type<bool> );
+        make 'bool' => False;
     }
     method object:sym<bool>($/)    { make $<bool>.ast }
     method object:sym<string>($/)  { make $<string>.ast }

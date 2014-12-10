@@ -23,7 +23,7 @@ class PDF::Grammar::Function::Actions
     method illegal-object:sym<name>($/)  { make '??' => $<name>.ast }
     method illegal-object:sym<null>($/)  { make '??' => Any }
   
-    method object:sym<ps-op>($/) {make $.node( $<ps-op>.ast, :pdf-type<op> )};
+    method object:sym<ps-op>($/) {make 'op' => $<ps-op>.ast }
     # extended postcript operators
     method ps-op:sym<arithmetic>($/) {make ~$<op> }
     method ps-op:sym<bitwise>($/)    {make ~$<op> }
