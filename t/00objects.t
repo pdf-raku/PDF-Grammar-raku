@@ -5,7 +5,6 @@ use Test;
 use PDF::Grammar;
 use PDF::Grammar::Test;
 use PDF::Grammar::Actions;
-use PDF::Grammar::Attributes;
 
 my %escapes = (
     '\n'   => "\n", 
