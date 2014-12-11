@@ -7,7 +7,6 @@
     "provides"    : {
         "PDF::Grammar" : "lib/PDF/Grammar.pm",
         "PDF::Grammar::Actions" : "lib/PDF/Grammar/Actions.pm",
-        "PDF::Grammar::Attributes" : "lib/PDF/Grammar/Attributes.pm",
         "PDF::Grammar::Content" : "lib/PDF/Grammar/Content.pm",
         "PDF::Grammar::Content::Actions" : "lib/PDF/Grammar/Content/Actions.pm",
         "PDF::Grammar::FDF" : "lib/PDF/Grammar/FDF.pm",
