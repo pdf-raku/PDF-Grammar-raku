@@ -52,12 +52,12 @@ grammar PDF::Grammar:ver<0.0.6> {
     regex char_delimiter {<[ ( ) < > \[ \] { } / % \# ]>}
     regex name-reg-char  {<[\! .. \~] -char_delimiter>}
 
-    proto token name-chars {<...>}
-    token name-chars:sym<number-symbol> {'##'}
-    token name-chars:sym<escaped>       {'#'<hex-char> }
-    token name-chars:sym<regular>       {<name-reg-char>+}
+    proto token name-bytes {<...>}
+    token name-bytes:sym<number-symbol> {'##'}
+    token name-bytes:sym<escaped>       {'#'<hex-char> }
+    token name-bytes:sym<regular>       {<name-reg-char>}
 
-    rule name { '/'<name-chars>+ }
+    rule name { '/'<name-bytes>+ }
 
     # [PDF 1.7] 7.3.2  Boolean objects + Null object
     # ---------------

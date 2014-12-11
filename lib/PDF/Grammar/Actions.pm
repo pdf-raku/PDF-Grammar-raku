@@ -17,21 +17,22 @@ class PDF::Grammar::Actions:ver<0.0.1> {
     }
 
     method hex-char($/) {
-        make chr( _hex-pair(~$/) )
+        make _hex-pair(~$/);
     }
 
-    method name-chars:sym<number-symbol>($/) {
-        make '#';
+    method name-bytes:sym<number-symbol>($/) {
+        make '#'.ord;
     }
-    method name-chars:sym<escaped>($/) {
+    method name-bytes:sym<escaped>($/) {
         make $<hex-char>.ast;
     }
-    method name-chars:sym<regular>($/) {
-        make ~$/;
+    method name-bytes:sym<regular>($/) {
+        make $/.ord;
     }
 
     method name($/) {
-        make 'name' => [~] $<name-chars>».ast;
+        my @name-bytes = $<name-bytes>».ast;
+        make 'name' => Buf.new( @name-bytes ).decode;
     }
 
     method hex-string ($/) {

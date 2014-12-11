@@ -34,12 +34,15 @@ my @tests = (
     ws =>              {input => "\%XX\n \%\%YYY\n", ast => Mu},
     ws =>              {input => '%bye',             ast => Mu},
 
-    name-chars =>      {input => '##',               ast => '#'},
-    hex-char =>        {input => '6D',               ast => 'm'},
-    name-chars =>      {input => '#6E',              ast => 'n'},
-    name-chars =>      {input => 'snoopy',           ast => 'snoopy'},
+    name =>            {input => '/##',              ast => :name<#>},
+    name =>            {input => '/#6E',             ast => :name<n>},
     name =>            {input => '/snoopy',          ast => :name<snoopy>},
     name =>            {input => '/s#6Eo#6fpy',      ast => :name<snoopy>},
+
+    # [PDF 1.7] 3.2.4 "it is recommended that the sequence of bytes (after
+    #        expansion of # sequences, if any) be interpreted according
+    #        to UTF-8, a variable-length byte-encoded representation".
+    name =>            {input => '/Zs#c3#b3fia',      ast => :name<Zsófia>},
 
     hex-string =>      {input => '<736E6F6f7079>',   ast => :hex-string<snoopy>},
 
