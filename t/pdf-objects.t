@@ -72,17 +72,46 @@ my $xref = "xref
 0000000415 00000 n
 0000000445 00000 n
 ";
-my $xref-ast = [{object-first-num => 0,
-                 object-count => 8,
-                 entries => [{:offset(0), :gen(65535),  :status<f>},
-                             {:offset(9), :gen(0), :status<n>},
-                             {:offset(74), :gen(0), :status<n>},
-                             {:offset(120), :gen(0), :status<n>},
-                             {:offset(179), :gen(0), :status<n>},
-                             {:offset(322), :gen(0), :status<n>},
-                             {:offset(415), :gen(0), :status<n>},
-                             {:offset(445), :gen(0), :status<n>}]
-               }];
+my $xref-ast = [
+                {:object-first-num(0),
+                 :object-count(8),
+                 :entries[{:offset(0), :gen(65535),  :status<f>},
+                          {:offset(9), :gen(0), :status<n>},
+                          {:offset(74), :gen(0), :status<n>},
+                          {:offset(120), :gen(0), :status<n>},
+                          {:offset(179), :gen(0), :status<n>},
+                          {:offset(322), :gen(0), :status<n>},
+                          {:offset(415), :gen(0), :status<n>},
+                          {:offset(445), :gen(0), :status<n>}]
+               },
+              ];
+
+my $xref-multiple = "xref
+0 2
+0000000000 65535 f 
+0000000018 00000 n 
+2 3
+0000000077 00000 n 
+0000000178 00000 n 
+0000000457 00000 n 
+";
+
+my $xref-multiple-ast = [
+                {:object-first-num(0),
+                 :object-count(2),
+                 :entries[{:offset(0), :gen(65535),  :status<f>},
+                          {:offset(18), :gen(0), :status<n>},
+                         ]
+               },
+
+                {:object-first-num(2), :object-count(3),
+                 entries => [{:offset(77), :gen(0), :status<n>},
+                             {:offset(178), :gen(0), :status<n>},
+                             {:offset(457), :gen(0), :status<n>},
+                            ]
+               },
+              ];
+
 
 my $trailer = 'trailer
 <<
@@ -112,6 +141,7 @@ for (
       ind-obj => {input => $ind-obj2, ast => $ind-obj2-ast},
       trailer => {input => $trailer, ast => :trailer($trailer-ast)},
       xref => {input => $xref, ast => :xref($xref-ast)},
+      xref => {input => $xref-multiple, ast => :xref($xref-multiple-ast)},
       body => {input => $body ~ "\n" ~ $trailer, ast => $body-trailer-ast},
       pdf => {input => $pdf, ast => Mu},
     ) {
