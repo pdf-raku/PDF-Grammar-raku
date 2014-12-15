@@ -4,8 +4,8 @@ use Test;
 use PDF::Grammar::PDF;
 use PDF::Grammar::PDF::Actions;
 
-my $pdf-header_version = 1.5;
-my $header = "%PDF-{$pdf-header_version}";
+my $pdf-header-version = 1.5;
+my $header = "%PDF-{$pdf-header-version}";
 
 for ('%PDF-1.0', $header) {
      ok($_ ~~ /^<PDF::Grammar::PDF::header>$/, "pdf header: $_");
@@ -102,60 +102,59 @@ startxref
 ok($trailer ~~ /^<PDF::Grammar::PDF::trailer>$/, "trailer")
     or diag $trailer;
 
-my $nix_pdf = "$header
+my $nix-pdf = "$header
 $body
 $xref$trailer%\%EOF";
 
-my $bin_commented_pdf = "$header
+my $bin-commented-pdf = "$header
 %âãÏÓ
 $body
 $xref$trailer%\%EOF";
 
-my $edited_pdf_small = "$header
+my $edited-pdf-small = "$header
 $ind-obj1
 $xref$trailer
 {$ind-obj1.subst(/0/, '9'):g}
 {$xref.subst(/0/, '9'):g}$trailer%\%EOF";
 
-my $edited_pdf = "$header
+my $edited-pdf = "$header
 $body
 $xref$trailer
 $body
 $xref$trailer%\%EOF";
 
-(my $mac_osx_pdf = $nix_pdf)  ~~ s:g/\n/\r/;
+(my $mac-osx-pdf = $nix-pdf)  ~~ s:g/\n/\r/;
 # nb although the document remains parsable, converting to ms-dos line-endings
 # changes byte offsets and corrupts the xref table
-(my $ms_dos_pdf = $nix_pdf)  ~~ s:g/\n/\r\n/;
+(my $ms-dos-pdf = $nix-pdf)  ~~ s:g/\n/\r\n/;
 
 my $actions = PDF::Grammar::PDF::Actions.new;
 
-for (unix => $nix_pdf,
-     bin_comments => $bin_commented_pdf,
-     edit_history_small => $edited_pdf_small,
-     edit_history => $edited_pdf,
-     mac_osx_formatted => $mac_osx_pdf,
-     ms_dos_formatted => $ms_dos_pdf,
+for (unix => $nix-pdf,
+     bin-comments => $bin-commented-pdf,
+     edit-history-small => $edited-pdf-small,
+     edit-history => $edited-pdf,
+     mac-osx-formatted => $mac-osx-pdf,
+     ms-dos-formatted => $ms-dos-pdf,
      ) {
 
-     my $p = PDF::Grammar::PDF.parse($_.value, :$actions);
-     ok($p, "pdf parse - " ~ $_.key)
-       or diag $_.value;
-next;
+     my $p = PDF::Grammar::PDF.parse(.value, :$actions);
+     ok($p, "pdf parse - " ~ .key)
+       or diag .value;
 
      my $pdf-ast = $p.ast;
-     is($pdf-ast<header><version>, $pdf-header_version, "pdf version - as expected");
+     is($pdf-ast<header><version>, $pdf-header-version, "pdf version - as expected");
      ok($pdf-ast<body>, "pdf has body");
 
      # see if we can independently locate the trailer (parse)
-     my $tail = $_.value.substr(*-512);
-     my $tail_p = PDF::Grammar::PDF.parse($tail, :rule<pdf-tail>, :$actions);
-     ok($tail_p, "pdf tail parse - " ~ $_.key)
+     my $tail = .value.substr(*-512);
+     my $tail-p = PDF::Grammar::PDF.parse($tail, :rule<pdf-tail>, :$actions);
+     ok($tail-p, "pdf tail parse - " ~ .key)
        or note '...' ~ substr($tail, *-80);
-     my $trailer = $tail_p.ast;
+     my $trailer = $tail-p.ast;
 
    # see of we can independently locate the trailer (regex)
-   ok($_.value ~~ /<PDF::Grammar::PDF::pdf-tail>/, "file_trailer match " ~ $_.key);
+   ok(.value ~~ /<PDF::Grammar::PDF::pdf-tail>/, "file_trailer match " ~ .key);
 }
 
 done;

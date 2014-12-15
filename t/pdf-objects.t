@@ -128,6 +128,12 @@ my $trailer-ast = { :dict{ Size => :int(8),
 
 my $body-trailer-ast = :body{objects => $body-objects-ast, trailer => $trailer-ast};
 
+my $trailer-xref-only = 'startxref
+553
+';
+
+my $trailer-xref-only-ast = { :offset(553) };
+
 my $pdf = "$header
 $body
 $xref$trailer%\%EOF";
@@ -140,6 +146,7 @@ for (
       ind-obj => {input => $ind-obj1, ast => $ind-obj1-ast},
       ind-obj => {input => $ind-obj2, ast => $ind-obj2-ast},
       trailer => {input => $trailer, ast => :trailer($trailer-ast)},
+      trailer => {input => $trailer-xref-only, ast => :trailer($trailer-xref-only-ast)},
       xref => {input => $xref, ast => :xref($xref-ast)},
       xref => {input => $xref-multiple, ast => :xref($xref-multiple-ast)},
       body => {input => $body ~ "\n" ~ $trailer, ast => $body-trailer-ast},

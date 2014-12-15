@@ -21,10 +21,10 @@ class PDF::Grammar::PDF::Actions
     method pdf-tail ($/) { make $<trailer>.ast }
 
     method trailer ($/) {
-	make 'trailer' => {
-	    dict => $<dict>.ast.value,
+	make 'trailer' => %(
+	    ( $<dict> ?? dict => $<dict>.ast.value !! () ),
 	    ( $<byte-offset> ?? offset => $<byte-offset>.ast.value !! () ),
-	};
+	);
     }
 
     method ind-ref($/) {

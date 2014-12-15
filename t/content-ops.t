@@ -4,7 +4,7 @@ use Test;
 
 use PDF::Grammar::Content;
 
-my $test_image_block = 'BI                  % Begin inline image object
+my $test-image-block = 'BI                  % Begin inline image object
     /W 17           % Width in samples
     /H 17           % Height in samples
     /CS /RGB        % Colour space
@@ -18,17 +18,17 @@ EI';
 
 # test individual ops
 for (
-    text_block_empty               => 'BT ET',
-    text_block_populated           => 'BT B* ET',
+    text-block-empty               => 'BT ET',
+    text-block-populated           => 'BT B* ET',
 
-    BDC_marked_content_empty_text  =>'/foo <</MP /yup>> BDC BT ET EMC',
-    BDC_marked_content_with_op     => '/foo <</MP /yup>> BDC (hello) Tj EMC',
-    BDC_content_dict_ref           => '/EmbeddedDocument /MC3 BDC q EMC',      # optional content - named dict
-    BMC_marked_content_empty_text  => '/foo BMC BT ET EMC',     # Marked content - empty
-    BMC_marked_content_with_text   => '/bar BMC BT B* ET EMC',  # Marked content + text block - empty
-    BMC_marked_content_with_op     => '/baz BMC B* EMC',        # BT .. ET  Text block - with valid content
+    BDC-marked-content-empty-text  =>'/foo <</MP /yup>> BDC BT ET EMC',
+    BDC-marked-content-with-op     => '/foo <</MP /yup>> BDC (hello) Tj EMC',
+    BDC-content-dict-ref           => '/EmbeddedDocument /MC3 BDC q EMC',      # optional content - named dict
+    BMC-marked-content-empty-text  => '/foo BMC BT ET EMC',     # Marked content - empty
+    BMC-marked-content-with-text   => '/bar BMC BT B* ET EMC',  # Marked content + text block - empty
+    BMC-marked-content-with-op     => '/baz BMC B* EMC',        # BT .. ET  Text block - with valid content
 
-    'BI .. ID .. EI image_block'   => $test_image_block,
+    'BI .. ID .. EI image-block'   => $test-image-block,
 
     'BX .. EX ignored text'        => 'BX this stuff gets ignored EX',
     'BX .. BX .. EX .. EX nesting' => 'BX this stuff gets BX doubly EX ignored EX',
@@ -116,10 +116,10 @@ for (
     MoveShowText => "(hello) '",            # '         show
 
     ) {
-    ok($_.value ~~ /^<PDF::Grammar::Content::instruction>$/, "instruction " ~ $_.key)
+    ok(.value ~~ /^<PDF::Grammar::Content::instruction>$/, "instruction " ~ .key)
         or do {
-            diag "failed instruction: " ~ $_.value;
-            if ($_.value ~~ /^(.*?)(<PDF::Grammar::Content::instruction>)(.*?)$/) {
+            diag "failed instruction: " ~ .value;
+            if (.value ~~ /^(.*?)(<PDF::Grammar::Content::instruction>)(.*?)$/) {
 
                 my $p = $0 && $0.join(',');
                 note "(preceeding: $p)" if $p;
@@ -150,11 +150,11 @@ for (
     'BX ... EX incorrect nesting (extra EX)' =>'BX EX EX',                 
     ) {
     # test our parser's resilience
-    ok($_.value !~~ /^<PDF::Grammar::Content::instruction>$/,
-       "invalid instruction: " ~ $_.key)
-        or diag $_.value;
+    ok(.value !~~ /^<PDF::Grammar::Content::instruction>$/,
+       "invalid instruction: " ~ .key)
+        or diag .value;
     ok($_ ~~ /<PDF::Grammar::Content::unknown>/,
-       "parsed as unknown: " ~ $_.key);
+       "parsed as unknown: " ~ .key);
 }
 
 done;

@@ -43,15 +43,15 @@ grammar PDF::Grammar::PDF
     # the trailer contains the position of the cross reference
     # table plus the file trailer dictionary
     token trailer {
-        trailer\n
-        <dict>\n
+        [trailer\n
+        <dict>\n]?
         startxref\n
         <byte-offset=.int>\n
-	[<!before '%%EOF'><.ws-char>]*
+	[<!before ['%%EOF'\n?$]><.ws-char>]*
     }
 
     # pdf-tail: special stand-alone regex for reverse matching
     # trailer information from the end of the file. Typically used
     # when reading last few KB of a PDF to locate root resources
-    token pdf-tail {.*?<trailer>'%%EOF'\n?$}
+    token pdf-tail {.*?\n<trailer>'%%EOF'\n?$}
 }

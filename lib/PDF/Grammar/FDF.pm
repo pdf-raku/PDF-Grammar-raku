@@ -9,7 +9,7 @@ grammar PDF::Grammar::FDF
     # structure of FDF form data exchange files.
     #
     rule TOP {^<fdf>$}
-    rule fdf {<header> [<body>+]'%%EOF' }
+    rule fdf {<header> [<body>+]'%%EOF'\n?$ }
 
     token header {'%FDF-'$<version>=(\d'.'\d)}
 

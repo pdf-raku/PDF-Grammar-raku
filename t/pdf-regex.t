@@ -165,7 +165,7 @@ for (empty1 => '<<>>', empty2 => '<< >>', trival => '<</id 42>>',
      trivial2 => '<</a 1 /b (2)>>', example_hex => $dict_example,
      example_nested => $dict_example2, sans_whitespace => $dict_example3,
      nested_stream => $dict_example4) {
-    ok($_.value ~~ /^<PDF::Grammar::PDF::dict>$/, "dict " ~ $_.key)
+    ok(.value ~~ /^<PDF::Grammar::PDF::dict>$/, "dict " ~ .key)
     or diag $_;
 }
 
@@ -247,8 +247,8 @@ endstream
 for (empty => $empty_stream, tiny => $stream1, content => $stream2,
      non_ascii => $stream3, no_eol => $stream4, indirect => $stream5,
      sizable => $stream6) {
-    my $test = $_.key;
-    my $val = $_.value;
+    my $test = .key;
+    my $val = .value;
 
     ok($val ~~ /^<PDF::Grammar::PDF::dict> <PDF::Grammar::PDF::stream-head>/, "$test stream - head match");
     ok($val ~~ /<PDF::Grammar::PDF::stream-tail>$/, "$test stream - tail match");
@@ -303,8 +303,8 @@ for (simple => $ind_obj1, empty => $ind_obj2, squashed1 => $ind_obj3,
      squashed2 => $ind_obj-scrunched, stream => $ind_obj4,
      comments => $ind_obj5, fdf => $ind_obj-fdf,
      ) {
-    ok($_.value ~~ /^<PDF::Grammar::PDF::ind-obj>$/, "ind-obj - " ~ $_.key)
-        or diag $_.value;
+    ok(.value ~~ /^<PDF::Grammar::PDF::ind-obj>$/, "ind-obj - " ~ .key)
+        or diag .value;
 }
 
 # null
