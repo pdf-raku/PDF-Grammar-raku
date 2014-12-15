@@ -146,7 +146,8 @@ for (
       ind-obj => {input => $ind-obj1, ast => $ind-obj1-ast},
       ind-obj => {input => $ind-obj2, ast => $ind-obj2-ast},
       trailer => {input => $trailer, ast => :trailer($trailer-ast)},
-      trailer => {input => $trailer-xref-only, ast => :trailer($trailer-xref-only-ast)},
+## precursor to cross reference streams not yet supported
+##      trailer => {input => $trailer-xref-only, ast => :trailer($trailer-xref-only-ast)},
       xref => {input => $xref, ast => :xref($xref-ast)},
       xref => {input => $xref-multiple, ast => :xref($xref-multiple-ast)},
       body => {input => $body ~ "\n" ~ $trailer, ast => $body-trailer-ast},
