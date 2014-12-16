@@ -43,8 +43,8 @@ grammar PDF::Grammar::PDF
     # the trailer contains the position of the cross reference
     # table plus the file trailer dictionary
     token trailer {
-        trailer\n
-        <dict>\n
+        [trailer\n
+         <dict>\n]?
         startxref\n
         <byte-offset=.int>\n
 	[<!before ['%%EOF'\n?$]><.ws-char>]*

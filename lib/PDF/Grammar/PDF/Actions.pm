@@ -22,7 +22,7 @@ class PDF::Grammar::PDF::Actions
 
     method trailer ($/) {
 	make 'trailer' => %(
-	    $<dict>.ast.kv,
+	    ($<dict> ?? $<dict>.ast.kv !! ()),
 	    ( $<byte-offset> ?? offset => $<byte-offset>.ast.value !! () ),
 	);
     }
