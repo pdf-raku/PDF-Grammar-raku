@@ -18,7 +18,7 @@ class PDF::Grammar::PDF::Actions
     }
 
     method header ($/) { make 'version' => $<version>.Rat }
-    method pdf-tail ($/) { make $<trailer>.ast }
+    method pdf-tail ($/) { $.trailer($/) }
 
     method trailer ($/) {
 	make 'trailer' => %(
