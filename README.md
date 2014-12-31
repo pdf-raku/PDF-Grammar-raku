@@ -73,9 +73,9 @@ Examples
     use PDF::Grammar::PDF::Actions;
 
     sub MAIN(Str $pdf-file) {
-        my $pdf-actions = PDF::Grammar::PDF::Actions.new;
+        my $actions = PDF::Grammar::PDF::Actions.new;
 
-        if PDF::Grammar::PDF.parsefile( $pdf-file, :actions($pdf-actions) ) {
+        if PDF::Grammar::PDF.parsefile( $pdf-file, :$actions ) {
             say $/.ast.perl;
         }
         else {

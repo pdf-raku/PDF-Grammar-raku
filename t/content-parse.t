@@ -127,7 +127,7 @@ for (trivial => [$sample_content1, $ast1],
      ) {
     my ($test, $spec) = $_.kv;
     my ($str, $eqv) = @$spec;
-    my $p = PDF::Grammar::Content.parse($str, :actions($actions));
+    my $p = PDF::Grammar::Content.parse($str, :$actions);
     ok($p, "$test - parsed pdf content")
         or do {diag ("unable to parse: $str"); next};
 

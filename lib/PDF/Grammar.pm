@@ -75,9 +75,10 @@ grammar PDF::Grammar:ver<0.0.6> {
     rule object:sym<dict>    { <dict> }
     rule object:sym<null>    { <sym> }
 
-    method parsefile( $pdf-file, :$actions ) {
+    method parsefile( $pdf-file, :$rule = 'TOP', :$actions ) {
         my $pdf-body = slurp( $pdf-file, :enc<latin1> );
-        $.parse($pdf-body, :$actions );
+        my $result = $.parse($pdf-body, :$rule, :$actions );
+        nqp::getlexcaller('$/') = $result;
     }
 
 };
