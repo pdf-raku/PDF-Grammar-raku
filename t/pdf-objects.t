@@ -140,6 +140,10 @@ $xref$trailer%\%EOF";
 
 my $actions = PDF::Grammar::PDF::Actions.new;
 
+my $object-stream-index = "125 0 126 28 127 81 128 109 ";
+my $object-stream-index-ast = [[125, 0], [126 ,28], [127, 81], [128, 109]];
+
+
 for (
       header => {input => $header, ast => $header-ast},
       ind-ref => {input => $ind-ref1, ast => $ind-ref1-ast},
@@ -152,6 +156,7 @@ for (
       xref => {input => $xref-multiple, ast => :xref($xref-multiple-ast)},
       body => {input => $body ~ "\n" ~ $trailer, ast => $body-trailer-ast},
       pdf => {input => $pdf, ast => Mu},
+      object-stream-index => {input => $object-stream-index, ast => $object-stream-index-ast},
     ) {
      my $rule = .key;
      my %expected = %( .value );

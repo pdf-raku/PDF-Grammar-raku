@@ -148,7 +148,7 @@ for (unix => $nix-pdf,
 
      # see if we can independently locate the trailer (parse)
      my $tail = .value.substr(*-512);
-     my $tail-p = PDF::Grammar::PDF.parse($tail, :rule<pdf-tail>, :$actions);
+     my $tail-p = PDF::Grammar::PDF.subparse($tail, :rule<pdf-tail>, :$actions);
      ok $tail-p, "pdf tail parse - " ~ .key
        or note '...' ~ substr($tail, *-80);
      my $trailer-ast = $tail-p.ast;

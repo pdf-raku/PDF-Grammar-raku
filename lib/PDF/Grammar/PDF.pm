@@ -59,4 +59,15 @@ grammar PDF::Grammar::PDF
         <dict>\n]?
         startxref\n
         <byte-offset=.int>\n'%%EOF'\n?$}
+
+    # PDF reference 1.7 3.4.6 Object Streams
+    # These occur as the content of objects of /Type /ObjStm
+    # They consist of an index followed by a sequence of pdf objects
+    rule object-stream-indice {
+        <obj-num=.int> <byte-offset=.int>
+    }
+    rule object-stream-index {
+        <object-stream-indice>+
+    }
+
 }
