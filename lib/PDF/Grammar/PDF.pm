@@ -18,7 +18,7 @@ grammar PDF::Grammar::PDF
     # xref section is optional - document could have a cross reference stream
     # quite likely if linearized [PDF 1.7] 7.5.8 & Annex F (Linearized PDF)
     rule body         { <ind-obj>+ <xref>? <trailer>}
-    rule ind-obj { <obj-num=.int> <gen-num=.int> obj <object>* endobj }
+    rule ind-obj { <obj-num=.int> <gen-num=.int> obj <object> endobj }
     rule ind-ref { <obj-num=.int> <gen-num=.int> R }
 
     # Object extensions:

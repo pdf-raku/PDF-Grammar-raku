@@ -32,7 +32,7 @@ class PDF::Grammar::PDF::Actions
     }
 
     method ind-obj($/) {
-        make 'ind-obj' => [ $<obj-num>.ast.value, $<gen-num>.ast.value, $<object>>>.ast ];
+        make 'ind-obj' => [ $<obj-num>.ast.value, $<gen-num>.ast.value, $<object>.ast ];
     }
 
     method object:sym<ind-ref>($/)  { make $<ind-ref>.ast }
