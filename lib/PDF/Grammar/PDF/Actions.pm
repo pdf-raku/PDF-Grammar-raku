@@ -17,10 +17,10 @@ class PDF::Grammar::PDF::Actions
         }
     }
 
-    method header ($/) { make 'version' => $<version>.Rat }
-    method pdf-tail ($/) { $.trailer($/) }
+    method header($/)    { make 'version' => $<version>.Rat }
+    method postamble($/) { make 'offset' => $<byte-offset>.ast.value }
 
-    method trailer ($/) {
+    method trailer($/)   {
 	make 'trailer' => %(
 	    ($<dict> ?? $<dict>.ast.kv !! ()),
 	    ( $<byte-offset> ?? offset => $<byte-offset>.ast.value !! () ),

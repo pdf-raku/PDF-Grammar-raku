@@ -147,19 +147,13 @@ for (unix => $nix-pdf,
      ok $pdf-ast<body>, "pdf has body";
 
      # see if we can independently locate the trailer (parse)
-     my $tail = .value.substr(*-512);
-     my $tail-p = PDF::Grammar::PDF.subparse($tail, :rule<pdf-tail>, :$actions);
-     ok $tail-p, "pdf tail parse - " ~ .key
-       or note '...' ~ substr($tail, *-80);
+     my $tail = .value.substr(*-64);
+     my $tail-p = PDF::Grammar::PDF.subparse($tail, :rule<postamble>, :$actions);
+     ok $tail-p, "pdf postamble parse - " ~ .key
+       or note '...' ~ $tail;
      my $trailer-ast = $tail-p.ast;
-     ok $trailer-ast.key eq 'trailer', 'parsed trailer';
-     ok $trailer-ast.value<dict>.defined, '<dict> in trailer ast'
+     is $trailer-ast.key, 'offset', '<offset> in trailer ast'
          or diag :$trailer-ast.perl;
-     ok $trailer-ast.value<offset>.defined, '<offset> in trailer ast'
-         or diag :$trailer-ast.perl;
-
-   # see of we can independently locate the trailer (regex)
-   ok(.value ~~ /<PDF::Grammar::PDF::pdf-tail>/, "file_trailer match " ~ .key);
 }
 
 done;

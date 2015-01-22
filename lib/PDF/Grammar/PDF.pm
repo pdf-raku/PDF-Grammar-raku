@@ -17,7 +17,7 @@ grammar PDF::Grammar::PDF
 
     # xref section is optional - document could have a cross reference stream
     # quite likely if linearized [PDF 1.7] 7.5.8 & Annex F (Linearized PDF)
-    rule body         { <ind-obj>+ <xref>? <trailer>}
+    rule body    { <ind-obj>+ <xref>? <trailer>}
     rule ind-obj { <obj-num=.int> <gen-num=.int> obj <object> endobj }
     rule ind-ref { <obj-num=.int> <gen-num=.int> R }
 
@@ -50,15 +50,20 @@ grammar PDF::Grammar::PDF
 	[<!before ['%%EOF'\n?$]><.ws-char>]*
     }
 
-    # pdf-tail: special stand-alone regex for reverse matching
-    # trailer information from the end of the file. Typically used
-    # when reading last few KB of a PDF to locate root resources
-    token pdf-tail {
+    #== PDF::Core Support ==#
+
+    # support for index loading
+    # (1) read the last few bytes of a PDF, parse the 'startxref' directive
+    # (2) seek to the indicated position in the PDF, load the xref, which may either be:
+    #    a. an immediately cross reference table (see <xref> token)
+    #    b. a cross reference stream, indirect object, which may occur anywhere in the PDF
+    token postamble {
         .*?
-        \n[trailer\n
-        <dict>\n]?
         startxref\n
-        <byte-offset=.int>\n'%%EOF'\n?$}
+        <byte-offset=.int>\n
+        '%%EOF'\n?
+        $
+    }
 
     # PDF reference 1.7 3.4.6 Object Streams
     # These occur as the content of objects of /Type /ObjStm
