@@ -11,7 +11,10 @@ grammar PDF::Grammar:ver<0.0.6> {
     # [PDF 1.7] 7.2.2 Character Set + 7.2.3 Comment characters
     # ---------------
     token comment {'%' \N* \n?}
-    token ws-char {' ' | \t | \f | \n | <.comment>}
+    # [PDF 1.7] Table 3.1: White-space characters
+    token LF      { \x0A }
+    token NUL     { \x0 }
+    token ws-char {' ' | \t | \f | \n | <LF> | <NUL> | <.comment>}
     token ws      {<!ww><.ws-char>*}
 
     # [PDF 1.7] 7.3.3  Numeric Objects

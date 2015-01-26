@@ -30,6 +30,7 @@ for %escapes.kv -> $escape_seq, $expected_result {
 my @tests = (
     ws =>              {input => ' ',                ast => Mu},
     ws =>              {input => "  \r\n \t",        ast => Mu},
+    ws =>              {input => "  \x0A \x0 ",      ast => Mu},
     ws =>              {input => " %hi\r",           ast => Mu},
     ws =>              {input => "\%XX\n \%\%YYY\n", ast => Mu},
     ws =>              {input => '%bye',             ast => Mu},
