@@ -14,4 +14,10 @@ class PDF::Grammar::FDF::Actions
 	    body => $bodies-ast,
         }
      }
+    method body($/) {
+        my %body = :objects[ $<ind-obj>>>.ast ];
+        %body<trailer> = $<trailer>.ast.value
+            if $<trailer>;
+        make (:%body);
+    }
 };

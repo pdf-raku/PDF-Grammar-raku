@@ -118,45 +118,44 @@ my $trailer = 'trailer
 /Size 8
 /Root 1 0 R
 >>
-startxref
-553
 ';
 
 my $trailer-ast = { :dict{ Size => :int(8),
                            Root => :ind-ref[ 1, 0 ]},
-                    :offset(553) };
+                  };
 
-my $body-trailer-ast = :body{objects => $body-objects-ast, trailer => $trailer-ast};
-
-my $trailer-xref-only = 'startxref
+my $startxref = 'startxref
 553
 ';
 
-my $trailer-xref-only-ast = { :offset(553) };
+my $startxref-ast = :startxref(553);
+
+my $body-ast = :body{objects => $body-objects-ast, :xref($xref-ast), trailer => $trailer-ast, $startxref-ast};
 
 my $pdf = "$header
 $body
-$xref$trailer%\%EOF";
+$xref$trailer$startxref%\%EOF";
 
 my $actions = PDF::Grammar::PDF::Actions.new;
 
 my $object-stream-index = "125 0 126 28 127 81 128 109 ";
 my $object-stream-index-ast = [[125, 0], [126 ,28], [127, 81], [128, 109]];
 
+my $body-input = [~] ($body, "\n", $xref, $trailer,  $startxref);
+
 
 for (
-      header => {input => $header, ast => $header-ast},
-      ind-ref => {input => $ind-ref1, ast => $ind-ref1-ast},
-      ind-obj => {input => $ind-obj1, ast => $ind-obj1-ast},
-      ind-obj => {input => $ind-obj2, ast => $ind-obj2-ast},
-      trailer => {input => $trailer, ast => :trailer($trailer-ast)},
-## precursor to cross reference streams not yet supported
-      trailer => {input => $trailer-xref-only, ast => :trailer($trailer-xref-only-ast)},
-      xref => {input => $xref, ast => :xref($xref-ast)},
-      xref => {input => $xref-multiple, ast => :xref($xref-multiple-ast)},
-      body => {input => $body ~ "\n" ~ $trailer, ast => $body-trailer-ast},
-      pdf => {input => $pdf, ast => Mu},
-      object-stream-index => {input => $object-stream-index, ast => $object-stream-index-ast},
+      header => { :input($header),     :ast($header-ast)},
+      ind-ref => { :input($ind-ref1),  :ast($ind-ref1-ast)},
+      ind-obj => { :input($ind-obj1),  :ast($ind-obj1-ast)},
+      ind-obj => { :input($ind-obj2),  :ast($ind-obj2-ast)},
+      trailer => { :input($trailer),    ast => :trailer($trailer-ast)},
+      startxref => { :input($startxref),     :ast($startxref-ast)},
+      xref => { :input($xref),          ast => :xref($xref-ast)},
+      xref => { :input($xref-multiple), ast => :xref($xref-multiple-ast)},
+      body => {input => $body-input,  :ast($body-ast)},
+      pdf => { :input($pdf), ast => Any},
+      object-stream-index => { :input($object-stream-index),  :ast($object-stream-index-ast)},
     ) {
      my $rule = .key;
      my %expected = %( .value );

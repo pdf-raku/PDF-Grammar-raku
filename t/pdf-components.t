@@ -96,7 +96,9 @@ my $trailer = 'trailer
 /Size 8
 /Root 1 0 R
 >>
-startxref
+';
+
+my $footer = 'startxref
 553
 ';
 ok($trailer ~~ /^<PDF::Grammar::PDF::trailer>$/, "trailer")
@@ -104,24 +106,24 @@ ok($trailer ~~ /^<PDF::Grammar::PDF::trailer>$/, "trailer")
 
 my $nix-pdf = "$header
 $body
-$xref$trailer%\%EOF";
+$xref$trailer$footer%\%EOF";
 
 my $bin-commented-pdf = "$header
 %âãÏÓ
 $body
-$xref$trailer%\%EOF";
+$xref$trailer$footer%\%EOF";
 
 my $edited-pdf-small = "$header
 $ind-obj1
-$xref$trailer
+$xref$trailer$footer
 {$ind-obj1.subst(/0/, '9'):g}
-{$xref.subst(/0/, '9'):g}$trailer%\%EOF";
+{$xref.subst(/0/, '9'):g}$trailer$footer%\%EOF";
 
 my $edited-pdf = "$header
 $body
-$xref$trailer
+$xref$trailer$footer
 $body
-$xref$trailer%\%EOF";
+$xref$trailer$footer%\%EOF";
 
 (my $mac-osx-pdf = $nix-pdf)  ~~ s:g/\n/\r/;
 # nb although the document remains parsable, converting to ms-dos line-endings
@@ -152,7 +154,7 @@ for (unix => $nix-pdf,
      ok $tail-p, "pdf postamble parse - " ~ .key
        or note '...' ~ $tail;
      my $trailer-ast = $tail-p.ast;
-     is $trailer-ast.key, 'offset', '<offset> in trailer ast'
+     is $trailer-ast.key, 'startxref', '<startxref> in trailer ast'
          or diag :$trailer-ast.perl;
 }
 

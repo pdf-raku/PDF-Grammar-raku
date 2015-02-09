@@ -9,16 +9,8 @@ grammar PDF::Grammar::FDF
     # structure of FDF form data exchange files.
     #
     rule TOP {^<fdf>$}
-    rule fdf {<header> [<body>+]'%%EOF'\n?$ }
-
+    rule fdf {<header> [<body>+]<?after '%%EOF'\n?> }
+    rule body{ <ind-obj>+ <trailer> }
     token header {'%FDF-'$<version>=(\d'.'\d)}
-
-    token trailer {
-        trailer\n
-        <dict>\n
-        [ startxref\n
-          <byte-offset=.int>\n
-        ]?
-    }
 
 }

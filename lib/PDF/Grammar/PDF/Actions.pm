@@ -18,13 +18,14 @@ class PDF::Grammar::PDF::Actions
     }
 
     method header($/)    { make 'version' => $<version>.Rat }
-    method postamble($/) { make 'offset' => $<byte-offset>.ast.value }
+    method postamble($/) { make 'startxref' => $<byte-offset>.ast.value }
 
     method trailer($/)   {
-	make 'trailer' => %(
-	    ($<dict> ?? $<dict>.ast.kv !! ()),
-	    ( $<byte-offset> ?? offset => $<byte-offset>.ast.value !! () ),
-	);
+	make 'trailer' => $<dict>.ast
+    }
+
+    method startxref($/)   {
+	make 'startxref' => $<byte-offset>.ast.value
     }
 
     method ind-ref($/) {
@@ -53,12 +54,16 @@ class PDF::Grammar::PDF::Actions
     }
 
     method body($/) {
-	my $objects = [ $<ind-obj>>>.ast ];
-        make 'body' => {
-	    objects => $objects,
-	    ($<xref> ?? $<xref>.ast !! () ),
-            trailer => $<trailer>.ast.value,
-       }
+        my %body = (:objects[ $<ind-obj>>>.ast ],
+                    $<startxref>.ast,
+                    ($<index> ?? @( $<index>.ast ) !! () ),
+            );
+        
+        make (:%body);
+    }
+
+    method index($/) {
+        make [ $<xref>.ast, $<trailer>.ast ];
     }
 
     method xref($/) {

@@ -6,16 +6,24 @@ use PDF::Grammar::FDF;
 use PDF::Grammar::FDF::Actions;
 use PDF::Grammar::Test;
 
-my $fdf-small = '%FDF-1.2
-%âãÏÓ
-1 0 obj
+my $fdf-tiny = '%FDF-1.2
+1 0 obj <</FDF (yup) >> endobj
+trailer
+<</Root 1 0 R>>
+%%EOF';
+
+my $fdf-body = "1 0 obj
 <</FDF
     << /F (small.pdf) /Fields [<</T(barcode)/V(*TEST-1234*)>>] >>
 >>
 endobj
 trailer
 <</Root 1 0 R>>
-%%EOF';
+";
+
+my $fdf-small = [~] ('%FDF-1.2
+%âãÏÓ
+', $fdf-body, '%%EOF');
 
 my $fdf-small-ast = {
     header => :version(1.2),
@@ -41,7 +49,7 @@ trailer
 <</Root 1 0 R>>
 %%EOF';
 
-my $fdf-body = q:to/END_END_END/;
+my $fdf-large = q:to/--END--/;
 %FDF-1.2
 %âãÏÓ
 1 0 obj
@@ -50,19 +58,26 @@ endobj
 trailer
 <</Root 1 0 R>>
 %%EOF
-END_END_END
+--END--
 
 my $actions = PDF::Grammar::FDF::Actions.new;
 
-for (small => {input => $fdf-small, "ast" => $fdf-small-ast},
-     medium => {input => $fdf-medium},
-     large => {input => $fdf-body},
+for (
+    tiny => { :input($fdf-tiny) },
+    header => { :input<%FDF-1.2>, :ast(version => 1.2), :rule<header> },
+    trailer => { :input("trailer\n<</Root 1 0 R>>\n"), :ast{ :trailer{ :dict{ :Root{ :ind-ref[1, 0]}}} }, :rule<trailer> },
+    body => { :input($fdf-body), :rule<body> },
+    small => { :input($fdf-small), :ast($fdf-small-ast) },
+    medium => { :input($fdf-medium)},
+    large => { :input($fdf-large)},
     ) {
     my $test-name = .key;	
     my %expected = %( .value );
     %expected<ast> //= Mu;
 
-    PDF::Grammar::Test::parse-tests(PDF::Grammar::FDF, %expected<input>, :$actions, :suite("fdf {$test-name}"), :%expected );
+    my $rule = %expected<rule> // 'TOP';
+
+    PDF::Grammar::Test::parse-tests(PDF::Grammar::FDF, %expected<input>, :$actions, :$rule, :suite("fdf {$test-name}"), :%expected );
 }
 
 done;

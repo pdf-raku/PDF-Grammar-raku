@@ -9,15 +9,16 @@ grammar PDF::Grammar::PDF
     # structure of PDF documents.
     #
     rule TOP {^<pdf>$}
-    rule pdf {<header> [<body>+]'%%EOF' }
+    rule pdf {<header> [<body>+]<?after '%%EOF'\n?> }
 
     # [PDF 1.7] 7.5.2 File Header
     # ---------------
     token header {'%PDF-'$<version>=(\d'.'\d)}
 
-    # xref section is optional - document could have a cross reference stream
+    # index section is optional - document could have a cross reference stream
     # quite likely if linearized [PDF 1.7] 7.5.8 & Annex F (Linearized PDF)
-    rule body    { <ind-obj>+ <xref>? <trailer>}
+    rule body    { <ind-obj>+ <index>? <startxref>}
+    rule index   { <xref> <trailer> }
     rule ind-obj { <obj-num=.int> <gen-num=.int> obj <object> endobj }
     rule ind-ref { <obj-num=.int> <gen-num=.int> R }
 
@@ -43,11 +44,13 @@ grammar PDF::Grammar::PDF
     # the trailer contains the position of the cross reference
     # table plus the file trailer dictionary
     token trailer {
-        [trailer\n
-         <dict>\n]?
+        trailer\n
+        <dict>\n
+    }
+
+    rule startxref {
         startxref\n
         <byte-offset=.int>\n
-	[<!before ['%%EOF'\n?$]><.ws-char>]*
     }
 
     #== PDF::Core Support ==#
