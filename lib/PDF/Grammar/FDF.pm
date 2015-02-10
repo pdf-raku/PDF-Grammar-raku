@@ -11,6 +11,6 @@ grammar PDF::Grammar::FDF
     rule TOP {^<fdf>$}
     rule fdf {<header> [<body>+]<?after '%%EOF'\n?> }
     rule body{ <ind-obj>+ <trailer> }
-    token header {'%FDF-'$<version>=(\d'.'\d)}
+    token header {'%FDF-'$<version>=[\d'.'\d]}
 
 }

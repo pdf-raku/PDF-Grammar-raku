@@ -10,7 +10,7 @@ grammar PDF::Grammar::Content
     # Text operations as described in sections 8 and 9 of [PDF 1.7].
     rule TOP {^ [<op=.instruction>||<op=.unknown>]* $}
 
-    proto rule instruction {<...>}
+    proto rule instruction {*}
     rule instruction:sym<block> {<block>}
     rule instruction:sym<op>    {<op>}
 
@@ -41,7 +41,7 @@ grammar PDF::Grammar::Content
 
     rule inner-text-block { <opBeginText> <op>* <opEndText> }
     rule inner-marked-content-block { <opBeginMarkedContent> <op>* <opEndMarkedContent> }
-    proto rule block { <...> }
+    proto rule block {*}
     rule block:sym<text> { <opBeginText> [ <inner-marked-content-block> | <op> ]* <opEndText> }
     rule block:sym<markedContent> { <opBeginMarkedContent> [ <inner-text-block> | <op> ]* <opEndMarkedContent> }
     rule imageAtts { [<name> <object>]* }
@@ -52,7 +52,7 @@ grammar PDF::Grammar::Content
                       <opImageData>(<stream-chars>?)\n?<opEndImage>
     }
 
-    proto rule ignored {<...>}
+    proto rule ignored {*}
     rule ignored:sym<block> { <ignored-block> }
     rule ignored:sym<guff>  { <guff> }
     rule ignored:sym<char>  { . }
@@ -64,7 +64,7 @@ grammar PDF::Grammar::Content
     # ------------------------
 
     # operator names courtersy of xpdf / Gfx.cc (http://foolabs.com/xdf/)
-    proto rule op { <...> }
+    proto rule op {*}
     rule op:sym<CloseEOFillStroke>   { (b\*) }
     rule op:sym<CloseFillStroke>     { (b) } 
     rule op:sym<EOFillStroke>        { (B\*) }

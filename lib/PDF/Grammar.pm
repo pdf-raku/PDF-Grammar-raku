@@ -29,7 +29,7 @@ grammar PDF::Grammar:ver<0.0.6> {
     token literal_delimiter {<[ ( ) \\ \n \r ]>}
 
     # literal string components
-    proto token literal {<...>}
+    proto token literal {*}
     token literal:sym<regular>          {<-literal_delimiter>+}
     token literal:sym<eol>              {\n}
     token literal:sym<substring>        {<literal-string>}
@@ -55,7 +55,7 @@ grammar PDF::Grammar:ver<0.0.6> {
     regex char_delimiter {<[ ( ) < > \[ \] { } / % \# ]>}
     regex name-reg-char  {<[\! .. \~] -char_delimiter>}
 
-    proto token name-bytes {<...>}
+    proto token name-bytes {*}
     token name-bytes:sym<number-symbol> {'##'}
     token name-bytes:sym<escaped>       {'#'<hex-char> }
     token name-bytes:sym<regular>       {<name-reg-char>}
@@ -68,7 +68,7 @@ grammar PDF::Grammar:ver<0.0.6> {
     rule dict   {'<<' [ <name> <object> ]* '>>'}
 
     # Define a core set of objects.
-    proto rule object { <...> }
+    proto rule object {*}
     rule object:sym<number>  { <number> }
     rule object:sym<true>    { <sym> }
     rule object:sym<false>   { <sym> }
@@ -84,5 +84,5 @@ grammar PDF::Grammar:ver<0.0.6> {
         nqp::getlexcaller('$/') = $result;
     }
 
-};
+}
 

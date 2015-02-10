@@ -11,12 +11,12 @@ grammar PDF::Grammar::Function
 
     rule expression { '{' [<statement>||<statement=.unknown>]* '}' }
 
-    proto rule statement {<...>}
+    proto rule statement {*}
     rule statement:sym<ifelse>     { <ifelse> }
     rule statement:sym<if>         { <if> }
     rule statement:sym<object>     { <object=.illegal-object>||<object> }
 
-    proto rule illegal-object {<...>}
+    proto rule illegal-object {*}
     rule illegal-object:sym<dict>  { <dict> }
     rule illegal-object:sym<array> { <array> }
     rule illegal-object:sym<name>  { <name> }
@@ -25,7 +25,7 @@ grammar PDF::Grammar::Function
     # extend <object> add <ps-op>
     rule object:sym<ps-op> {<ps-op>}
 
-    proto token ps-op { <...> }
+    proto token ps-op {*}
 
     token ps-op:sym<arithmetic> {
         $<op>=[abs|add|atan|ceiling|cos|cvi|cvr|div|exp|floor
