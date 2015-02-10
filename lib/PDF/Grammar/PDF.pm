@@ -53,7 +53,13 @@ grammar PDF::Grammar::PDF
         <byte-offset=.int>\n
     }
 
-    #== PDF::Core Support ==#
+    #== PDF Reader Support ==#
+
+    # reads an indirect object, stopping if the start of a stream is encountered
+    # typically used when the reader is locating objects via the index and doesn't
+    # need to fully scan the PDF. The reader can manually (and lazily) extract the
+    # stream using the dictionary /Length entry
+    rule ind-obj-nibble   { <obj-num=.int> <gen-num=.int> obj [<object=.dict>||<object>] $<marker>=[endobj|stream] }
 
     # support for index loading
     # (1) read the last few bytes of a PDF, parse the 'startxref' directive

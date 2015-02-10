@@ -251,28 +251,30 @@ for ($empty_stream, $stream1, $stream2,
 
     ok($val ~~ /^<PDF::Grammar::PDF::dict> <PDF::Grammar::PDF::stream-head>/, "$test stream - head match");
     ok($val ~~ /<PDF::Grammar::PDF::stream-tail>$/, "$test stream - tail match");
-    my $ind_obj = "42 0 obj $val endobj";
-    ok($ind_obj ~~ /^<PDF::Grammar::PDF::ind-obj>$/, "$test stream - embedded in object")
-    or diag $ind_obj;
+    my $ind-obj = "42 0 obj $val endobj";
+    ok($ind-obj ~~ /^<PDF::Grammar::PDF::ind-obj-nibble>/, "$test stream - ind-obj-nibble");
+    ok($ind-obj !~~ /^<PDF::Grammar::PDF::ind-obj-nibble>$/, "$test stream - ind-obj-nibble");
+    ok($ind-obj ~~ /^<PDF::Grammar::PDF::ind-obj>$/, "$test stream - ind-obj")
+    or diag $ind-obj;
 }
 
-my $ind_obj1 = "10 0 obj
+my $ind-obj1 = "10 0 obj
 (Brillig) % blah blah blah
 endobj";
-my $ind_ref1 = '10 0 R';
+my $ind-ref1 = '10 0 R';
 
-my $ind_obj2 = '20 1 obj endobj';
-my $ind_ref2 = '20 1 R';
+my $ind-obj2 = '20 1 obj endobj';
+my $ind-ref2 = '20 1 R';
 
-my $ind_obj3 = '13 0 obj<</BaseFont/Times-Roman/Type/Font/Subtype/Type1>>endobj';
-my $ind_ref3 = '13 0 R';
+my $ind-obj3 = '13 0 obj<</BaseFont/Times-Roman/Type/Font/Subtype/Type1>>endobj';
+my $ind-ref3 = '13 0 R';
 
-for ($ind_ref1, $ind_ref2, $ind_ref3) {
+for ($ind-ref1, $ind-ref2, $ind-ref3) {
     ok($_ ~~ /^<PDF::Grammar::PDF::ind-ref>$/, "ind-ref: $_");
     ok($_ ~~ /^<PDF::Grammar::PDF::object>$/, "object: $_");
 }
 
-my $ind_obj4 = "7 0 obj
+my $ind-obj4 = "7 0 obj
 << /Length 8 0 R >>% An indirect reference to object 8
 stream
 BT
@@ -283,27 +285,28 @@ ET
 endstream
 endobj";
 
-my $ind_obj5 = '8 0 obj
+my $ind-obj5 = '8 0 obj
 % hello
 77% The length of the preceding stream
 % goodbye
 endobj';
 
-my $ind_obj-fdf = '1 0 obj
+my $ind-obj-fdf = '1 0 obj
 <</FDF
     << /F (empty.pdf) /Fields [] >>
 >>
 endobj';
 
-my $ind_obj-scrunched = '1 0 obj<</FDF<</F(Document.pdf)/ID[<7a0631678ed475f0898815f0a818cfa1><bef7724317b311718e8675b677ef9b4e>]/Fields[<</T(Street)/V(345 Park Ave.)>><</T(City)/V(San Jose)>>]>>>> 
+my $ind-obj-scrunched = '1 0 obj<</FDF<</F(Document.pdf)/ID[<7a0631678ed475f0898815f0a818cfa1><bef7724317b311718e8675b677ef9b4e>]/Fields[<</T(Street)/V(345 Park Ave.)>><</T(City)/V(San Jose)>>]>>>> 
 endobj';
 
-for (simple => $ind_obj1, squashed1 => $ind_obj3,
-     squashed2 => $ind_obj-scrunched, stream => $ind_obj4,
-     comments => $ind_obj5, fdf => $ind_obj-fdf,
+for (simple => $ind-obj1, squashed1 => $ind-obj3,
+     squashed2 => $ind-obj-scrunched, stream => $ind-obj4,
+     comments => $ind-obj5, fdf => $ind-obj-fdf,
      ) {
     ok(.value ~~ /^<PDF::Grammar::PDF::ind-obj>$/, "ind-obj - " ~ .key)
         or diag .value;
+    ok(.value ~~ /^<PDF::Grammar::PDF::ind-obj-nibble>/, "ind-obj-nibble - " ~ .key)
 }
 
 # null

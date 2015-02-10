@@ -36,6 +36,10 @@ class PDF::Grammar::PDF::Actions
         make 'ind-obj' => [ $<obj-num>.ast.value, $<gen-num>.ast.value, $<object>.ast ];
     }
 
+    method ind-obj-nibble($/) {
+        make 'ind-obj-nibble' => [ $<obj-num>.ast.value, $<gen-num>.ast.value, $<object>.ast, ~ $<marker> ];
+    }
+
     method object:sym<ind-ref>($/)  { make $<ind-ref>.ast }
 
     method object:sym<dict>($/) {
