@@ -37,7 +37,15 @@ class PDF::Grammar::PDF::Actions
     }
 
     method ind-obj-nibble($/) {
-        make 'ind-obj-nibble' => [ $<obj-num>.ast.value, $<gen-num>.ast.value, $<object>.ast, ~ $<marker> ];
+        my $object = $<object>.ast;
+        if $<stream-head> {
+            # locate the start of the stream data following the 'stream' token. The
+            # invokee can deterime the length using the /Length entry in the dictionary
+            $object = :stream( %( $object.kv,
+                                  :start( $<stream-head>.to ),
+                               ));
+        }
+        make 'ind-obj' => [ $<obj-num>.ast.value, $<gen-num>.ast.value, $object ];
     }
 
     method object:sym<ind-ref>($/)  { make $<ind-ref>.ast }
@@ -46,10 +54,9 @@ class PDF::Grammar::PDF::Actions
 
         if ($<stream>) {
             # <dict> is a just a header the following <stream>
-            my %stream;
-            %stream<dict> = $<dict>.ast.value;
+            my %stream = $<dict>.ast.kv;
             (%stream<start>, %stream<end>) = $<stream>.ast.flat;
-            make (stream => %stream)
+            make (:%stream)
         }
         else {
             # simple stand-alone <dict>
