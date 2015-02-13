@@ -93,11 +93,14 @@ class PDF::Grammar::PDF::Actions
 
     method xref-entry($/) {
         make {
+            type   => $<obj-status>.ast,
             offset => $<byte-offset>.ast.value,
             gen    => $<gen-number>.ast.value,
-            status => $<obj-status>.lc,
             };
     }
+
+    method obj-status:sym<free>($/)  { make 0}
+    method obj-status:sym<inuse>($/) { make 1}
 
    # don't actually capture streams, which can be huge and represent
    # the majority of data in a typical PDF. Rather just return the byte
