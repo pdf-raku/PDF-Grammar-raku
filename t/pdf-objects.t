@@ -39,7 +39,7 @@ endobj
 ";
 my $ind-obj2-ast = :ind-obj[ 5, 0,
                              :stream{
-                                 :dict{Length => :int(68)}, :start(33), :end(101)
+                                 :dict{Length => :int(68)}, :start(32), :end(99)
                              }];
 
 my $body = $ind-obj1 ~
@@ -56,8 +56,8 @@ endobj';
 
 my $body-objects-ast = [$ind-obj1-ast,
                         :ind-obj[ 5, 0, :stream{ :dict{Length => :int(68)},
-                                                 :start(98),
-                                                 :end(166)}],
+                                                 :start(97),
+                                                 :end(164)}],
                         :ind-obj[ 3, 0, :dict{Type => :name<Outlines>, Count => :int(0) }],
                         :ind-obj[ 4, 2, :array[ :name<PDF>, :name<Text> ]]];
 

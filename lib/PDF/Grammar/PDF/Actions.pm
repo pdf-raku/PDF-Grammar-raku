@@ -108,6 +108,6 @@ class PDF::Grammar::PDF::Actions
    # the caller to disseminate
 
     method stream($/) {
-        make [ $<stream-head>.to + 1, $<stream-tail>.from + 1 ];
+        make [ $<stream-head>.to, $<stream-tail>.from - 1 ];
     }
 }
