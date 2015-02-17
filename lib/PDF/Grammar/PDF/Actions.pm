@@ -95,7 +95,7 @@ class PDF::Grammar::PDF::Actions
         make {
             type   => $<obj-status>.ast,
             offset => $<byte-offset>.ast.value,
-            gen    => $<gen-number>.ast.value,
+            gen-num  => $<gen-number>.ast.value,
             };
     }
 

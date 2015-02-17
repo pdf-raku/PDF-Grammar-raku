@@ -75,14 +75,14 @@ my $xref = "xref
 my $xref-ast = [
                 {:object-first-num(0),
                  :object-count(8),
-                 :entries[{:offset(0), :gen(65535),  :type(0)},
-                          {:offset(9), :gen(0), :type(1)},
-                          {:offset(74), :gen(0), :type(1)},
-                          {:offset(120), :gen(0), :type(1)},
-                          {:offset(179), :gen(0), :type(1)},
-                          {:offset(322), :gen(0), :type(1)},
-                          {:offset(415), :gen(0), :type(1)},
-                          {:offset(445), :gen(0), :type(1)}]
+                 :entries[{:offset(0), :gen-num(65535),  :type(0)},
+                          {:offset(9), :gen-num(0), :type(1)},
+                          {:offset(74), :gen-num(0), :type(1)},
+                          {:offset(120), :gen-num(0), :type(1)},
+                          {:offset(179), :gen-num(0), :type(1)},
+                          {:offset(322), :gen-num(0), :type(1)},
+                          {:offset(415), :gen-num(0), :type(1)},
+                          {:offset(445), :gen-num(0), :type(1)}]
                },
               ];
 
@@ -99,15 +99,15 @@ my $xref-multiple = "xref
 my $xref-multiple-ast = [
                 {:object-first-num(0),
                  :object-count(2),
-                 :entries[{:offset(0), :gen(65535),  :type(0)},
-                          {:offset(18), :gen(0), :type(1)},
+                 :entries[{:offset(0), :gen-num(65535),  :type(0)},
+                          {:offset(18), :gen-num(0), :type(1)},
                          ]
                },
 
                 {:object-first-num(2), :object-count(3),
-                 entries => [{:offset(77), :gen(0), :type(1)},
-                             {:offset(178), :gen(0), :type(1)},
-                             {:offset(457), :gen(0), :type(1)},
+                 entries => [{:offset(77), :gen-num(0), :type(1)},
+                             {:offset(178), :gen-num(0), :type(1)},
+                             {:offset(457), :gen-num(0), :type(1)},
                             ]
                },
               ];
