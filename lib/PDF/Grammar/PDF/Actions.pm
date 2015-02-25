@@ -10,30 +10,31 @@ class PDF::Grammar::PDF::Actions
     method TOP($/) { make $<pdf>.ast.value }
 
     method pdf($/) {
-	my $bodies-ast = [ $<body>>>.ast.map({ .value.item }) ];
+        my $header = $<header>.ast;
+	my $body = [ $<body>>>.ast.map({ .value.item }) ];
         make 'pdf' => {
-	    header => $<header>.ast,
-	    body => $bodies-ast,
+	    :$header,
+	    :$body,
         }
     }
 
-    method header($/)    { make 'version' => $<version>.Rat }
-    method postamble($/) { make 'startxref' => $<byte-offset>.ast.value }
+    method header($/)    { make (:version($<version>.Rat)) }
+    method postamble($/) { make (:startxref($<byte-offset>.ast.value)) }
 
     method trailer($/)   {
-	make 'trailer' => $<dict>.ast
+	make (:trailer($<dict>.ast))
     }
 
     method startxref($/)   {
-	make 'startxref' => $<byte-offset>.ast.value
+	make (:startxref($<byte-offset>.ast.value))
     }
 
     method ind-ref($/) {
-        make 'ind-ref' => [ $<obj-num>.ast.value, $<gen-num>.ast.value ];
+        make (:ind-ref[ $<obj-num>.ast.value, $<gen-num>.ast.value ]);
     }
 
     method ind-obj($/) {
-        make 'ind-obj' => [ $<obj-num>.ast.value, $<gen-num>.ast.value, $<object>.ast ];
+        make (:ind-obj[ $<obj-num>.ast.value, $<gen-num>.ast.value, $<object>.ast ]);
     }
 
     method ind-obj-nibble($/) {
@@ -45,7 +46,7 @@ class PDF::Grammar::PDF::Actions
                                   :start( $<stream-head>.to ),
                                ));
         }
-        make 'ind-obj' => [ $<obj-num>.ast.value, $<gen-num>.ast.value, $object ];
+        make (:ind-obj[ $<obj-num>.ast.value, $<gen-num>.ast.value, $object ]);
     }
 
     method object:sym<ind-ref>($/)  { make $<ind-ref>.ast }
@@ -79,7 +80,7 @@ class PDF::Grammar::PDF::Actions
 
     method xref($/) {
 	my $sections = [ $<xref-section>>>.ast ];
-	make 'xref' => $sections;
+	make (:xref($sections));
     }
 
     method xref-section($/) {
@@ -87,7 +88,7 @@ class PDF::Grammar::PDF::Actions
         make {
 	    object-first-num => $<object-first-num>.ast.value,
 	    object-count => $<object-count>.ast.value,
-	    entries => @entries,
+	    :@entries,
         }
     }
 

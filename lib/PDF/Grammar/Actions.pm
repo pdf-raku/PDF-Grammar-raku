@@ -5,11 +5,11 @@ use v6;
 class PDF::Grammar::Actions:ver<0.0.1> {
 
     method real($/) {
-        make 'real' => $/.Num;
+        make (:real($/.Num));
     }
 
     method int($/) {
-        make 'int' => $/.Int;
+        make (:int($/.Int));
     }
 
     method number ($/) {
@@ -32,15 +32,15 @@ class PDF::Grammar::Actions:ver<0.0.1> {
 
     method name($/) {
         my @name-bytes = $<name-bytes>».ast;
-        make 'name' => Buf.new( @name-bytes ).decode;
+        make (:name( Buf.new( @name-bytes ).decode ));
     }
 
     method hex-string ($/) {
         my $xdigits = [~] $<xdigit>».Str;
         my @hex-codes = $xdigits.comb(/..?/).map({ _hex-pair($_) });
-        my $string = [~] @hex-codes.map({ chr($_) });
+        my $hex-string = [~] @hex-codes.map({ chr($_) });
 
-        make 'hex-string' => $string;
+        make (:$hex-string);
     }
 
     method literal:sym<eol>($/) { make "\n" }
@@ -61,8 +61,8 @@ class PDF::Grammar::Actions:ver<0.0.1> {
     method literal:sym<esc-continuation>($/) { make '' }
 
     method literal-string ($/) {
-        my $string = [~] $<literal>».ast;
-        make 'literal' => $string;
+        my $literal = [~] $<literal>».ast;
+        make (:$literal);
     }
 
     method string ($/) {
@@ -70,8 +70,8 @@ class PDF::Grammar::Actions:ver<0.0.1> {
     }
 
     method array ($/) {
-        my @objects = @<object>».ast;
-        make 'array' => @objects;
+        my @array = @<object>».ast;
+        make (:@array);
     }
 
     method dict ($/) {
@@ -80,15 +80,15 @@ class PDF::Grammar::Actions:ver<0.0.1> {
 
         my %dict = @names Z=> @objects;
 
-        make 'dict' => %dict;
+        make (:%dict);
     }
 
     method object:sym<number>($/)  { make $<number>.ast }
     method object:sym<true>($/)    {
-        make 'bool' => True;
+        make (:bool(True));
     }
     method object:sym<false>($/)   {
-        make 'bool' => False;
+        make (:bool(False));
     }
     method object:sym<bool>($/)    { make $<bool>.ast }
     method object:sym<string>($/)  { make $<string>.ast }

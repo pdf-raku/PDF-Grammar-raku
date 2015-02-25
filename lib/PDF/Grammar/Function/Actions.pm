@@ -8,8 +8,8 @@ class PDF::Grammar::Function::Actions
     method TOP($/) { make $<expression>.ast }
 
     method expression($/) {
-        my @result = $<statement>».ast;
-        make (expr => @result);
+        my @expr = $<statement>».ast;
+        make (:@expr);
     }
 
     method statement:sym<ifelse>($/)     { make $<ifelse>.ast; }
