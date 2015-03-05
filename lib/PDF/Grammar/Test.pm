@@ -37,6 +37,14 @@ module PDF::Grammar::Test {
     }
 
     use Test;
+    sub is-json-equiv($got, $expected, Str $test = '') is export(:is-json-equiv) {
+        unless ok(json-eqv($got, $expected), $test) {
+                diag "expected: " ~ to-json($expected);
+                diag "got     : " ~ to-json($got)
+            };
+
+    }
+
     our sub parse-tests($class, $input, :$parse is copy, :$actions,
 			:$rule = 'TOP', :$suite, :%expected) {
 
@@ -54,10 +62,7 @@ module PDF::Grammar::Test {
         }
 
         if (my $expected-ast = %expected<ast>).defined {
-            unless ok(json-eqv($parse.ast, $expected-ast), "{$suite} $rule - ast") {
-                diag "expected: " ~ to-json($expected-ast);
-                diag "got     : " ~ to-json($parse.ast)
-            };
+            is-json-equiv($parse.ast, $expected-ast, "{$suite} $rule - ast");
         }
         else {
             if defined $parse.ast {
