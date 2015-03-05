@@ -5,7 +5,7 @@ use v6;
 class PDF::Grammar::Actions:ver<0.0.1> {
 
     method real($/) {
-        make (:real($/.Num));
+        make (:real($/.Rat));
     }
 
     method int($/) {
