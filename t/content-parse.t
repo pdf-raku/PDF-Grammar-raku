@@ -9,7 +9,7 @@ my $sample_content1 = '/RGB CS';
 my $ast1 = [ :CS[ :name<RGB> ]];
 
 my $sample_content2 = '100 125 m 9 0 0 9 476.48 750 Tm';
-my $ast2 = [ :m[ :int(100), :int(125) ], :Tm[ :int(9), :int(0), :int(0), :int(9), :real(476.48e0), :int(750)]];
+my $ast2 = [ :m[ :int(100), :int(125) ], :Tm[ :int(9), :int(0), :int(0), :int(9), :real(476.48), :int(750)]];
 
 my $sample_content2a = '[(Hello)(World)]TJ';
 my $ast2a = [ :TJ[ :array[ :literal<Hello>, :literal<World> ]] ];
