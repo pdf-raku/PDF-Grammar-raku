@@ -26,7 +26,7 @@ module PDF::Grammar::Test {
     multi sub json-eqv (Numeric:D $a, Numeric:D $b) { $a == $b }
     multi sub json-eqv (Stringy $a, Stringy $b) { $a eq $b }
     multi sub json-eqv (Bool $a, Bool $b) { $a == $b }
-    multi sub json-eqv (Any $a, Any $b) {
+    multi sub json-eqv (Mu $a, Mu $b) {
         return json-eqv( %$a, $b) if $a.isa(Pair);
         return json-eqv( $a, %$b) if $b.isa(Pair);
         return True if !$a.defined && !$b.defined;
@@ -55,7 +55,11 @@ module PDF::Grammar::Test {
         my $parsed = %expected<parse> // $input;
 
         if $input.defined {
-            is(~$parse, $parsed, "{$suite}: " ~ $rule ~ " parse: " ~ $input)
+            my $desc = ($input.chars < 60
+                        ?? $input
+                        !! [~] $input.substr(0, 32), ' ... ', $input.substr(*-20))\
+                        .subst(/\n+/, ' ', :g);
+            is(~$parse, $parsed, "{$suite}: " ~ $rule ~ " parse: " ~ $desc)
         }
         else {
             ok(~$parse, "{$suite}: " ~ $rule ~ " parsed")
