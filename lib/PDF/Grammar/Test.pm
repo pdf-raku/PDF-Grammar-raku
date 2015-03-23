@@ -9,7 +9,7 @@ module PDF::Grammar::Test {
     multi sub json-eqv (EnumMap:D $a, EnumMap:D $b) {
         if +$a != +$b { return False }
 	for $a.kv -> $k, $v {
-            unless $b.exists_key($k) && json-eqv($a{$k}, $b{$k}) {
+            unless $b{$k}:exists && json-eqv($a{$k}, $b{$k}) {
                 return False;
             }
 	}
