@@ -26,7 +26,7 @@ my $fdf-small = [~] ('%FDF-1.2
 ', $fdf-body, '%%EOF');
 
 my $fdf-small-ast = {
-    header => :version(1.2),
+    header => { :type<fdf>, :version(1.2) },
     body => [{
         objects => [ :ind-obj[ 1, 0,
                             :dict{FDF => :dict{F => :literal("small.pdf"),
@@ -64,7 +64,7 @@ my $actions = PDF::Grammar::FDF::Actions.new;
 
 for (
     tiny => { :input($fdf-tiny) },
-    header => { :input<%FDF-1.2>, :ast(version => 1.2), :rule<header> },
+    header => { :input<%FDF-1.2>, :ast{type => 'fdf', version => 1.2}, :rule<header> },
     trailer => { :input("trailer\n<</Root 1 0 R>>\n"), :ast{ :trailer{ :dict{ :Root{ :ind-ref[1, 0]}}} }, :rule<trailer> },
     body => { :input($fdf-body), :rule<body> },
     small => { :input($fdf-small), :ast($fdf-small-ast) },
