@@ -97,9 +97,6 @@ class PDF::Grammar::Actions:ver<0.0.1> {
     method object:sym<dict>($/)    { make $<dict>.ast }
     method object:sym<null>($/)    { make 'null' => Any }
 
-    method object-stream-indice($/) { make [$<obj-num>.ast.value, $<byte-offset>.ast.value] }
-    method object-stream-index($/)  { make [ $<object-stream-indice>>>.ast ] }
-
     # utility subs
 
     sub _hex-pair($hex) {

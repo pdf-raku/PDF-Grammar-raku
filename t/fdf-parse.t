@@ -78,6 +78,18 @@ for (
     my $rule = %expected<rule> // 'TOP';
 
     PDF::Grammar::Test::parse-tests(PDF::Grammar::FDF, %expected<input>, :$actions, :$rule, :suite("fdf {$test-name}"), :%expected );
+
+    if $rule eq 'TOP' {
+        # see if we can independently locate the trailer (parse)
+        my $tail = %expected<input>.substr(*-64);
+        my $tail-p = PDF::Grammar::FDF.subparse($tail, :rule<postamble>, :$actions);
+        ok $tail-p, "pdf postamble parse - " ~ .key
+            or note '...' ~ $tail;
+        my $trailer-ast = $tail-p.ast;
+    
+        ok $trailer-ast<trailer>, '<trailer> in trailer ast'
+            or diag :$trailer-ast.perl;
+    }
 }
 
 done;

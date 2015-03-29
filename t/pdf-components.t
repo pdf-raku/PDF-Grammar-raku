@@ -154,7 +154,7 @@ for (unix => $nix-pdf,
      ok $tail-p, "pdf postamble parse - " ~ .key
        or note '...' ~ $tail;
      my $trailer-ast = $tail-p.ast;
-     is $trailer-ast.key, 'startxref', '<startxref> in trailer ast'
+     ok $trailer-ast<startxref>, '<startxref> in trailer ast'
          or diag :$trailer-ast.perl;
 }
 

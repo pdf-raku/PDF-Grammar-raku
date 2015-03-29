@@ -26,7 +26,15 @@ class PDF::Grammar::Doc::Actions
         my $version = $<version>.Rat;
         make { :$type, :$version }
     }
-    method postamble($/) { make (:startxref($<byte-offset>.ast.value)) }
+    method postamble($/) {
+        my %postamble;
+        %postamble<startxref> = $<byte-offset>.ast.value
+            if $<byte-offset>;
+        %postamble<trailer> = $<trailer>.ast.value
+            if $<trailer>;
+
+        make %postamble;
+    }
 
     method trailer($/)   {
 	make (:trailer($<dict>.ast))
@@ -42,18 +50,6 @@ class PDF::Grammar::Doc::Actions
 
     method ind-obj($/) {
         make (:ind-obj[ $<obj-num>.ast.value, $<gen-num>.ast.value, $<object>.ast ]);
-    }
-
-    method ind-obj-nibble($/) {
-        my $object = $<object>.ast;
-        if $<stream-head> {
-            # locate the start of the stream data following the 'stream' token. The
-            # invokee can deterime the length using the /Length entry in the dictionary
-            $object = :stream( %( $object.kv,
-                                  :start( $<stream-head>.to ),
-                               ));
-        }
-        make (:ind-obj[ $<obj-num>.ast.value, $<gen-num>.ast.value, $object ]);
     }
 
     method object:sym<ind-ref>($/)  { make $<ind-ref>.ast }
