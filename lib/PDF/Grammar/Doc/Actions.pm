@@ -18,7 +18,7 @@ class PDF::Grammar::Doc::Actions
         }
     }
     method doc-type($/) {
-        make $/.lc
+        make $/.uc
     }
 
     method header($/)    {

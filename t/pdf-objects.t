@@ -7,7 +7,7 @@ use PDF::Grammar::PDF::Actions;
 use PDF::Grammar::Test;
 
 my $header = '%PDF-1.3';
-my $header-ast = { :type<pdf>, :version(1.3) };
+my $header-ast = { :type<PDF>, :version(1.3) };
 
 my $ind-ref1 =  '3 0 R';
 my $ind-ref1-ast = :ind-ref[ 3, 0 ];

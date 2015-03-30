@@ -10,11 +10,4 @@ grammar PDF::Grammar::FDF
     is PDF::Grammar::Doc {
 
     token doc-type {:i 'fdf' }
-
-    rule postamble {
-        .*? <trailer>
-            [ startxref\n
-              <byte-offset=.int>\n
-            ]?
-    }
 }
