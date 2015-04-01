@@ -8,7 +8,7 @@ module PDF::Grammar::Test {
     # allow only json compatible data
     multi sub json-eqv (EnumMap:D $a, EnumMap:D $b) {
         if +$a != +$b { return False }
-	for $a.kv -> $k, $v {
+	for $a.keys -> $k {
             unless $b{$k}:exists && json-eqv($a{$k}, $b{$k}) {
                 return False;
             }
@@ -17,9 +17,9 @@ module PDF::Grammar::Test {
     }
     multi sub json-eqv (List:D $a, List:D $b) {
         if +$a != +$b { return False }
-	for (0 .. +$a-1) {
+	for $a.keys => $k {
 	    return False
-		unless (json-eqv($a[$_], $b[$_]));
+		unless (json-eqv($a[$k], $b[$k]));
 	}
 	return True;
     }
