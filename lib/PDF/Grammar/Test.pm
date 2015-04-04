@@ -17,7 +17,7 @@ module PDF::Grammar::Test {
     }
     multi sub json-eqv (List:D $a, List:D $b) {
         if +$a != +$b { return False }
-	for $a.keys => $k {
+	for $a.keys -> $k {
 	    return False
 		unless (json-eqv($a[$k], $b[$k]));
 	}
