@@ -11,7 +11,7 @@ grammar PDF::Grammar::Doc
     # structure of PDF documents.
     #
     rule TOP {^<pdf>$}
-    rule pdf {<header> [<body>+]<?after '%%EOF'\n?> }
+    rule pdf {<header> [<body>+] }
 
     # [PDF 1.7] 7.5.2 File Header
     # ---------------
