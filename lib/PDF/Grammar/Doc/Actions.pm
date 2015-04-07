@@ -6,6 +6,8 @@ use PDF::Grammar::Actions;
 
 class PDF::Grammar::Doc::Actions
     is PDF::Grammar::Actions {
+ 
+    has Bool $.get-offsets = False; #| return ind-obj byte offsets in AST
 
     method TOP($/) { make $<pdf>.ast.value }
 
@@ -26,6 +28,7 @@ class PDF::Grammar::Doc::Actions
         my $version = $<version>.Rat;
         make { :$type, :$version }
     }
+
     method postamble($/) {
         my %postamble;
         %postamble<startxref> = $<byte-offset>.ast.value
@@ -45,11 +48,18 @@ class PDF::Grammar::Doc::Actions
     }
 
     method ind-ref($/) {
-        make (:ind-ref[ $<obj-num>.ast.value, $<gen-num>.ast.value ]);
+        my $obj-num = $<obj-num>.ast.value;
+        my $gen-num = $<gen-num>.ast.value;
+        make (:ind-ref[ $obj-num, $gen-num ]);
     }
 
     method ind-obj($/) {
-        make (:ind-obj[ $<obj-num>.ast.value, $<gen-num>.ast.value, $<object>.ast ]);
+        my $obj-num = $<obj-num>.ast.value;
+        my $gen-num = $<gen-num>.ast.value;
+        my $ind-obj = [ $obj-num, $gen-num, $<object>.ast ];
+        $ind-obj.push: $/.from
+            if self.get-offsets;
+        make (:$ind-obj)
     }
 
     method object:sym<ind-ref>($/)  { make $<ind-ref>.ast }
