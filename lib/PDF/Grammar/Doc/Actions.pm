@@ -7,7 +7,7 @@ use PDF::Grammar::Actions;
 class PDF::Grammar::Doc::Actions
     is PDF::Grammar::Actions {
  
-    has Bool $.get-offsets = False; #| return ind-obj byte offsets in AST
+    has Bool $.get-offsets is rw = False; #| return ind-obj byte offsets in AST
 
     method TOP($/) { make $<pdf>.ast.value }
 
@@ -50,7 +50,8 @@ class PDF::Grammar::Doc::Actions
     method ind-ref($/) {
         my $obj-num = $<obj-num>.ast.value;
         my $gen-num = $<gen-num>.ast.value;
-        make (:ind-ref[ $obj-num, $gen-num ]);
+        my $ind-ref = [ $obj-num, $gen-num ];
+        make (:$ind-ref);
     }
 
     method ind-obj($/) {
