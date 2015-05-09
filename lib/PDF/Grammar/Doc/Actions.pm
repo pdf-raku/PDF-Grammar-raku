@@ -81,15 +81,17 @@ class PDF::Grammar::Doc::Actions
 
     method body($/) {
         my %body = (:objects[ $<ind-obj>>>.ast ],
-                    $<startxref>.ast,
-                    ($<index> ?? @( $<index>.ast ) !! () ),
+                    ($<startxref> ?? $<startxref>.ast !! () ),
+                    ($<index>.defined ?? @( $<index>.ast ) !! () ),
             );
-        
+
         make (:%body);
     }
 
     method index($/) {
-        make [ $<xref>.ast, $<trailer>.ast ];
+        my %index = ($<xref>.defined ?? $<xref>.ast !! (),
+                     $<trailer>.ast);
+        make %index;
     }
 
     method xref($/) {
