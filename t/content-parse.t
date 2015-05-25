@@ -133,7 +133,7 @@ for (trivial => [$sample_content1, $ast1],
 
     if ($eqv) {
         my $result = $p.ast; 
-        is_deeply($result, $eqv, "$test - result as expected");
+        is-deeply($result, $eqv, "$test - result as expected");
     }
 }
 
