@@ -3,7 +3,7 @@
     "version"     : "*",
     "description" : "Perl 6 grammars for parsing PDF Content Streams and File Structure",
     "depends"     : [ "JSON::Tiny" ],
-    "source-url"  : "git://github.com/dwarring/perl6-PDF-Grammar.git",
+    "source-url"  : "git://github.com/p6-pdf/perl6-PDF-Grammar.git",
     "provides"    : {
         "PDF::Grammar" : "lib/PDF/Grammar.pm",
         "PDF::Grammar::Actions" : "lib/PDF/Grammar/Actions.pm",
