@@ -111,7 +111,13 @@ ID                  % Begin image data
 J1/gKA>.]AN&J?]-<HW]aRVcg*bb.\eKAdVV%/PcZ
 %R.s(4KE3&d&7hb*7[%Ct2HCqC~>
 EI';
-my $test_image_expected = ["BI" => {"name\tBPC" => "int" => 8, "name\tF" => "array" => ["name" => "A85", "name" => "LZW"], "name\tH" => "int" => 17, "name\tW" => "int" => 17, "name\tCS" => "name" => "RGB"}, "ID" => "J1/gKA>.]AN\&J?]-<HW]aRVcg*bb.\\eKAdVV\%/PcZ\n\%R.s(4KE3\&d\&7hb*7[\%Ct2HCqC~>\n", "EI" => []];
+my $test_image_expected = [:BI{BPC => :int(8),
+                               F => :array[ :name<A85>, :name<LZW> ],
+                               H => :int(17),
+                               W => :int(17),
+                               CS => :name<RGB>},
+                            :ID("J1/gKA>.]AN\&J?]-<HW]aRVcg*bb.\\eKAdVV\%/PcZ\n\%R.s(4KE3\&d\&7hb*7[\%Ct2HCqC~>"),
+                            :EI[]];
 
 my $actions = PDF::Grammar::Content::Actions.new;
 

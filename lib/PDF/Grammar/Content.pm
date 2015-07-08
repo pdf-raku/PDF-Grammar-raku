@@ -1,7 +1,6 @@
 use v6;
 
 use PDF::Grammar;
-use PDF::Grammar::Stream;
 
 grammar PDF::Grammar::Content
     is PDF::Grammar {
@@ -24,7 +23,7 @@ grammar PDF::Grammar::Content
 
     # marked content blocks: BMC ... EMC   or   BDC ... EMC
     rule opBeginMarkedContent  { <name> (BMC)
-                                     | <name> [<name> | <dict>] (BDC) }
+                               | <name> [<name> | <dict>] (BDC) }
     rule opEndMarkedContent    { (EMC) }
 
     # image blocks BI ... ID ... EI
@@ -45,11 +44,10 @@ grammar PDF::Grammar::Content
     rule block:sym<text> { <opBeginText> [ <inner-marked-content-block> | <op> ]* <opEndText> }
     rule block:sym<markedContent> { <opBeginMarkedContent> [ <inner-text-block> | <op> ]* <opEndMarkedContent> }
     rule imageAtts { [<name> <object>]* }
-    regex stream-chars{<PDF::Grammar::Stream::chars>}
     regex block:sym<image> {
                       <opBeginImage>:
                       <imageAtts>
-                      <opImageData>(<stream-chars>?)\n?<opEndImage>
+                      <opImageData>(.*?)\n<opEndImage>
     }
 
     proto rule ignored {*}
@@ -71,7 +69,7 @@ grammar PDF::Grammar::Content
     rule op:sym<FillStroke>          { (B) }
 
     rule op:sym<CurveTo>             { <number>**6 (c) }
-    rule op:sym<Concat>              { <number>**6 (cm) }
+    rule op:sym<ConcatMatrix>        { <number>**6 (cm) }
     rule op:sym<SetFillColorSpace>   { <name> (cs) }
     rule op:sym<SetStrokeColorSpace> { <name> (CS) }
 

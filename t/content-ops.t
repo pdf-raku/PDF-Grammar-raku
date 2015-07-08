@@ -38,9 +38,9 @@ for (
     FillStroke => 'B',
     EOFillStroke => 'B*',
 
-    CurveTo           => '.1 .2 .3 4. 5. 6.0 c',
-    'Concat (Matrix)' => '.1 .2 .3 4. 5. 6.0 cm',
-    SetFillColorSpace => '/RGB cs',
+    CurveTo             => '.1 .2 .3 4. 5. 6.0 c',
+    ConcatMatrix        => '.1 .2 .3 4. 5. 6.0 cm',
+    SetFillColorSpace   => '/RGB cs',
     SetStrokeColorSpace => '/CMYK CS',
 
     Dash => '[1 2] 2 d',
