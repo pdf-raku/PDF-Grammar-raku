@@ -111,12 +111,12 @@ ID                  % Begin image data
 J1/gKA>.]AN&J?]-<HW]aRVcg*bb.\eKAdVV%/PcZ
 %R.s(4KE3&d&7hb*7[%Ct2HCqC~>
 EI';
-my $test_image_expected = [:BI{BPC => :int(8),
-                               F => :array[ :name<A85>, :name<LZW> ],
-                               H => :int(17),
-                               W => :int(17),
-                               CS => :name<RGB>},
-                            :ID("J1/gKA>.]AN\&J?]-<HW]aRVcg*bb.\\eKAdVV\%/PcZ\n\%R.s(4KE3\&d\&7hb*7[\%Ct2HCqC~>"),
+my $test_image_expected = [:BI[ :dict{BPC => :int(8),
+                                      F => :array[ :name<A85>, :name<LZW> ],
+                                      H => :int(17),
+                                      W => :int(17),
+                                      CS => :name<RGB>}],
+                            :ID[:stream("J1/gKA>.]AN\&J?]-<HW]aRVcg*bb.\\eKAdVV\%/PcZ\n\%R.s(4KE3\&d\&7hb*7[\%Ct2HCqC~>")],
                             :EI[]];
 
 my $actions = PDF::Grammar::Content::Actions.new;
@@ -132,14 +132,13 @@ for (trivial => [$sample_content1, $ast1],
      real-word-example => [$sample_content5],
      ) {
     my ($test, $spec) = $_.kv;
-    my ($str, $eqv) = @$spec;
+    my ($str, $expected-ast) = @$spec;
     my $p = PDF::Grammar::Content.parse($str, :$actions);
     ok($p, "$test - parsed pdf content")
         or do {diag ("unable to parse: $str"); next};
 
-    if ($eqv) {
-        my $result = $p.ast; 
-        is-deeply($result, $eqv, "$test - result as expected");
+    if ($expected-ast) {
+        is-deeply($p.ast, $expected-ast, "$test - result as expected");
     }
 }
 

@@ -28,8 +28,11 @@ class PDF::Grammar::Content::Actions
 
     sub _image_block_data($/) {
 
-        return (BI => $<imageAtts>.ast,
-                ID => ~$0,
+        my $dict = $<imageAtts>.ast;
+        my $stream = ~$0;
+
+        return (BI => [ :$dict ],
+                ID => [ :$stream ],
                 EI => [],
             );
     }
