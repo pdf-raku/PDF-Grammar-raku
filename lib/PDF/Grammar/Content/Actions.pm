@@ -29,10 +29,10 @@ class PDF::Grammar::Content::Actions
     sub _image_block_data($/) {
 
         my $dict = $<imageAtts>.ast;
-        my $stream = ~$0;
+        my $encoded = ~$0;
 
         return (BI => [ :$dict ],
-                ID => [ :$stream ],
+                ID => [ :$encoded ],
                 EI => [],
             );
     }

@@ -116,7 +116,7 @@ my $test_image_expected = [:BI[ :dict{BPC => :int(8),
                                       H => :int(17),
                                       W => :int(17),
                                       CS => :name<RGB>}],
-                            :ID[:stream("J1/gKA>.]AN\&J?]-<HW]aRVcg*bb.\\eKAdVV\%/PcZ\n\%R.s(4KE3\&d\&7hb*7[\%Ct2HCqC~>")],
+                            :ID[:encoded("J1/gKA>.]AN\&J?]-<HW]aRVcg*bb.\\eKAdVV\%/PcZ\n\%R.s(4KE3\&d\&7hb*7[\%Ct2HCqC~>")],
                             :EI[]];
 
 my $actions = PDF::Grammar::Content::Actions.new;
