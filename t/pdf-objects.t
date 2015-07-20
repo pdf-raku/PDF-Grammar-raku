@@ -37,6 +37,7 @@ $stream-content
 endstream
 endobj
 ";
+
 my $ind-obj2-ast = :ind-obj[ 5, 0,
                              :stream{
                                  :dict{Length => :int(68)}, :start(32), :end(99)
@@ -159,7 +160,8 @@ for (
     ) {
      my $rule = .key;
      my %expected = %( .value );
-     my $input = %expected<input>;
+     # normalise lines for Win platforms
+     my $input = %expected<input>.subst(/\n/, "\n", :g);
 
      PDF::Grammar::Test::parse-tests(PDF::Grammar::PDF, $input, :$rule, :$actions, :suite('pdf doc'), :%expected );
 }
