@@ -12,9 +12,8 @@ grammar PDF::Grammar::Function
     rule expression { '{' [<statement>||<statement=.unknown>]* '}' }
 
     proto rule statement {*}
-    rule statement:sym<ifelse>     { <ifelse> }
-    rule statement:sym<if>         { <if> }
-    rule statement:sym<object>     { <object=.illegal-object>||<object> }
+    rule statement:sym<conditional> { <conditional> }
+    rule statement:sym<object>      { <object=.illegal-object>||<object> }
 
     proto rule illegal-object {*}
     rule illegal-object:sym<dict>  { <dict> }
@@ -40,8 +39,9 @@ grammar PDF::Grammar::Function
         $<op>=[copy|dup|exch|index|pop|roll]
     }
 
-    rule if { <if-expr=.expression> 'if' }
-    rule ifelse { <if-expr=.expression> <else-expr=.expression> 'ifelse' }
+    proto rule conditional {*}
+    rule conditional:sym<if>     { <if-expr=.expression> 'if' }
+    rule conditional:sym<ifelse> { <if-expr=.expression> <else-expr=.expression> 'ifelse' }
 
     token unknown { <alpha><[\w]>* }
 }

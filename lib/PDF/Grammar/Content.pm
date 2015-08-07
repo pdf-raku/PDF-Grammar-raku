@@ -84,7 +84,7 @@ grammar PDF::Grammar::Content
 
     rule op:sym<SetStrokeGray>       { <number> (G) }
     rule op:sym<SetFillGray>         { <number> (g) }
-    rule op:sym<SetExtGState>        { <name> (gs) }
+    rule op:sym<SetGraphicsState>    { <name> (gs) }
 
     rule op:sym<ClosePath>           { (h) }
 

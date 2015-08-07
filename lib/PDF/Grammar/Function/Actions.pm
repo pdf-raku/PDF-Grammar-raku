@@ -12,10 +12,10 @@ class PDF::Grammar::Function::Actions
         make (:@expr);
     }
 
-    method statement:sym<ifelse>($/)     { make $<ifelse>.ast; }
-    method statement:sym<if>($/)         { make $<if>.ast; }
-    method statement:sym<object>($/)     { make $<object>.ast}
-    method statement:sym<unexpected>($/) { make ('??' => $<unexpected>.ast); }
+    method statement:sym<conditional>($/) { make $<conditional>.ast; }
+    method statement:sym<if>($/)          { make $<if>.ast; }
+    method statement:sym<object>($/)      { make $<object>.ast}
+    method statement:sym<unexpected>($/)  { make ('??' => $<unexpected>.ast); }
     method unknown($/)    { make ('??' => ~$/); }
 
     method illegal-object:sym<dict>($/)  { make '??' => $<dict>.ast }
@@ -29,8 +29,15 @@ class PDF::Grammar::Function::Actions
     method ps-op:sym<bitwise>($/)    {make ~$<op> }
     method ps-op:sym<stack>($/)      {make ~$<op> }
 
-    method if($/)     { make {if => $<if-expr>.ast} }
+    method conditional:sym<if>($/) {
+	my $if = $<if-expr>.ast;
+	make 'expr' => { :$if }
+    }
 
-    method ifelse($/) { make {if => $<if-expr>.ast,
-                              else => $<else-expr>.ast} }
+    method conditional:sym<ifelse>($/) {
+	my $if = $<if-expr>.ast;
+	my $else = $<else-expr>.ast;
+	make 'expr' => { :$if, :$else }
+    }
+
 }
