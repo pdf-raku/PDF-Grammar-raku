@@ -30,9 +30,9 @@ module PDF::Grammar::Test {
         return json-eqv( %$a, $b) if $a.isa(Pair);
         return json-eqv( $a, %$b) if $b.isa(Pair);
         return True if !$a.defined && !$b.defined;
-	note "data type mismatch";
-	note "  - expected: {$b.perl}";
-	note "  -      got: {$a.perl}";
+	diag("data type mismatch";
+	     ~ "\n  - expected: {$b.perl}";
+	     ~ "\n  -      got: {$a.perl}");
 	return False;
     }
 

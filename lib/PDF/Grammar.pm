@@ -1,6 +1,7 @@
 use v6;
 use nqp;
 
+
 grammar PDF::Grammar:ver<0.0.6> {
     # abstract base grammar for PDF Elements, see instances:
     # PDF::Grammar::Content  - Text and Graphics Content
@@ -8,6 +9,10 @@ grammar PDF::Grammar:ver<0.0.6> {
     # PDF::Grammar::PDF      - Overall PDF Document Structure
     # PDF::Grammar::Function - Postscript calculator functions
     # 
+    BEGIN constant AST-Types is export(:AST-Types) = set <
+	array body bool dict end entries fdf gen-num header hex-string
+	ind-ref ind-obj int object-count object-first-num offset literal
+	name null pdf real start startxref stream trailer type version >;
 
     # [PDF 1.7] 7.2.2 Character Set + 7.2.3 Comment characters
     # ---------------
