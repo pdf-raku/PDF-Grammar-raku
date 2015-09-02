@@ -44,4 +44,4 @@ for ([ :$trivial-expr, $trivial-ast],
                                     :suite("functions - $name"), :%expected );
 }
 
-done;
+done-testing;

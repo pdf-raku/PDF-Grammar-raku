@@ -157,4 +157,4 @@ for (
        "parsed as unknown: " ~ .key);
 }
 
-done;
+done-testing;

@@ -94,4 +94,4 @@ for @tests {
     PDF::Grammar::Test::parse-tests(PDF::Grammar, $input, :$rule, :$actions, :suite($rule), :%expected );
 }
 
-done;
+done-testing;

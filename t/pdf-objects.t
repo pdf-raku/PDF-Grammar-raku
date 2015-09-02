@@ -166,4 +166,4 @@ for (
      PDF::Grammar::Test::parse-tests(PDF::Grammar::PDF, $input, :$rule, :$actions, :suite('pdf doc'), :%expected );
 }
 
-done;
+done-testing;

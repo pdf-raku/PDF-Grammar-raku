@@ -143,4 +143,4 @@ for (trivial => [$sample_content1, $ast1],
     }
 }
 
-done;
+done-testing;

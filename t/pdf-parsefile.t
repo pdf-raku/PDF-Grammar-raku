@@ -17,4 +17,4 @@ my $p = PDF::Grammar::PDF.parsefile($pdf-file);
 
 ok($p, "parsed pdf content ($pdf-file)");
 
-done;
+done-testing;

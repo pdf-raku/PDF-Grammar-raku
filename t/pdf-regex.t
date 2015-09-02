@@ -314,4 +314,4 @@ for ('null') {
     ok($_ ~~ /^<PDF::Grammar::PDF::object>$/, "object: $_");
 }
 
-done;
+done-testing;

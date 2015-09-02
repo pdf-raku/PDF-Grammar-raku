@@ -80,4 +80,4 @@ for (
     PDF::Grammar::Test::parse-tests(PDF::Grammar::FDF, %expected<input>, :$actions, :$rule, :suite("fdf {$test-name}"), :%expected );
 }
 
-done;
+done-testing;

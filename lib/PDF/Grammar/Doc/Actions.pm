@@ -80,7 +80,7 @@ class PDF::Grammar::Doc::Actions
     }
 
     method body($/) {
-        my %body = (:objects[ $<ind-obj>>>.ast ],
+        my %body = flat (:objects[ $<ind-obj>>>.ast ],
                     ($<startxref> ?? $<startxref>.ast !! () ),
                     ($<index>.defined ?? @( $<index>.ast ) !! () ),
             );
@@ -89,7 +89,7 @@ class PDF::Grammar::Doc::Actions
     }
 
     method index($/) {
-        my %index = ($<xref>.defined ?? $<xref>.ast !! (),
+        my %index = flat ($<xref>.defined ?? $<xref>.ast !! (),
                      $<trailer>.ast);
         make %index;
     }

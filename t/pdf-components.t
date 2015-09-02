@@ -158,4 +158,4 @@ for (unix => $nix-pdf,
          or diag :$trailer-ast.perl;
 }
 
-done;
+done-testing;
