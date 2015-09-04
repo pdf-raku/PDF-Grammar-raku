@@ -26,17 +26,23 @@ my $fdf-small = [~] ('%FDF-1.2
 ', $fdf-body, '%%EOF');
 
 my $fdf-small-ast = {
-    header => { :type<FDF>, :version(1.2) },
-    body => [{
-        objects => [ :ind-obj[ 1, 0,
-                            :dict{FDF => :dict{F => :literal("small.pdf"),
-                                               Fields => :array[ :dict{T => :literal<barcode>, 
-                                                                       V => :literal("*TEST-1234*")
-                                                                       }]
-                            }}
-                  ]],
-        trailer => { :dict{ Root => :ind-ref[ 1, 0] }},
-     }],
+    :header{ :type<FDF>, :version(1.2) },
+    :body[
+         {
+             :objects[ :ind-obj[ 1, 0,
+                                 :dict{FDF => :dict{F => :literal("small.pdf"),
+                                                    Fields => :array[ :dict{T => :literal<barcode>, 
+                                                                            V => :literal("*TEST-1234*")
+                                                                       },
+                                                        ],
+                                       },
+                                 }
+                                 
+                  ],
+                 ],
+             :trailer{ :dict{ Root => :ind-ref[ 1, 0] }},
+         },
+        ],
 };
 
 my $fdf-medium = '%FDF-1.2

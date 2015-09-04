@@ -38,11 +38,13 @@ module PDF::Grammar::Test {
 
     use Test;
     sub is-json-equiv($got, $expected, Str $test = '') is export(:is-json-equiv) {
+        my $ok = True;
         unless ok(json-eqv($got, $expected), $test) {
                 diag "expected: " ~ to-json($expected);
-                diag "got     : " ~ to-json($got)
+                diag "got     : " ~ to-json($got);
+                $ok = False;
             };
-
+        $ok;
     }
 
     our sub parse-tests($class, $input, :$parse is copy, :$actions,
@@ -58,7 +60,7 @@ module PDF::Grammar::Test {
             my $desc = ($input.chars < 60
                         ?? $input
                         !! [~] $input.substr(0, 32), ' ... ', $input.substr(*-20))\
-                        .subst(/\n+/, ' ', :g);
+                        .subst(/\s+/, ' ', :g);
             is(~$parse, $parsed, "{$suite}: " ~ $rule ~ " parse: " ~ $desc)
         }
         else {

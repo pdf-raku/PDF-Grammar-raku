@@ -31,10 +31,10 @@ class PDF::Grammar::Content::Actions
         my $dict = $<imageAtts>.ast;
         my $encoded = ~$0;
 
-        return (BI => [ :$dict ],
-                ID => [ :$encoded ],
-                EI => [],
-            );
+        return (:BI[ :$dict ],
+                :ID[ :$encoded ],
+                :EI[],
+            ).Slip;
     }
 
     sub _block_data($block) {
@@ -45,13 +45,13 @@ class PDF::Grammar::Content::Actions
 
         my @result = map -> $token {
             given $token.key {
-                when /^op/ {_op_data( $token.value )}
+                when /^op/          { _op_data( $token.value )    }
                 when /inner.*block/ { _block_data( $token.value ) }
                 default {'tba: ' ~ $token.key ~ ' = '  ~ $token.value};
-            }
+            };
         }, $block.caps;
 
-        return @result;
+        return @result.Slip;
     }
 
     method instruction:sym<block>($/) {
