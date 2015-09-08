@@ -11,7 +11,7 @@ class PDF::Grammar::PDF::Actions
         if $<stream-head> {
             # locate the start of the stream data following the 'stream' token. The
             # invokee can deterime the length using the /Length entry in the dictionary
-            $object = :stream( %( $object.kv,
+            $object = :stream( %( %$object,
                                   :start( $<stream-head>.to ),
                                ));
         }

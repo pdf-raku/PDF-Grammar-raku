@@ -12,7 +12,7 @@ my $header-ast = { :type<PDF>, :version(1.3) };
 my $ind-ref1 =  '3 0 R';
 my $ind-ref1-ast = :ind-ref[ 3, 0 ];
 
-my $ind-obj1 = "1 0 obj
+my $ind-obj-dict = "1 0 obj
 <<
 /Type /Catalog
 /Pages {$ind-ref1}
@@ -20,7 +20,7 @@ my $ind-obj1 = "1 0 obj
 >>
 endobj
 ";
-my $ind-obj1-ast = :ind-obj[ 1, 0, :dict{ Type => :name<Catalog>,
+my $ind-obj-dict-ast = :ind-obj[ 1, 0, :dict{ Type => :name<Catalog>,
                                          Pages => $ind-ref1-ast,
                                          Outlines => :ind-ref[ 2, 0 ]}];
 
@@ -30,21 +30,28 @@ my $stream-content = 'BT
 ET';
 my $stream-length = $stream-content.chars;
 
-my $ind-obj2 = "5 0 obj
+my $ind-obj-stream-nibble = "5 0 obj
 << /Length $stream-length >>
 stream
-$stream-content
+";
+
+my $ind-obj-stream = $$ind-obj-stream-nibble ~ $stream-content ~ "
 endstream
 endobj
 ";
 
-my $ind-obj2-ast = :ind-obj[ 5, 0,
+my $ind-obj-stream-nibble-ast = :ind-obj[ 5, 0,
+                             :stream{
+                                 :dict{Length => :int(68)}, :start(32),
+                             }];
+
+my $ind-obj-stream-ast = :ind-obj[ 5, 0,
                              :stream{
                                  :dict{Length => :int(68)}, :start(32), :end(99)
                              }];
 
-my $body = $ind-obj1 ~
-$ind-obj2 ~
+my $body = $ind-obj-dict ~
+$ind-obj-stream ~
 '3 0 obj
 <<
   /Type /Outlines
@@ -55,7 +62,7 @@ endobj
 [/PDF /Text]
 endobj';
 
-my $body-objects-ast = [$ind-obj1-ast,
+my $body-objects-ast = [$ind-obj-dict-ast,
                         :ind-obj[ 5, 0, :stream{ :dict{Length => :int(68)},
                                                  :start(97),
                                                  :end(164)}],
@@ -148,8 +155,10 @@ my $body-input = [~] ($body, "\n", $xref, $trailer,  $startxref);
 for (
       header => { :input($header),     :ast($header-ast)},
       ind-ref => { :input($ind-ref1),  :ast($ind-ref1-ast)},
-      ind-obj => { :input($ind-obj1),  :ast($ind-obj1-ast)},
-      ind-obj => { :input($ind-obj2),  :ast($ind-obj2-ast)},
+      ind-obj => { :input($ind-obj-dict),  :ast($ind-obj-dict-ast)},
+      ind-obj => { :input($ind-obj-stream),  :ast($ind-obj-stream-ast)},
+      ind-obj-nibble => { :input($ind-obj-dict),  :ast($ind-obj-dict-ast)},
+      ind-obj-nibble => { :input($ind-obj-stream-nibble),  :ast($ind-obj-stream-nibble-ast)},
       trailer => { :input($trailer),    ast => :trailer($trailer-ast)},
       startxref => { :input($startxref),     :ast($startxref-ast)},
       xref => { :input($xref),          ast => :xref($xref-ast)},
