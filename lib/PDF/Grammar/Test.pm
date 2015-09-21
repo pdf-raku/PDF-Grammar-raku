@@ -6,7 +6,7 @@ module PDF::Grammar::Test {
     use JSON::Tiny;
 
     # allow only json compatible data
-    multi sub json-eqv (EnumMap:D $a, EnumMap:D $b) {
+    multi sub json-eqv (Hash:D $a, Hash:D $b) {
         if +$a != +$b { return False }
 	for $a.keys -> $k {
             unless $b{$k}:exists && json-eqv($a{$k}, $b{$k}) {
