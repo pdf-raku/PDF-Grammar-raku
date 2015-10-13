@@ -8,8 +8,7 @@ description; there are areas where these can be put to use, including:
 - The operands that make up content streams. These are used to markup text, forms,
 images and graphical elements.
 
-PDF::Grammar is under construction as an experimental/example Perl 6 grammar
-for parsing and validation of real-world PDF examples. It currently implements
+PDF::Grammar is an experimental set of Perl 6 grammars for parsing and validation of real-world PDF examples. There are
 four grammars:
 
 `PDF::Grammar::Content` - describes the text and graphics operators that are used to produce page layout.
@@ -22,14 +21,13 @@ including headers, trailers, top-level objects and the cross-reference table.
 
 `PDF::Grammar::Function` - a tokeniser for Postscript Calculator (type 4) functions. 
 
-PDF-Grammar has so far been tested against a limited sample of PDF documents
-and has not yet been put to use for any serious PDF processing. The grammar is still evolving and is likely to change.
+PDF-Grammar has so far been tested against a number of sample of PDF documents and may still be subject to change.
 
 I have been working off the PDF 1.7 reference manual (http://www.adobe.com/content/dam/Adobe/en/devnet/acrobat/pdfs/pdf_reference_1-7.pdf). I've relaxed rules, when needed, to handle real-world examples.
 
 Rakudo Star
 -----------
-You'll first need to download and build Rakudo Star 2013.05 or better (http://rakudo.org/downloads/star/ - don't forget the final `make install`):
+You'll first need to download and build Rakudo or Rakudo Star 2015.07 or better (http://rakudo.org/downloads/star/ - don't forget the final `make install`):
 
 Ensure that `perl6` and `panda` are available on your path, e.g. :
 
