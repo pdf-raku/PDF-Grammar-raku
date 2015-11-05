@@ -70,7 +70,7 @@ class PDF::Grammar::Doc::Actions
         if ($<stream>) {
             # <dict> is a just a header the following <stream>
             my %stream = $<dict>.ast.kv;
-            (%stream<start>, %stream<end>) = $<stream>.ast.flat;
+	    %stream<encoded> = $<stream>.ast;
             make (:%stream)
         }
         else {
@@ -119,12 +119,7 @@ class PDF::Grammar::Doc::Actions
     method obj-status:sym<free>($/)  { make 0}
     method obj-status:sym<inuse>($/) { make 1}
 
-   # don't actually capture streams, which can be huge and represent
-   # the majority of data in a typical PDF. Rather just return the byte
-   # offsets of the start and the end of the stream and leave it up to
-   # the caller to disseminate
-
     method stream($/) {
-        make [ $<stream-head>.to, $<stream-tail>.from - 1 ];
+        make ~$<encoded>;
     }
 }

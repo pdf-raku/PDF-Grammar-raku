@@ -206,7 +206,7 @@ my $stream3 = :non-ascii(sprintf "<< /Length %d >>
 stream
 %s
 endstream
-", $content3.chars, $content3);
+", $content3.codes, $content3);
 
 # have observed endstream without a proceeding eol
 my $stream4 = :no-eol(sprintf "<< /Length %d >>

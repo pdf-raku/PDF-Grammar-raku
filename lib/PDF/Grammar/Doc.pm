@@ -34,7 +34,7 @@ grammar PDF::Grammar::Doc
     # stream parsing
     token stream-head  {<.ws>stream\n}
     token stream-tail  {\n? endstream <.ws-char>+}
-    rule stream        {<stream-head>.*?<stream-tail> }
+    token stream       {<stream-head>$<encoded>=.*?\n? endstream <.ws-char>+}
 
     # cross reference table
     rule  xref         { xref\n<xref-section>+ }

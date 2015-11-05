@@ -47,7 +47,8 @@ my $ind-obj-stream-nibble-ast = :ind-obj[ 5, 0,
 
 my $ind-obj-stream-ast = :ind-obj[ 5, 0,
                              :stream{
-                                 :dict{Length => :int(68)}, :start(32), :end(99)
+                                 :dict{Length => :int(68)},
+				 :encoded("BT\n  /F1 24 Tf  % useless comment\n  100 100 Td (Hello, world!) Tj\nET"),
                              }];
 
 my $body = $ind-obj-dict ~
@@ -63,9 +64,10 @@ endobj
 endobj';
 
 my $body-objects-ast = [$ind-obj-dict-ast,
-                        :ind-obj[ 5, 0, :stream{ :dict{Length => :int(68)},
-                                                 :start(97),
-                                                 :end(164)}],
+                        :ind-obj[ 5, 0, :stream{
+                                            :dict{Length => :int(68)},
+			                    :encoded("BT\n  /F1 24 Tf  % useless comment\n  100 100 Td (Hello, world!) Tj\nET"),
+                                         }],
                         :ind-obj[ 3, 0, :dict{Type => :name<Outlines>, Count => :int(0) }],
                         :ind-obj[ 4, 2, :array[ :name<PDF>, :name<Text> ]]];
 

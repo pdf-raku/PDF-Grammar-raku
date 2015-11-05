@@ -1,0 +1,16 @@
+    Release 0.3
+    - Reworked 'stream' AST to return :encoded stream content. Rather
+      than :start and :end positions of the stream.
+
+      This was orginally intended as a optimisation. In practice the reader
+      only uses this rule in :repair mode, in which case it always extracts
+      the stream data, nullifying this optismisation
+
+    - tweaked ind-obj-nibble rule to use .codes rather than .chars to compute
+      offset of stream start - safer in a post-NFG world. Latin encoding now
+      has "\n\r" as a combining newline character.
+
+    Release 0.2
+    - General fixes for the 2015 Rakudo GLR
+
+    Release 0.1 initial development
