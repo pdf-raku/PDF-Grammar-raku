@@ -46,7 +46,7 @@ grammar PDF::Grammar::Doc
 
     # the trailer contains the position of the cross reference
     # table plus the file trailer dictionary
-    token trailer {
+    rule trailer {
         trailer\n
         <dict>\n
     }

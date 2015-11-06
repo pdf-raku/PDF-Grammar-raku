@@ -122,8 +122,9 @@ my $xref-multiple-ast = [
                },
               ];
 
-
+# note: extra newline between trailer and trailer dict - as observed in pdftk
 my $trailer = 'trailer
+
 <<
 /Size 8
 /Root 1 0 R
@@ -153,6 +154,7 @@ my $object-stream-index-ast = [[125, 0], [126 ,28], [127, 81], [128, 109]];
 
 my $body-input = [~] ($body, "\n", $xref, $trailer,  $startxref);
 
+my $index-ast = {:trailer($trailer-ast), :xref($xref-ast) };
 
 for (
       header => { :input($header),     :ast($header-ast)},
@@ -165,7 +167,8 @@ for (
       startxref => { :input($startxref),     :ast($startxref-ast)},
       xref => { :input($xref),          ast => :xref($xref-ast)},
       xref => { :input($xref-multiple), ast => :xref($xref-multiple-ast)},
-      body => {input => $body-input,  :ast($body-ast)},
+      body => { :input($body-input),  :ast($body-ast)},
+      index => { :input($xref ~ "\n" ~ $trailer), :ast($index-ast) },
       pdf => { :input($pdf), ast => Any},
       object-stream-index => { :input($object-stream-index),  :ast($object-stream-index-ast)},
     ) {
