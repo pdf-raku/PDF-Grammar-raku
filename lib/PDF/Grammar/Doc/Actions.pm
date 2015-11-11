@@ -13,7 +13,7 @@ class PDF::Grammar::Doc::Actions
 
     method pdf($/) {
         my $header = $<header>.ast;
-	my $body = [ $<body>>>.ast.map({ .value.item }) ];
+	my $body = [ $<body>>>.ast.map({ .value }) ];
         make 'pdf' => {
 	    :$header,
 	    :$body,
