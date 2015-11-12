@@ -55,7 +55,7 @@ grammar PDF::Grammar:ver<0.0.6> {
     token hex-char   {<xdigit>**1..2}
     token hex-string {\< [ <xdigit> | <.ws-char> ]* \>}
 
-    token string {<hex-string>|<literal-string>}
+    token string {<string=.hex-string>|<string=.literal-string>}
 
     # [PDF 1.7] 7.2.2 Character Set
     regex char_delimiter {<[ ( ) < > \[ \] { } / % \# ]>}

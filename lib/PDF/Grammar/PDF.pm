@@ -17,7 +17,14 @@ grammar PDF::Grammar::PDF
     # typically used when the reader is locating objects via the index and doesn't
     # need to fully scan the PDF. The reader can manually (and lazily) extract the
     # stream using the dictionary /Length entry
-    rule ind-obj-nibble { <obj-num=.int> <gen-num=.int> obj [<object=.dict>[ endobj|<stream-head>] || <object> endobj] }
+    rule ind-obj-nibble {
+	:my $*OBJ-NUM;
+	:my $*GEN-NUM;
+	<obj-num=.int> <gen-num=.int> obj
+	{ $*OBJ-NUM := +$<obj-num>;
+	  $*GEN-NUM := +$<gen-num>;
+	}
+	[<object=.dict>[ endobj|<stream-head>] || <object> endobj] }
 
     # support for index loading
     # (1) read the last few bytes of a PDF, parse the 'startxref' directive

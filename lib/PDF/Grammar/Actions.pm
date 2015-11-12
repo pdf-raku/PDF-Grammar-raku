@@ -60,21 +60,21 @@ class PDF::Grammar::Actions:ver<0.0.1> {
     method literal:sym<esc-tab>($/)          { make "\t" }
     method literal:sym<esc-continuation>($/) { make '' }
 
-    method literal-string ($/) {
+    method literal-string($/) {
         my $literal = [~] $<literal>».ast;
         make (:$literal);
     }
 
-    method string ($/) {
-        make ($<literal-string> // $<hex-string>).ast;
+    method string($/) {
+        make $<string>.ast;
     }
 
-    method array ($/) {
+    method array($/) {
         my @array = @<object>».ast;
         make (:@array);
     }
 
-    method dict ($/) {
+    method dict($/) {
         my @names = @<name>».ast.map: *.value;
         my @objects = @<object>».ast;
 
@@ -84,12 +84,8 @@ class PDF::Grammar::Actions:ver<0.0.1> {
     }
 
     method object:sym<number>($/)  { make $<number>.ast }
-    method object:sym<true>($/)    {
-        make (:bool(True));
-    }
-    method object:sym<false>($/)   {
-        make (:bool(False));
-    }
+    method object:sym<true>($/)    { make (:bool(True)) }
+    method object:sym<false>($/)   { make (:bool(False)) }
     method object:sym<bool>($/)    { make $<bool>.ast }
     method object:sym<string>($/)  { make $<string>.ast }
     method object:sym<name>($/)    { make $<name>.ast }
