@@ -20,24 +20,13 @@ grammar PDF::Grammar::Doc
 
     # index section is optional - document could have a cross reference stream
     # quite likely if linearized [PDF 1.7] 7.5.8 & Annex F (Linearized PDF)
-    rule body    {
-	:my $*OBJ-NUM;
-	:my $*GEN-NUM;
-	<ind-obj>+ <index>? <startxref>?}
+    rule body     { <ind-obj>+ <index>? <startxref>?}
 
-    rule index   { <xref>? <trailer> }
+    rule index    { <xref>? <trailer> }
 
-    rule ind-obj {
-	:my $*OBJ-NUM;
-	:my $*GEN-NUM;
-	<obj-num=.int> <gen-num=.int> obj
-	{ $*OBJ-NUM := +$<obj-num>;
-	  $*GEN-NUM := +$<gen-num>;
-	}
-	<object> endobj
-    }
+    rule ind-obj  { <obj-num=.int> <gen-num=.int> obj <object> endobj }
 
-    rule ind-ref { <obj-num=.int> <gen-num=.int> R }
+    rule ind-ref  { <obj-num=.int> <gen-num=.int> R }
 
     # Object extensions:
     # modify <dict> - allow trailing stream anywhere

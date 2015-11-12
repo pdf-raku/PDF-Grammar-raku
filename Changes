@@ -1,13 +1,3 @@
-    Release 0.04
-    - Added $*OBJ-NUM and $*GEN-NUM dynamic variables, plus minor tweaks
-      to string rule.
-
-      Thi is to aid PDF decryption in PDF-Tools, which needs to know
-      the parent object and generation numbers of strings and streams.
-
-      Also added t/pdf-decrypt.t which demonstrates dummy decryption with
-      and actions subclass with overrides 'string' and 'stream' rules.
-
     Release 0.03
     - Reworked 'stream' AST to return :encoded stream content. Rather
       than :start and :end positions of the stream.
