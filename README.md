@@ -124,8 +124,8 @@ For reference, here is a list of all AST node types:
 array | Array[Any] | Array object type, e.g. `[ 0 0 612 792 ]`
 body | Array[Hash] | The FDF/PDF body. A PDF with revisions has multiple body segments
 bool | Bool | Boolean object type, e.g. `true`
-dict | Hash | Dictonary object type, e.g. `<< /Type /Catalog /Pages 3 0 R >>'
-encoded | Str | Raw encoded stream data. This is returned as a latin-1 byte string.
+dict | Hash | Dictonary object type, e.g. `<< /Type /Catalog /Pages 3 0 R >>`
+encoded | Str | Raw encoded stream data. This is returned as a latin-1 byte-string.
 entries | Array[Hash] | A list of entries in a cross reference segment
 decoded | Str | Uncompressed/unencrypted stream data
 fdf | Hash | An FDF document
@@ -139,8 +139,8 @@ obj-count | UInt | object count/number of entries in a cross reference segment
 obj-first-num | UInt | object first number in a  cross reference segment
 obj-num | UInt | Object number
 offset | UInt | byte offset of an indirect object in the file.
-literal | Str | A literal string, e.g. '(Hello, World!)'
-name | Str | String bject type, e.g. `/Fred`
+literal | Str | A literal string, e.g. `(Hello, World!)`
+name | Str | String object type, e.g. `/Fred`
 null | Mu | Null object type, e.g. `null`
 pdf | Hash | A PDF document, consisting of a `header` and `body` array
 real | Real | Real object type, e.g. `42.0`
@@ -149,7 +149,7 @@ startxref | Uint | byte offset from the end of the file to the start of the trai
 stream | Hash | Stream object type. An dictionary indirect object followed by stream data
 trailer | Hash | Trailer. This typically contains the trailer `dict` entry.
 type | UInt | Index entry type: 0 - free, 1 - inuse, 2 - stream object
-version | Rat | The PDF / FDF version number, parse from the header
+version | Rat | The PDF / FDF version number, parsed from the header
 
 
 
