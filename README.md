@@ -82,8 +82,8 @@ Examples
     }
     ```
 
-Ast Trees
-----------
+Ast Reference
+-------------
 The action methods in this module return AST trees. Each node in the
 tree consists of a key, value pair, where the key is the AST Tag,
 indicating the type of the AST node.
@@ -126,7 +126,7 @@ body | Array[Hash] | The FDF/PDF body. A PDF with revisions has multiple body se
 bool | Bool | Boolean object type, e.g. `true`
 dict | Hash | Dictonary object type, e.g. `<< /Type /Catalog /Pages 3 0 R >>'
 encoded | Str | Raw encoded stream data. This is returned as a latin-1 byte string.
-entries | Array[Hash] | A list of entries in an 
+entries | Array[Hash] | A list of entries in a cross reference segment
 decoded | Str | Uncompressed/unencrypted stream data
 fdf | Hash | An FDF document
 gen-num | UInt | Object generation number
@@ -144,7 +144,7 @@ name | Str | String bject type, e.g. `/Fred`
 null | Mu | Null object type, e.g. `null`
 pdf | Hash | A PDF document, consisting of a `header` and `body` array
 real | Real | Real object type, e.g. `42.0`
-start | UInt | Start position of stream data (return by `ind-obj-nibble` rule
+start | UInt | Start position of stream data (returned by `ind-obj-nibble` rule)
 startxref | Uint | byte offset from the end of the file to the start of the trailer
 stream | Hash | Stream object type. An dictionary indirect object followed by stream data
 trailer | Hash | Trailer. This typically contains the trailer `dict` entry.
