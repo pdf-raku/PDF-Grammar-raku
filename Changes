@@ -1,3 +1,9 @@
+    Release 0.4
+    - Added `AST Reference` section to README. Renamed a couple of token
+      tags for consistancy:
+         - object-first-num => obj-first-num
+         - object-count => obj-count
+
     Release 0.03
     - Reworked 'stream' AST to return :encoded stream content. Rather
       than :start and :end positions of the stream.

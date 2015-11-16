@@ -102,8 +102,8 @@ class PDF::Grammar::Doc::Actions
     method xref-section($/) {
         my @entries = $<xref-entry>».ast;
         make {
-	    object-first-num => $<object-first-num>.ast.value,
-	    object-count => $<object-count>.ast.value,
+	    obj-first-num => $<obj-first-num>.ast.value,
+	    obj-count => $<obj-count>.ast.value,
 	    :@entries,
         }
     }

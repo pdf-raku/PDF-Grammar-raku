@@ -83,8 +83,8 @@ my $xref = "xref
 0000000445 00000 n
 ";
 my $xref-ast = [
-                {:object-first-num(0),
-                 :object-count(8),
+                {:obj-first-num(0),
+                 :obj-count(8),
                  :entries[{:offset(0), :gen-num(65535),  :type(0)},
                           {:offset(9), :gen-num(0), :type(1)},
                           {:offset(74), :gen-num(0), :type(1)},
@@ -107,14 +107,14 @@ my $xref-multiple = "xref
 ";
 
 my $xref-multiple-ast = [
-                {:object-first-num(0),
-                 :object-count(2),
+                {:obj-first-num(0),
+                 :obj-count(2),
                  :entries[{:offset(0), :gen-num(65535),  :type(0)},
                           {:offset(18), :gen-num(0), :type(1)},
                          ]
                },
 
-                {:object-first-num(2), :object-count(3),
+                {:obj-first-num(2), :obj-count(3),
                  entries => [{:offset(77), :gen-num(0), :type(1)},
                              {:offset(178), :gen-num(0), :type(1)},
                              {:offset(457), :gen-num(0), :type(1)},
