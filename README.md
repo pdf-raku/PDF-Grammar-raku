@@ -115,7 +115,7 @@ This is an indirect object (`ind-obj`), it contains a dictionary object (`dict`)
 
 In most cases, the node type corresponds to the name of the rule or token that was used to construct the node.
 
-This AST representation is used extensively throughout the PDF tool-chain. For example, as an intermediate format by `CSS::Writer` for reserialization.
+This AST representation is used extensively throughout the PDF tool-chain. For example, as an intermediate format by `PDF::Writer` for reserialization.
 
 For reference, here is a list of all AST node types:
 
