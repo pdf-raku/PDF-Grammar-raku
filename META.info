@@ -1,8 +1,8 @@
 {
     "name"        : "PDF::Grammar",
-    "version"     : "0.04",
+    "version"     : "0.05",
     "description" : "Perl 6 grammars for parsing PDF Content Streams and File Structure",
-    "depends"     : [ "JSON::Tiny" ],
+    "depends"     : [ "JSON::Fast" ],
     "source-url"  : "git://github.com/p6-pdf/perl6-PDF-Grammar.git",
     "provides"    : {
         "PDF::Grammar" : "lib/PDF/Grammar.pm",

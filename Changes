@@ -1,4 +1,7 @@
-    Release 0.4
+    Release 0.05
+    - Replace JSON::Tiny with JSON::Fast
+
+    Release 0.04
     - Added `AST Reference` section to README. Renamed a couple of token
       tags for consistancy:
          - object-first-num => obj-first-num
