@@ -19,7 +19,6 @@
         "PDF::Grammar::Function::Actions" : "lib/PDF/Grammar/Function/Actions.pm",
         "PDF::Grammar::PDF" : "lib/PDF/Grammar/PDF.pm",
         "PDF::Grammar::PDF::Actions" : "lib/PDF/Grammar/PDF/Actions.pm",
-        "PDF::Grammar::Stream" : "lib/PDF/Grammar/Stream.pm",
         "PDF::Grammar::Test" : "lib/PDF/Grammar/Test.pm"
     }
 }
