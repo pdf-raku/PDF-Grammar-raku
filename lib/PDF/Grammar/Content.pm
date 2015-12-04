@@ -75,7 +75,7 @@ grammar PDF::Grammar::Content
 
     rule op:sym<SetDash>             { <array> <number> (d) }
     rule op:sym<SetCharWidth>        { <number> <number> (d0) }
-    rule op:sym<SetCacheDevice>      { <number>**6 (d1) }
+    rule op:sym<SetCharWidthBBox>    { <number>**6 (d1) }
     rule op:sym<XObject>             { <name> (Do) }
     rule op:sym<MarkPoint>           { <name> [<name> | <dict>] (DP) }
 
