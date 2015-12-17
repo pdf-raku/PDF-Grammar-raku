@@ -1,6 +1,7 @@
     Release 0.05
     - Replaced JSON::Tiny with JSON::Fast
     - Removed PDF::Grammar::Stream
+    - Slightly relax trailer parse. Don't require a \n before trailer dictionary
 
     Release 0.04
     - Added `AST Reference` section to README.
