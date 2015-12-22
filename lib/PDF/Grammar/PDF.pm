@@ -19,8 +19,7 @@ grammar PDF::Grammar::PDF
     # stream using the dictionary /Length entry
     rule ind-obj-nibble {
 	<obj-num=.int> <gen-num=.int> obj
-	[<object=.dict>[ endobj|<stream-head>] || <object> endobj]
-    }
+	[<object=.dict>[ endobj|<stream-head>]||<object> endobj]}
 
     # support for index loading
     # (1) read the last few bytes of a PDF, parse the 'startxref' directive

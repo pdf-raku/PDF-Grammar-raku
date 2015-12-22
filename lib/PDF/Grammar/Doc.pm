@@ -41,7 +41,7 @@ grammar PDF::Grammar::Doc
 
     # cross reference table
     rule  xref         { xref\n<xref-section>+ }
-    rule  xref-section {<obj-first-num=.int> <obj-count=.int>' '?\n<xref-entry>+}
+    rule  xref-section {<obj-first-num=.int> <obj-count=.int>' '*\n<xref-entry>+}
     rule  xref-entry   {<byte-offset=.int> <gen-number=.int> <obj-status>' '?\n}
     proto token obj-status      {*}
     token obj-status:sym<free>  {f}

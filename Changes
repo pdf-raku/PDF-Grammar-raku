@@ -2,6 +2,7 @@
     - Replaced JSON::Tiny with JSON::Fast
     - Removed PDF::Grammar::Stream
     - Slightly relax trailer parse. Don't require a \n before trailer dictionary
+    - Fixed whitespace handling in <PDF::Grammar::Doc::ind-obj-nibble> rule
 
     Release 0.04
     - Added `AST Reference` section to README.
