@@ -18,8 +18,7 @@ my $ind-obj-dict = "1 0 obj
 /Pages {$ind-ref1}
 /Outlines 2 0 R
 >>
-endobj
-";
+endobj";
 my $ind-obj-dict-ast = :ind-obj[ 1, 0, :dict{ Type => :name<Catalog>,
                                          Pages => $ind-ref1-ast,
                                          Outlines => :ind-ref[ 2, 0 ]}];
@@ -51,7 +50,7 @@ my $ind-obj-stream-ast = :ind-obj[ 5, 0,
 				 :encoded("BT\n  /F1 24 Tf  % useless comment\n  100 100 Td (Hello, world!) Tj\nET"),
                              }];
 
-my $body = $ind-obj-dict ~
+my $body = $ind-obj-dict ~ "\n" ~
 $ind-obj-stream ~
 '3 0 obj
 <<
