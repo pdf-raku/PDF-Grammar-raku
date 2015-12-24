@@ -1,17 +1,21 @@
-    Release 0.05
+    Release 0.0.6
+    - Make META.info version consistant with PDF::Grammar:ver<...>
+    - Declare "perl6" : "v6" in META.info
+
+    Release 0.0.5
     - Replaced JSON::Tiny with JSON::Fast
     - Removed PDF::Grammar::Stream
     - Slightly relax trailer parse. Don't require a \n before trailer dictionary
     - Fixed whitespace handling in <PDF::Grammar::Doc::ind-obj-nibble> rule
 
-    Release 0.04
+    Release 0.0.4
     - Added `AST Reference` section to README.
     - Renamed a couple of token
       tags for consistancy:
          - object-first-num => obj-first-num
          - object-count => obj-count
 
-    Release 0.03
+    Release 0.0.3
     - Reworked 'stream' AST to return :encoded stream content. Rather
       than :start and :end positions of the stream.
 
@@ -23,8 +27,8 @@
       offset of stream start - safer in a post-NFG world. Latin encoding now
       has "\n\r" as a combining newline character.
 
-    Release 0.02
+    Release 0.0.2
     - General fixes for the 2015 Rakudo GLR
 
-    Release 0.01
+    Release 0.0.1
     - Initial development

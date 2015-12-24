@@ -53,6 +53,7 @@ my @tests = (
     literal-string =>  {input => '(perl(6) rocks! :-\))', ast => :literal('perl(6) rocks! :-)')},
     literal-string =>  {input => "(continued\\\n line)",  ast => :literal('continued line')},
     literal-string =>  {input => '(stray back\-slash)',   ast => :literal('stray back-slash')},
+    literal-string =>  {input => "(some\ncontrol\x[b]chars)",   ast => :literal("some\ncontrol\x[b]chars")},
     literal-string =>  {input => "(try\\\n\\\n%this\\\n)",ast => :literal('try%this')},
 
     string =>          {input => '(hi)',             ast => :literal<hi>},

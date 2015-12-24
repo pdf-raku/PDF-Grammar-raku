@@ -43,7 +43,10 @@ class PDF::Grammar::Actions:ver<0.0.1> {
         make (:$hex-string);
     }
 
-    method literal:sym<eol>($/) { make "\n" }
+    method literal:sym<eol>($/) {
+        my Str $ch = ~$/;
+        make $ch.ords.grep(10)  ?? "\n" !! $ch
+    }
     method literal:sym<substring>($/)    {
         make '(' ~ $<literal-string>.ast.value ~ ')'
     }
