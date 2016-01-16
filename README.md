@@ -40,7 +40,7 @@ You can then use `panda` to test and install `PDF::Grammar`:
 Usage Notes
 -----------
 
-- PDF input files typically contain a mixture of ascii directives and binary data, plus byte-orientated addressing. For this
+- PDF input files typically contain a mixture of ASCII directives and binary data, plus byte-orientated addressing. For this
 reason **`latin1` encoding is recommended **. For example:
 
    ```% perl6 -MPDF::Grammar::PDF -e"say PDF::Grammar::PDF.parse( slurp($f, :enc<latin1>) )"```
@@ -124,7 +124,7 @@ For reference, here is a list of all AST node types:
 array | Array[Any] | Array object type, e.g. `[ 0 0 612 792 ]`
 body | Array[Hash] | The FDF/PDF body. A PDF with revisions has multiple body segments
 bool | Bool | Boolean object type, e.g. `true`
-dict | Hash | Dictonary object type, e.g. `<< /Type /Catalog /Pages 3 0 R >>`
+dict | Hash | Dictionary object type, e.g. `<< /Type /Catalog /Pages 3 0 R >>`
 encoded | Str | Raw encoded stream data. This is returned as a latin-1 byte-string.
 entries | Array[Hash] | A list of entries in a cross reference segment
 decoded | Str | Uncompressed/unencrypted stream data
@@ -145,7 +145,7 @@ null | Mu | Null object type, e.g. `null`
 pdf | Hash | A PDF document, consisting of a `header` and `body` array
 real | Real | Real object type, e.g. `42.0`
 start | UInt | Start position of stream data (returned by `ind-obj-nibble` rule)
-startxref | Uint | byte offset from the end of the file to the start of the trailer
+startxref | UInt | byte offset from the end of the file to the start of the trailer
 stream | Hash | Stream object type. An dictionary indirect object followed by stream data
 trailer | Hash | Trailer. This typically contains the trailer `dict` entry.
 type | UInt | Index entry type: 0 - free, 1 - inuse, 2 - stream object

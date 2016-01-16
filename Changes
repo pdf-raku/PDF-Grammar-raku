@@ -1,6 +1,6 @@
     Release 0.0.6
-    - Make META.info version consistant with PDF::Grammar:ver<...>
-    - Declare "perl6" : "v6" in META.info
+    - Make META.info version consistent with PDF::Grammar:ver<...>
+    - Declare "perl6" : "6" in META.info
 
     Release 0.0.5
     - Replaced JSON::Tiny with JSON::Fast
@@ -10,18 +10,17 @@
 
     Release 0.0.4
     - Added `AST Reference` section to README.
-    - Renamed a couple of token
-      tags for consistancy:
-         - object-first-num => obj-first-num
-         - object-count => obj-count
+    - Renamed a couple of token tags for consistency:
+         -- object-first-num => obj-first-num
+         -- object-count => obj-count
 
     Release 0.0.3
     - Reworked 'stream' AST to return :encoded stream content. Rather
       than :start and :end positions of the stream.
 
-      This was orginally intended as a optimisation. In practice the reader
+      This was originally intended as a optimization. In practice the reader
       only uses this rule in :repair mode, in which case it always extracts
-      the stream data, nullifying this optismisation
+      the stream data anyway.
 
     - tweaked ind-obj-nibble rule to use .codes rather than .chars to compute
       offset of stream start - safer in a post-NFG world. Latin encoding now
