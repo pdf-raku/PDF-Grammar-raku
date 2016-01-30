@@ -127,13 +127,13 @@ for ('[]', '[ ]', '[42]', '[/Name]', '[42/Name]', '[49 3.14 false (Ralph) /SomeN
     ok($_ ~~ /^<PDF::Grammar::PDF::array>$/, "array: $_");
 }
 
-my $dict_example = :with-hex-strings("<< /Size 22
+my $with-hex-strings = "<< /Size 22
 /Root 2 0 R/Info 1 0 R/ID[<81b14aafa313db63dbd6f981e49f94f4>
 <81b14aafa313db63dbd6f981e49f94f4>
 ]
->>");
+>>";
 
-my $dict_example2 = :nested-dictonary(
+my $nested-dictionary = 
 "<</Type /Example
   /Subtype /DictionaryExample
   /Version 0.01
@@ -144,14 +144,14 @@ my $dict_example2 = :nested-dictonary(
                     /LastItem (not!)
                     /VeryLastItem (OK)
                  >>
->>");
+>>";
 
-my $dict_example3 = :sans-whitespace(
+my $sans-whitespace = 
 '<</BaseFont/Times-Roman/Type/Font
-/Subtype /Type1>>');
+/Subtype /Type1>>';
 
 # nested stream - seems that this can happen in practice
-my $dict_example4 = :nested-stream(
+my $nested-stream =
 "<</Type /Example
   /Subtype /NestedStreamTest
   /StreamDict << /Length 22 >>
@@ -159,11 +159,11 @@ my $dict_example4 = :nested-stream(
 Nested stream - yikes!
   endstream
   /NowWhereWasI (?)
->>");
+>>";
 
 for (empty1 => '<<>>', empty2 => '<< >>', trival => '<</id 42>>',
-     trivial2 => '<</a 1 /b (2)>>', $dict_example,
-     $dict_example2, $dict_example3, $dict_example4) {
+     trivial2 => '<</a 1 /b (2)>>', :$with-hex-strings,
+     :$nested-dictionary, :$sans-whitespace, :$nested-stream) {
     ok(.value ~~ /^<PDF::Grammar::PDF::dict>$/, "dict " ~ .key)
     or diag $_;
 }
@@ -172,11 +172,11 @@ for ('/BaseFont/Times-Roman', '/Producer(AFPL Ghostscript 8.51)', '/X<</Y(42)>>'
     ok($_ ~~ /^<PDF::Grammar::PDF::name><PDF::Grammar::PDF::object>$/, "name + object: $_");
 }
 
-my $empty_stream = :empty("<< /Length 0 >>
+my $empty = "<< /Length 0 >>
 stream
 
 endstream
-");
+";
 
 # hopefully always at least two newlines shouldn't have to handle this
 my $this_stream-is_invalid_I_think = "<< /Length 0 >>
@@ -184,37 +184,37 @@ stream
 endstream
 ";
 
-my $stream1 = :tiny("<< /Length 4 >>
+my $tiny = "<< /Length 4 >>
 stream
 TEST
 endstream
-");
+";
 
-my $stream2 = :smallish("<< /Length 44 >>
+my $smallish = "<< /Length 44 >>
 stream
 BT
 /F1 24 Tf
 100 100 Td (Hello, world!) Tj
 ET
 endstream
-");
+";
 
 # pushing spec boundaries
 my $content3 = "abc123\n"~chr(0xFF)~chr(0)~'z endstream! - not really!';
 
-my $stream3 = :non-ascii(sprintf "<< /Length %d >>
+my $non-ascii = sprintf "<< /Length %d >>
 stream
 %s
 endstream
-", $content3.codes, $content3);
+", $content3.codes, $content3;
 
 # have observed endstream without a proceeding eol
-my $stream4 = :no-eol(sprintf "<< /Length %d >>
+my $no-eoln = sprintf "<< /Length %d >>
 stream
 %sendstream
-", $content3.chars, $content3);
+", $content3.chars, $content3;
 
-my $stream5 = :indirect-object-reference('<< /Length 8 0 R >>% An indirect reference to object 8
+my $indirect-object-reference = '<< /Length 8 0 R >>% An indirect reference to object 8
 stream
 BT
 /F1 12 Tf
@@ -222,9 +222,9 @@ BT
 (A stream with an indirect length) Tj
 ET
 endstream
-');
+';
 
-my $stream6 = :medium-size(q{<< /Length 534
+my $medium-size = q{<< /Length 534
 /Filter [/ASCII85Decode /LZWDecode]
 >>
 stream
@@ -241,11 +241,12 @@ al>iG1p&i;eVoK&juJHs9%;Xomop"5KatWRT"JQ#qYuL,
 JD?M$0QP)lKn06l1apKDC@\qJ4B!!(5m+j.7F790m(Vj8
 8l8Q:_CZ(Gm1%X\N1&u!FKHMB~>
 endstream
-});
+};
 
-for ($empty_stream, $stream1, $stream2,
-     $stream3, $stream4, $stream5,
-     $stream6) {
+for (:$empty, :$tiny, :$smallish,
+     :$non-ascii, :$no-eoln,
+     :$indirect-object-reference,
+     :$medium-size) {
     my $test = .key;
     my $val = .value;
 
@@ -258,23 +259,20 @@ for ($empty_stream, $stream1, $stream2,
     or diag $ind-obj;
 }
 
-my $ind-obj1 = "10 0 obj
+my $simple = "10 0 obj
 (Brillig) % blah blah blah
 endobj";
 my $ind-ref1 = '10 0 R';
-
-my $ind-obj2 = '20 1 obj endobj';
 my $ind-ref2 = '20 1 R';
-
-my $ind-obj3 = '13 0 obj<</BaseFont/Times-Roman/Type/Font/Subtype/Type1>>endobj';
-my $ind-ref3 = '13 0 R';
+my $ind-ref3 = '013 01 R';
 
 for ($ind-ref1, $ind-ref2, $ind-ref3) {
     ok($_ ~~ /^<PDF::Grammar::PDF::ind-ref>$/, "ind-ref: $_");
     ok($_ ~~ /^<PDF::Grammar::PDF::object>$/, "object: $_");
 }
 
-my $ind-obj4 = "7 0 obj
+my $squashed1 = '13 0 obj<</BaseFont/Times-Roman/Type/Font/Subtype/Type1>>endobj';
+my $stream = "7 0 obj
 << /Length 8 0 R >>% An indirect reference to object 8
 stream
 BT
@@ -285,24 +283,23 @@ ET
 endstream
 endobj";
 
-my $ind-obj5 = '8 0 obj
+my $comments = '8 0 obj
 % hello
 77% The length of the preceding stream
 % goodbye
 endobj';
 
-my $ind-obj-fdf = '1 0 obj
+my $fdf = '1 0 obj
 <</FDF
     << /F (empty.pdf) /Fields [] >>
 >>
 endobj';
 
-my $ind-obj-scrunched = '1 0 obj<</FDF<</F(Document.pdf)/ID[<7a0631678ed475f0898815f0a818cfa1><bef7724317b311718e8675b677ef9b4e>]/Fields[<</T(Street)/V(345 Park Ave.)>><</T(City)/V(San Jose)>>]>>>> 
+my $squashed2 = '1 0 obj<</FDF<</F(Document.pdf)/ID[<7a0631678ed475f0898815f0a818cfa1><bef7724317b311718e8675b677ef9b4e>]/Fields[<</T(Street)/V(345 Park Ave.)>><</T(City)/V(San Jose)>>]>>>> 
 endobj';
 
-for (simple => $ind-obj1, squashed1 => $ind-obj3,
-     squashed2 => $ind-obj-scrunched, stream => $ind-obj4,
-     comments => $ind-obj5, fdf => $ind-obj-fdf,
+for (:$simple, :$squashed1, :$squashed2,
+    :$stream, :$comments, :$fdf,
      ) {
     ok(.value ~~ /^<PDF::Grammar::PDF::ind-obj>$/, "ind-obj - " ~ .key)
         or diag .value;

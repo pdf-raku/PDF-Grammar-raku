@@ -104,40 +104,36 @@ my $footer = 'startxref
 ok($trailer ~~ /^<PDF::Grammar::PDF::trailer>$/, "trailer")
     or diag $trailer;
 
-my $nix-pdf = "$header
+my $unix = "$header
 $body
 $xref$trailer$footer%\%EOF";
 
-my $bin-commented-pdf = "$header
+my $bin-comments = "$header
 %âãÏÓ
 $body
 $xref$trailer$footer%\%EOF";
 
-my $edited-pdf-small = "$header
+my $edit-history-small = "$header
 $ind-obj1
 $xref$trailer$footer
 {$ind-obj1.subst(/0/, '9'):g}
 {$xref.subst(/0/, '9'):g}$trailer$footer%\%EOF";
 
-my $edited-pdf = "$header
+my $edit-history = "$header
 $body
 $xref$trailer$footer
 $body
 $xref$trailer$footer%\%EOF";
 
-(my $mac-osx-pdf = $nix-pdf)  ~~ s:g/\n/\r/;
+(my $mac-osx-formatted = $unix)  ~~ s:g/\n/\r/;
 # nb although the document remains parsable, converting to ms-dos line-endings
 # changes byte offsets and corrupts the xref table
-(my $ms-dos-pdf = $nix-pdf)  ~~ s:g/\n/\r\n/;
+(my $ms-dos-formatted = $unix)  ~~ s:g/\n/\r\n/;
 
 my $actions = PDF::Grammar::PDF::Actions.new;
 
-for (unix => $nix-pdf,
-     bin-comments => $bin-commented-pdf,
-     edit-history-small => $edited-pdf-small,
-     edit-history => $edited-pdf,
-     mac-osx-formatted => $mac-osx-pdf,
-     ms-dos-formatted => $ms-dos-pdf,
+for (:$unix, :$bin-comments, :$edit-history-small,
+     :$edit-history, :$mac-osx-formatted, :$ms-dos-formatted,
      ) {
 
      my $p = PDF::Grammar::PDF.parse(.value, :$actions);
