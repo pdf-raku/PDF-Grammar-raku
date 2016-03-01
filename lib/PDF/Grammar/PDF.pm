@@ -34,6 +34,13 @@ grammar PDF::Grammar::PDF
         $
     }
 
+    # To support << /Linearized 1 /T <offset> .. >>
+    # <offset> skips 'xref' \n <n> <m>
+    # and starts reading from the first xref section
+    # - <n> is zero
+    # - <m> is derivable
+    rule xref-first {.<xref-entry>+<xref-section>*}
+
     # PDF reference 1.7 3.4.6 Object Streams
     # These occur as the content of objects of /Type /ObjStm
     # They consist of an index followed by a sequence of pdf objects

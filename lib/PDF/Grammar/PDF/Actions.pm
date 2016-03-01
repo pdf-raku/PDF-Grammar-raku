@@ -19,4 +19,18 @@ class PDF::Grammar::PDF::Actions
 
     method object-stream-indice($/) { make [$<obj-num>.ast.value, $<byte-offset>.ast.value] }
     method object-stream-index($/)  { make [ $<object-stream-indice>>>.ast ] }
+
+    method xref-first($/) {
+	my @entries = $<xref-entry>».ast;
+        my $first-section = {
+	    obj-first-num => 0,
+	    obj-count => +@entries,
+	    :@entries,
+        };
+
+	my @sections = $first-section,;
+	@sections.append: $<xref-section>>>.ast;
+
+	make 'xref' => @sections;
+    }
 }

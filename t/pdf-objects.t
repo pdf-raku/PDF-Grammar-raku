@@ -95,15 +95,16 @@ my $xref-ast = [
                },
               ];
 
-my $xref-multiple = "xref
-0 2
-0000000000 65535 f 
+my $xref-first = "\x[A]0000000000 65535 f 
 0000000018 00000 n 
 2 3
 0000000077 00000 n 
 0000000178 00000 n 
 0000000457 00000 n 
 ";
+
+my $xref-multiple = "xref
+0 2$xref-first";
 
 my $xref-multiple-ast = [
                 {:obj-first-num(0),
@@ -166,6 +167,7 @@ for (
       startxref => { :input($startxref),     :ast($startxref-ast)},
       xref => { :input($xref),          ast => :xref($xref-ast)},
       xref => { :input($xref-multiple), ast => :xref($xref-multiple-ast)},
+      xref-first => { :input($xref-first), ast => :xref($xref-multiple-ast)},
       body => { :input($body-input),  :ast($body-ast)},
       index => { :input($xref ~ "\n" ~ $trailer), :ast($index-ast) },
       pdf => { :input($pdf), ast => Any},
