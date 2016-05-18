@@ -17,9 +17,7 @@ grammar PDF::Grammar:ver<0.0.6> {
     # ---------------
     token comment {'%' \N* \n?}
     # [PDF 1.7] Table 3.1: White-space characters
-    token LF      { \x0A }
-    token NUL     { \x0 }
-    token ws-char {' ' | \t | \f | \n | <LF> | <NUL> | <.comment>}
+    token ws-char { <[ \x20 \x0A \x0 \t \f \n ]> | <.comment>}
     token ws      {<!ww><.ws-char>*}
 
     # [PDF 1.7] 7.3.3  Numeric Objects
@@ -58,12 +56,11 @@ grammar PDF::Grammar:ver<0.0.6> {
 
     # [PDF 1.7] 7.2.2 Character Set
     regex char_delimiter {<[ ( ) < > \[ \] { } / % \# ]>}
-    regex name-reg-char  {<[\! .. \~] -char_delimiter>}
 
     proto token name-bytes {*}
     token name-bytes:sym<number-symbol> {'##'}
     token name-bytes:sym<escaped>       {'#'<hex-char> }
-    token name-bytes:sym<regular>       {<name-reg-char>}
+    token name-bytes:sym<regular>       {<[\! .. \~] -char_delimiter>+}
 
     rule name { '/'<name-bytes>+ }
 

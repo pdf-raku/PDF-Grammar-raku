@@ -27,7 +27,7 @@ class PDF::Grammar::Actions:ver<0.0.1> {
         make $<hex-char>.ast;
     }
     method name-bytes:sym<regular>($/) {
-        make $/.ord;
+        make $/.ords.Slip;
     }
 
     method name($/) {
