@@ -29,7 +29,7 @@ class PDF::Grammar::Content::Actions
     sub _image_block_data($/) {
 
         my $dict = $<imageAtts>.ast;
-        my $encoded = ~$0;
+        my $encoded = ~$<encoded>;
 
         return (:BI[ :$dict ],
                 :ID[ :$encoded ],

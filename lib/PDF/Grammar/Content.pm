@@ -44,10 +44,10 @@ grammar PDF::Grammar::Content
     rule block:sym<text> { <opBeginText> [ <inner-marked-content-block> | <op> ]* <opEndText> }
     rule block:sym<markedContent> { <opBeginMarkedContent> [ <inner-text-block> | <op> ]* <opEndMarkedContent> }
     rule imageAtts { [<name> <object>]* }
-    regex block:sym<image> {
-                      <opBeginImage>:
+    rule block:sym<image> {
+                      <opBeginImage>
                       <imageAtts>
-                      <opImageData>(.*?)\n<opEndImage>
+                      <opImageData>$<encoded>=.*?\n<opEndImage>
     }
 
     proto rule ignored {*}

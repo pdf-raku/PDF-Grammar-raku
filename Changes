@@ -4,6 +4,8 @@
     - new <xref-first> rule. A variation of <xref> that assumes we've
       hopped over the first few bytes. Needed by PDF::Reader to (gulp)
       handle the /T offset entry in linerization dictionary.
+    - minor optimisations to <ws> and <name> rules
+    - replaced a couple of regex with rules/tokens
 
     Release 0.0.5
     - Replaced JSON::Tiny with JSON::Fast

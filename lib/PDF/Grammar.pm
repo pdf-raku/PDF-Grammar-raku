@@ -55,7 +55,7 @@ grammar PDF::Grammar:ver<0.0.6> {
     token string {<string=.hex-string>|<string=.literal-string>}
 
     # [PDF 1.7] 7.2.2 Character Set
-    regex char_delimiter {<[ ( ) < > \[ \] { } / % \# ]>}
+    token char_delimiter {<[ ( ) < > \[ \] { } / % \# ]>}
 
     proto token name-bytes {*}
     token name-bytes:sym<number-symbol> {'##'}
