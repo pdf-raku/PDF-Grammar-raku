@@ -31,10 +31,10 @@ class PDF::Grammar::Doc::Actions
 
     method postamble($/) {
         my %postamble;
-        %postamble<startxref> = $<byte-offset>.ast.value
-            if $<byte-offset>;
-        %postamble<trailer> = $<trailer>.ast.value
-            if $<trailer>;
+        %postamble<startxref> = .ast.value
+            with $<byte-offset>;
+        %postamble.push: .ast
+            with $<trailer>;
 
         make %postamble;
     }
@@ -66,46 +66,41 @@ class PDF::Grammar::Doc::Actions
     method object:sym<ind-ref>($/)  { make $<ind-ref>.ast }
 
     method object:sym<dict>($/) {
-
-        if ($<stream>) {
+        with $<stream> {
             # <dict> is a just a header the following <stream>
-            my %stream = $<dict>.ast.kv;
-	    %stream<encoded> = $<stream>.ast;
+            my %stream = $<dict>.ast;
+	    %stream<encoded> = .ast;
             make (:%stream)
         }
         else {
-            # simple stand-alone <dict>
             make $<dict>.ast;
         }
     }
 
     method body($/) {
-        my %body = flat (:objects[ $<ind-obj>>>.ast ],
-                    ($<startxref> ?? $<startxref>.ast !! () ),
-                    ($<index>.defined ?? @( $<index>.ast ) !! () ),
-            );
-
+        my $objects = [ $<ind-obj>>>.ast ];
+        my %body = :$objects;
+        %body.push: .ast with $<startxref>;
+        %body.push: .ast with $<index>;
         make (:%body);
     }
 
     method index($/) {
-        my %index = flat ($<xref>.defined ?? $<xref>.ast !! (),
-                     $<trailer>.ast);
+        my %index = $<trailer>.ast;
+        %index.push: .ast with $<xref>;
         make %index;
     }
 
     method xref($/) {
-	my $sections = [ $<xref-section>>>.ast ];
-	make (:xref($sections));
+	my $xref = [ $<xref-section>>>.ast ];
+	make (:$xref);
     }
 
     method xref-section($/) {
         my @entries = $<xref-entry>».ast;
-        make {
-	    obj-first-num => $<obj-first-num>.ast.value,
-	    obj-count => $<obj-count>.ast.value,
-	    :@entries,
-        }
+        my $obj-first-num = $<obj-first-num>.ast.value;
+        my $obj-count = $<obj-count>.ast.value;
+        make { :$obj-first-num, :$obj-count, :@entries };
     }
 
     method xref-entry($/) {

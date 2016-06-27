@@ -56,10 +56,10 @@ module PDF::Grammar::Test {
 
         my $parsed = %expected<parse> // $input;
 
-        if $input.defined {
-            my $desc = ($input.chars < 60
-                        ?? $input
-                        !! [~] $input.substr(0, 32), ' ... ', $input.substr(*-20))\
+        with $input {
+            my $desc = (.chars < 60
+                        ?? $_
+                        !! [~] .substr(0, 32), ' ... ', .substr(*-20))\
                         .subst(/\s+/, ' ', :g);
             is(~$parse, $parsed, "{$suite}: " ~ $rule ~ " parse: " ~ $desc)
         }
@@ -67,12 +67,12 @@ module PDF::Grammar::Test {
             ok(~$parse, "{$suite}: " ~ $rule ~ " parsed")
         }
 
-        if (my $expected-ast = %expected<ast>).defined {
+        with %expected<ast> -> $expected-ast {
             is-json-equiv($parse.ast, $expected-ast, "{$suite} $rule - ast");
         }
         else {
-            if defined $parse.ast {
-                note {untested_ast =>  $parse.ast}.perl
+            with $parse.ast {
+                note {untested_ast => $_}.perl
                     unless %expected<ast>:exists;
             }
         }

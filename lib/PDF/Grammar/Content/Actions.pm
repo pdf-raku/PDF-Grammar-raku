@@ -10,7 +10,7 @@ class PDF::Grammar::Content::Actions
         make @result;
     }
 
-    sub _op_data($op) {
+    sub _op-ast($op) {
         my $operator;
         my @objects;
 
@@ -26,40 +26,37 @@ class PDF::Grammar::Content::Actions
         return $operator => @objects;
      }
 
-    sub _image_block_data($/) {
+    sub _image-ast($/) {
 
         my $dict = $<imageAtts>.ast;
         my $encoded = ~$<encoded>;
 
-        return (:BI[ :$dict ],
-                :ID[ :$encoded ],
-                :EI[],
-            ).Slip;
+        (:BI[:$dict], :ID[:$encoded], :EI[]).Slip;
     }
 
-    sub _block_data($block) {
+    multi sub _block-ast($/ where $<opBeginImage>) {
+        _image-ast($/)
+    }
 
-        if ($block.caps[0].key eq 'opBeginImage') {
-            return _image_block_data($block)
-        }
+    multi sub _block-ast($block) is default {
 
         my @result = map -> $token {
             given $token.key {
-                when /^op/          { _op_data( $token.value )    }
-                when /inner.*block/ { _block_data( $token.value ) }
+                when /^op/          { _op-ast( $token.value )    }
+                when /inner.*block/ { _block-ast( $token.value ) }
                 default {'tba: ' ~ $token.key ~ ' = '  ~ $token.value};
             };
         }, $block.caps;
 
-        return @result.Slip;
+        @result.Slip;
     }
 
     method instruction:sym<block>($/) {
-        make _block_data($<block>);
+        make _block-ast($<block>);
     }
 
     method instruction:sym<op>($/) {
-        make _op_data($<op>);
+        make _op-ast($<op>);
     }
 
     method guff ($/) {
@@ -72,12 +69,10 @@ class PDF::Grammar::Content::Actions
     }
 
     method imageAtts ($/) {
-        my @names = @<name>.map({.ast.value});
+        my @names = @<name>.map( *.ast.value );
         my @objects = @<object>».ast;
 
-        my %atts;
-        %atts{ @names } = @objects;
-
+        my %atts = @names Z=> @objects;
         make %atts;
     }
 

@@ -31,8 +31,8 @@ class PDF::Grammar::Actions:ver<0.0.1> {
     }
 
     method name($/) {
-        my @name-bytes = $<name-bytes>».ast;
-        make (:name( Buf.new( @name-bytes ).decode ));
+        my Str $name = Buf.new( $<name-bytes>».ast ).decode;
+        make (:$name);
     }
 
     method hex-string ($/) {
@@ -98,9 +98,10 @@ class PDF::Grammar::Actions:ver<0.0.1> {
 
     # utility subs
 
-    sub _hex-pair($hex) {
-        my $result = :16($hex);
-        $result *= 16 unless $hex.chars %% 2;
-        return $result;
+    sub _hex-pair($hex --> UInt) {
+        my $num = :16($hex);
+        $hex.chars %% 2
+          ?? $num
+          !! $num * 16
     }
 }

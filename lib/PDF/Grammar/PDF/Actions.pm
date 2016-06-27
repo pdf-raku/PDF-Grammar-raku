@@ -23,14 +23,14 @@ class PDF::Grammar::PDF::Actions
     method xref-first($/) {
 	my @entries = $<xref-entry>».ast;
         my $first-section = {
-	    obj-first-num => 0,
-	    obj-count => +@entries,
+	    :obj-first-num(0),
+	    :obj-count(+@entries),
 	    :@entries,
         };
 
-	my @sections = $first-section,;
-	@sections.append: $<xref-section>>>.ast;
+	my @xref = [$first-section, ];
+	@xref.append: $<xref-section>>>.ast;
 
-	make 'xref' => @sections;
+	make (:@xref);
     }
 }
