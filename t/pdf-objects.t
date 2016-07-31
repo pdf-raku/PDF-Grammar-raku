@@ -122,6 +122,17 @@ my $xref-multiple-ast = [
                },
               ];
 
+my $xref-empty = "xref
+0 0
+";
+
+my $xref-empty-ast = [
+    {:obj-first-num(0),
+     :obj-count(0),
+     :entries[],
+    },
+];
+
 # note: extra newline between trailer and trailer dict - as observed in pdftk
 my $trailer = 'trailer
 
@@ -167,6 +178,7 @@ for (
       startxref => { :input($startxref),     :ast($startxref-ast)},
       xref => { :input($xref),          ast => :xref($xref-ast)},
       xref => { :input($xref-multiple), ast => :xref($xref-multiple-ast)},
+      xref => { :input($xref-empty), ast => :xref($xref-empty-ast)},
       xref-first => { :input($xref-first), ast => :xref($xref-multiple-ast)},
       body => { :input($body-input),  :ast($body-ast)},
       index => { :input($xref ~ "\n" ~ $trailer), :ast($index-ast) },
