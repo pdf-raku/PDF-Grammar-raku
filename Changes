@@ -1,3 +1,6 @@
+    Release 0.0.7
+    - Optimized stream token
+
     Release 0.0.6
     - Make META.info version consistent with PDF::Grammar:ver<...>
     - Declare "perl6" : "6" in META.info

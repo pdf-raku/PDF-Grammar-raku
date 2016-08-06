@@ -114,6 +114,11 @@ class PDF::Grammar::Doc::Actions
     method obj-status:sym<free>($/)  { make 0 }
     method obj-status:sym<inuse>($/) { make 1 }
 
-    method stream($/) { make ~$<encoded> }
+    method stream($/) {
+        my $start = $<stream-head>.to;
+        my $len = $<stream-tail>.from - $start;
+        $start -= $/.from;
+        make $/.substr($start, $len)
+    }
 
 }

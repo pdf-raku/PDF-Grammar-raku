@@ -1,7 +1,7 @@
 use v6;
 use nqp;
 
-grammar PDF::Grammar:ver<0.0.6> {
+grammar PDF::Grammar:ver<0.0.7> {
     # abstract base grammar for PDF Elements, see instances:
     # PDF::Grammar::Content  - Text and Graphics Content
     # PDF::Grammar::FDF      - Describes FDF (Form Data) files
