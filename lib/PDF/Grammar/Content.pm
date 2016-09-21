@@ -73,11 +73,11 @@ grammar PDF::Grammar::Content
     rule op:sym<SetFillColorSpace>   { <name> (cs) }
     rule op:sym<SetStrokeColorSpace> { <name> (CS) }
 
-    rule op:sym<SetDash>             { <array> <number> (d) }
+    rule op:sym<SetDashPattern>      { <array> <number> (d) }
     rule op:sym<SetCharWidth>        { <number> <number> (d0) }
     rule op:sym<SetCharWidthBBox>    { <number>**6 (d1) }
     rule op:sym<XObject>             { <name> (Do) }
-    rule op:sym<MarkPoint>           { <name> [<name> | <dict>] (DP) }
+    rule op:sym<MarkPointDict>       { <name> [<name> | <dict>] (DP) }
 
     rule op:sym<EOFill>              { (f\*) }
     rule op:sym<Fill>                { (F|f) }
@@ -100,7 +100,7 @@ grammar PDF::Grammar::Content
 
     rule op:sym<MoveTo>              { <number> <number> (m) }
     rule op:sym<SetMiterLimit>       { <number> (M) }
-    rule op:sym<MarkPoint2>          { <name> (MP) }
+    rule op:sym<MarkPoint>           { <name> (MP) }
 
     rule op:sym<EndPath>             { (n) }
 
@@ -134,13 +134,13 @@ grammar PDF::Grammar::Content
     rule op:sym<SetWordSpacing>      { <number> (Tw) }
     rule op:sym<SetHorizScaling>     { <number> (Tz) }
 
-    rule op:sym<CurveTo1>             { <number>**4 (v) }
+    rule op:sym<CurveToInitial>      { <number>**4 (v) }
 
     rule op:sym<EOClip>              { (W\*) }
     rule op:sym<Clip>                { (W) } 
     rule op:sym<SetLineWidth>        { <number> (w) }
 
-    rule op:sym<CurveTo2>            { <number>**4 (y) }
+    rule op:sym<CurveToFinal>        { <number>**4 (y) }
 
     rule op:sym<MoveSetShowText>     { <number> <number> <string> (\") } 
     rule op:sym<MoveShowText>        { <string> (\') }
