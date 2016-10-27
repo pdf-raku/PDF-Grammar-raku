@@ -27,7 +27,6 @@ class PDF::Grammar::Content::Actions
      }
 
     sub _image-ast($/) {
-
         my $dict = $<imageAtts>.ast;
         my $encoded = ~$<encoded>;
 
@@ -39,16 +38,13 @@ class PDF::Grammar::Content::Actions
     }
 
     multi sub _block-ast($block) is default {
-
-        my @result = map -> $token {
+        ($block.caps.map: -> $token {
             given $token.key {
                 when /^op/          { _op-ast( $token.value )    }
                 when /inner.*block/ { _block-ast( $token.value ) }
                 default {'tba: ' ~ $token.key ~ ' = '  ~ $token.value};
             };
-        }, $block.caps;
-
-        @result.Slip;
+        }).Slip;
     }
 
     method instruction:sym<block>($/) {

@@ -50,10 +50,7 @@ module PDF::Grammar::Test {
     our sub parse-tests($class, $input, :$parse is copy, :$actions,
 			:$rule = 'TOP', :$suite, :%expected) {
 
-        $parse //= do { 
-            $class.subparse( $input, :$rule, :$actions)
-        };
-
+        $parse //= $class.subparse( $input, :$rule, :$actions);
         my $parsed = %expected<parse> // $input;
 
         with $input {
@@ -61,10 +58,10 @@ module PDF::Grammar::Test {
                         ?? $_
                         !! [~] .substr(0, 32), ' ... ', .substr(*-20))\
                         .subst(/\s+/, ' ', :g);
-            is(~$parse, $parsed, "{$suite}: " ~ $rule ~ " parse: " ~ $desc)
+            is ~$parse, $parsed, "{$suite}: " ~ $rule ~ " parse: " ~ $desc;
         }
         else {
-            ok(~$parse, "{$suite}: " ~ $rule ~ " parsed")
+            ok ~$parse, "{$suite}: " ~ $rule ~ " parsed";
         }
 
         with %expected<ast> -> $expected-ast {

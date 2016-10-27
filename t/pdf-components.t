@@ -66,13 +66,13 @@ endobj
 >>
 endobj';
 
-for ($ind-obj1) {
-    ok($_ ~~ /^<PDF::Grammar::PDF::ind-obj>$/, "indirect object")
+for $ind-obj1 {
+    ok $_ ~~ /^<PDF::Grammar::PDF::ind-obj>$/, "indirect object"
         or diag $_;
 }
 
-for ($ind-obj1, $body) {
-    ok($_ ~~ /^<PDF::Grammar::PDF::ind-obj>+$/, "body")
+for $ind-obj1, $body {
+    ok $_ ~~ /^<PDF::Grammar::PDF::ind-obj>+$/, "body"
         or diag $_;
 }
 

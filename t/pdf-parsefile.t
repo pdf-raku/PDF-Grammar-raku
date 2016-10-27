@@ -4,17 +4,17 @@ use Test;
 
 use PDF::Grammar::PDF;
 
-my $pdf-file = %*ENV<TEST_PDF>;
-if ($pdf-file) {
+my $pdf-file = 't/helloworld.pdf';
+with %*ENV<TEST_PDF> {
+    $pdf-file = $_;
     diag "loading $pdf-file";
 }
 else {
-    $pdf-file = 't/helloworld.pdf';
     diag "loading $pdf-file (set \$TEST_PDF to override)";
 }
 
 my $p = PDF::Grammar::PDF.parsefile($pdf-file);
 
-ok($p, "parsed pdf content ($pdf-file)");
+ok $p, "parsed pdf content ($pdf-file)";
 
 done-testing;

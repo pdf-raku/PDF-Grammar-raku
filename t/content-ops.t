@@ -116,7 +116,7 @@ for (
     MoveShowText => "(hello) '",            # '         show
 
     ) {
-    ok(.value ~~ /^<PDF::Grammar::Content::instruction>$/, "instruction " ~ .key)
+    ok .value ~~ /^<PDF::Grammar::Content::instruction>$/, "instruction " ~ .key
         or do {
             diag "failed instruction: " ~ .value;
             if (.value ~~ /^(.*?)(<PDF::Grammar::Content::instruction>)(.*?)$/) {
@@ -150,11 +150,9 @@ for (
     'BX ... EX incorrect nesting (extra EX)' =>'BX EX EX',                 
     ) {
     # test our parser's resilience
-    ok(.value !~~ /^<PDF::Grammar::Content::instruction>$/,
-       "invalid instruction: " ~ .key)
+    ok .value !~~ /^<PDF::Grammar::Content::instruction>$/, "invalid instruction: " ~ .key
         or diag .value;
-    ok($_ ~~ /<PDF::Grammar::Content::unknown>/,
-       "parsed as unknown: " ~ .key);
+    ok $_ ~~ /<PDF::Grammar::Content::unknown>/, "parsed as unknown: " ~ .key;
 }
 
 done-testing;
