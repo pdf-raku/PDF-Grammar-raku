@@ -6,11 +6,11 @@
     - Declare "perl6" : "6" in META.info
     - new <xref-first> rule. A variation of <xref> that assumes we've
       hopped over the first few bytes. Needed by PDF::Reader to (gulp)
-      handle the /T offset entry in linerization dictionary.
+      handle the /T offset entry in linearization dictionary.
     - minor optimisations to <ws> and <name> rules
     - replaced a couple of regex with rules/tokens
     - <xref-section> - allow zero <xref-entry>'s
-      As observed in some realy-world PDF's
+      As observed in some real-world PDF's
 
     Release 0.0.5
     - Replaced JSON::Tiny with JSON::Fast
