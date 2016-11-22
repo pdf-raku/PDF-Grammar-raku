@@ -9,6 +9,7 @@
         "PDF::Grammar::Actions" : "lib/PDF/Grammar/Actions.pm",
         "PDF::Grammar::Content" : "lib/PDF/Grammar/Content.pm",
         "PDF::Grammar::Content::Actions" : "lib/PDF/Grammar/Content/Actions.pm",
+        "PDF::Grammar::Content::Fast" : "lib/PDF/Grammar/Content/Fast.pm",
         "PDF::Grammar::Doc" : "lib/PDF/Grammar/Doc.pm",
         "PDF::Grammar::Doc::Actions" : "lib/PDF/Grammar/Doc/Actions.pm",
         "PDF::Grammar::PDF" : "lib/PDF/Grammar/PDF.pm",

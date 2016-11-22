@@ -3,6 +3,7 @@ use v6;
 use Test;
 
 use PDF::Grammar::Content;
+use PDF::Grammar::Content::Fast;
 
 my $test-image-block = 'BI                  % Begin inline image object
     /W 17           % Width in samples
@@ -116,18 +117,20 @@ for (
     MoveShowText => "(hello) '",            # '         show
 
     ) {
-    ok .value ~~ /^<PDF::Grammar::Content::instruction>$/, "instruction " ~ .key
-        or do {
-            diag "failed instruction: " ~ .value;
-            if (.value ~~ /^(.*?)(<PDF::Grammar::Content::instruction>)(.*?)$/) {
+    for :normal(/^<PDF::Grammar::Content::instruction>$/), :fast(/^<PDF::Grammar::Content::Fast::instruction>$/) -> \re {
+        ok .value ~~ re.value, re.key ~ " instruction " ~ .key
+            or do {
+                diag "failed instruction: " ~ .value;
+                if (.value ~~ /^(.*?)(<PDF::Grammar::Content::instruction>)(.*?)$/) {
 
-                my $p = $0 && $0.join(',');
-                note "(preceeding: $p)" if $p;
-                my $m = $1 && $1.join(',');
-                note "(best match: $m)" if $m;
-                my $f = $2 && $2.join(',');
-                note "(following: $f)" if $f;
-            }
+                    my $p = $0 && $0.join(',');
+                    note "(preceeding: $p)" if $p;
+                    my $m = $1 && $1.join(',');
+                    note "(best match: $m)" if $m;
+                    my $f = $2 && $2.join(',');
+                    note "(following: $f)" if $f;
+                }
+        }
     }
 }
 

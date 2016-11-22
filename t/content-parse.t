@@ -3,6 +3,7 @@ use v6;
 use Test;
 
 use PDF::Grammar::Content;
+use PDF::Grammar::Content::Fast;
 use PDF::Grammar::Content::Actions;
 use PDF::Grammar::Test :is-json-equiv;
 
@@ -134,12 +135,16 @@ for (trivial => [$sample_content1, $ast1],
      ) {
     my ($test, $spec) = $_.kv;
     my ($str, $expected-ast) = @$spec;
-    my $p = PDF::Grammar::Content.parse($str, :$actions);
-    ok $p, "$test - parsed pdf content"
-        or do {diag ("unable to parse: $str"); next};
+    for :normal( PDF::Grammar::Content), :fast( PDF::Grammar::Content::Fast) {
+        my $speed = .key;
+        my $grammar = .value;
+        my $p = $grammar.parse($str, :$actions);
+        ok $p, "$test $speed - parsed pdf content"
+            or do {diag ("unable to parse: $str"); next};
 
-    if $expected-ast {
-        is-json-equiv($p.ast, $expected-ast, "$test - result as expected");
+        if $expected-ast {
+            is-json-equiv($p.ast, $expected-ast, "$test $speed - result as expected");
+        }
     }
 }
 
