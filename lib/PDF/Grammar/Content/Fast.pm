@@ -11,8 +11,8 @@ grammar PDF::Grammar::Content::Fast
     rule TOP {^ [<op=.instruction>||<op=.unknown>]* $}
 
     proto rule instruction {*}
-    rule instruction:sym<block> {<block>}
     rule instruction:sym<op>    {<op>}
+    rule instruction:sym<block> {<block>}
 
     # ------------------------
     # Blocks
@@ -23,8 +23,7 @@ grammar PDF::Grammar::Content::Fast
     rule opEndText             { (ET) }
 
     # marked content blocks: BMC ... EMC   or   BDC ... EMC
-    rule opBeginMarkedContent  { <name> (BMC)
-                               | <name> [<name> | <dict>] (BDC) }
+    rule opBeginMarkedContent  { <name> [ (BMC) | [<name> | <dict>] (BDC) ] }
     rule opEndMarkedContent    { (EMC) }
 
     # image blocks BI ... ID ... EI
@@ -42,8 +41,8 @@ grammar PDF::Grammar::Content::Fast
     rule inner-text-block { <opBeginText> <op>* <opEndText> }
     rule inner-marked-content-block { <opBeginMarkedContent> <op>* <opEndMarkedContent> }
     proto rule block {*}
-    rule block:sym<text> { <opBeginText> [ <inner-marked-content-block> | <op> ]* <opEndText> }
-    rule block:sym<markedContent> { <opBeginMarkedContent> [ <inner-text-block> | <op> ]* <opEndMarkedContent> }
+    rule block:sym<text> { <opBeginText> [ <op> | <inner-marked-content-block> ]* <opEndText> }
+    rule block:sym<markedContent> { <opBeginMarkedContent> [ <op> | <inner-text-block> ]* <opEndMarkedContent> }
     rule imageAtts { [<name> <object>]* }
     rule block:sym<image> {
                       <opBeginImage>
@@ -77,6 +76,6 @@ grammar PDF::Grammar::Content::Fast
     rule op:sym<array>  { <array> [ (TJ) | <number> (d) ] }
 
     # catchall for unknown opcodes and arguments
-    token guff { <[a..zA..Z\*\"\']><[\w\*\"\']>* }
-    rule unknown               { <object> || <guff> } 
+    token guff    { <[a..zA..Z\*\"\']><[\w\*\"\']>* }
+    rule unknown  { <object> || <guff> } 
 }
