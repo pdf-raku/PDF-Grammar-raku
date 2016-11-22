@@ -1,7 +1,7 @@
     Release 0.0.7
-    - Optimized stream token
-    - Added PDF::Grammar::Content::Fast. A faster, more concise
-      alternative to the PDF::Grammar::Content grammar
+    - Optimized stream and image tokens
+    - Added PDF::Grammar::Content::Fast. A faster, more forgiving
+      alternative to PDF::Grammar::Content
 
     Release 0.0.6
     - Make META.info version consistent with PDF::Grammar:ver<...>

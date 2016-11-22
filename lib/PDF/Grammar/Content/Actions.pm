@@ -27,8 +27,11 @@ class PDF::Grammar::Content::Actions
      }
 
     sub _image-ast($/) {
-        my $dict = $<imageAtts>.ast;
-        my $encoded = ~$<encoded>;
+        my $dict = $<imageDict>.ast;
+        my $start = $<start>.to;
+        my $len = $<end>.from - $start;
+        $start -= $/.from;
+        my $encoded = $/.substr($start, $len);
 
         (:BI[:$dict], :ID[:$encoded], :EI[]).Slip;
     }
@@ -55,21 +58,21 @@ class PDF::Grammar::Content::Actions
         make _op-ast($<op>);
     }
 
+    method imageDict ($/) {
+        my @names = @<name>.map: *.ast.value;
+        my @objects = @<object>».ast;
+
+        my %atts = @names Z=> @objects;
+        make %atts;
+    }
+
     method guff ($/) {
         make ~$/;
     }
 
     method unknown ($/) {
-        my @u =  $/.caps.map( *.value.ast );
+        my @u =  $/.caps.map: *.value.ast;
         make '??' => @u
-    }
-
-    method imageAtts ($/) {
-        my @names = @<name>.map( *.ast.value );
-        my @objects = @<object>».ast;
-
-        my %atts = @names Z=> @objects;
-        make %atts;
     }
 
 }

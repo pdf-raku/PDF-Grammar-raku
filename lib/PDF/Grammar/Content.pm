@@ -43,18 +43,20 @@ grammar PDF::Grammar::Content
     proto rule block {*}
     rule block:sym<text> { <opBeginText> [ <inner-marked-content-block> | <op> ]* <opEndText> }
     rule block:sym<markedContent> { <opBeginMarkedContent> [ <inner-text-block> | <op> ]* <opEndMarkedContent> }
-    rule imageAtts { [<name> <object>]* }
+    rule imageDict { [<name> <object>]* }
     rule block:sym<image> {
                       <opBeginImage>
-                      <imageAtts>
-                      <opImageData>$<encoded>=.*?\n<opEndImage>
+                      <imageDict>
+                      $<start>=<opImageData>.*?$<end>=\n<opEndImage>
     }
+
+    rule ignored-block { <opBeginIgnore> <ignored>*? <opEndIgnore> }
 
     proto rule ignored {*}
     rule ignored:sym<block> { <ignored-block> }
     rule ignored:sym<guff>  { <guff> }
     rule ignored:sym<char>  { . }
-    rule ignored-block { <opBeginIgnore> <ignored>*? <opEndIgnore> }
+
     rule block:sym<ignore> { <ignored-block> }
 
     # ------------------------

@@ -117,7 +117,7 @@ for (
     MoveShowText => "(hello) '",            # '         show
 
     ) {
-    for :normal(/^<PDF::Grammar::Content::instruction>$/), :fast(/^<PDF::Grammar::Content::Fast::instruction>$/) -> \re {
+    for :normal(/^<PDF::Grammar::Content::TOP>$/), :fast(/^<PDF::Grammar::Content::Fast::TOP>$/) -> \re {
         ok .value ~~ re.value, re.key ~ " instruction " ~ .key
             or do {
                 diag "failed instruction: " ~ .value;
