@@ -13,6 +13,8 @@ four grammars:
 
 `PDF::Grammar::Content` - describes the text and graphics operators that are used to produce page layout.
 
+`PDF::Grammar::Content::Fast` - is an optimized version of PDF::Grammar::Content.
+
 `PDF::Grammar::FDF` - this describes the file structure of FDF (Form Data)
 exchange files.
 
@@ -24,18 +26,6 @@ including headers, trailers, top-level objects and the cross-reference table.
 PDF-Grammar has so far been tested against a number of sample of PDF documents and may still be subject to change.
 
 I have been working off the PDF 1.7 reference manual (http://www.adobe.com/content/dam/Adobe/en/devnet/acrobat/pdfs/pdf_reference_1-7.pdf). I've relaxed rules, when needed, to handle real-world examples.
-
-Rakudo Star
------------
-You'll first need to download and build Rakudo or Rakudo Star 2015.07 or better (http://rakudo.org/downloads/star/ - don't forget the final `make install`):
-
-Ensure that `perl6` and `panda` are available on your path, e.g. :
-
-    % export PATH=~/src/rakudo-star-2013.05/install/bin:$PATH
-
-You can then use `panda` to test and install `PDF::Grammar`:
-
-    % panda install PDF::Grammar
 
 Usage Notes
 -----------
@@ -145,13 +135,13 @@ null | Mu | Null object type, e.g. `null`
 pdf | Hash | A PDF document, consisting of a `header` and `body` array
 real | Real | Real object type, e.g. `42.0`
 start | UInt | Start position of stream data (returned by `ind-obj-nibble` rule)
-startxref | UInt | byte offset from the end of the file to the start of the trailer
-stream | Hash | Stream object type. An dictionary indirect object followed by stream data
+startxref | UInt | byte offset from the start of the file to the start of the trailer
+stream | Hash | Stream object type. A dictionary indirect object followed by stream data
 trailer | Hash | Trailer. This typically contains the trailer `dict` entry.
 type | UInt | Index entry type: 0 - free, 1 - inuse, 2 - stream object
 version | Rat | The PDF / FDF version number, parsed from the header
 
 ## See also
 
-- [PDF-Tools](https://github.com/p6-pdf/perl6-PDF-Tools) - extends this module, providing additional functions for PDF manipulation, including compression and the reading and writing of PDF data.
+- [PDF::IO](https://github.com/p6-pdf/perl6-PDF-Tools) - extends this module, providing additional functions for PDF manipulation, including compression and the reading and writing of PDF data.
 
