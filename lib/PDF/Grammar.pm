@@ -1,7 +1,6 @@
 use v6;
-use nqp;
 
-grammar PDF::Grammar:ver<0.0.7> {
+grammar PDF::Grammar {
     # abstract base grammar for PDF Elements, see instances:
     # PDF::Grammar::Content  - Text and Graphics Content
     # PDF::Grammar::FDF      - Describes FDF (Form Data) files
@@ -81,6 +80,7 @@ grammar PDF::Grammar:ver<0.0.7> {
     rule object:sym<null>    { <sym> }
 
     method parsefile( $pdf-file, :$rule = 'TOP', :$actions ) {
+        use nqp;
         my $pdf-body = slurp( $pdf-file, :enc<latin1> );
         my $result = $.parse($pdf-body, :$rule, :$actions );
         nqp::getlexcaller('$/') = $result;

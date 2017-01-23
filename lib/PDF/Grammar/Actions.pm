@@ -2,7 +2,7 @@ use v6;
 
 # base rules for constructing AST from PDF::Grammar.
 
-class PDF::Grammar::Actions:ver<0.0.1> {
+class PDF::Grammar::Actions {
 
     method real($/) {
         make (:real($/.Rat));
