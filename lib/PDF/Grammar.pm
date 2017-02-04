@@ -16,7 +16,7 @@ grammar PDF::Grammar {
     # ---------------
     token comment {'%' \N* \n?}
     # [PDF 1.7] Table 3.1: White-space characters
-    token ws-char { <[ \x20 \x0A \x0 \t \f \n ]> | <.comment>}
+    token ws-char {<[ \x20 \x0A \x0 \t \f \n ]> | <.comment>}
     token ws      {<!ww><.ws-char>*}
 
     # [PDF 1.7] 7.3.3  Numeric Objects
@@ -28,11 +28,11 @@ grammar PDF::Grammar {
     rule number { <real> | <int> }
 
     token octal-code {<[0..7]> ** 1..3}
-    token literal_delimiter {<[ ( ) \\ \n \r ]>}
+    token literal-delimiter {<[ ( ) \\ \n \r ]>}
 
     # literal string components
     proto token literal {*}
-    token literal:sym<regular>          {<-literal_delimiter>+}
+    token literal:sym<regular>          {<-literal-delimiter>+}
     token literal:sym<eol>              {\n}
     token literal:sym<substring>        {<literal-string>}
     # literal string escape sequences
@@ -49,17 +49,17 @@ grammar PDF::Grammar {
 
     # hex strings
     token hex-char   {<xdigit>**1..2}
-    token hex-string {\< [ <xdigit> | <.ws-char> ]* \>}
+    token hex-string {'<' [ <xdigit> | <.ws-char> ]* '>'}
 
     token string {<string=.hex-string>|<string=.literal-string>}
 
     # [PDF 1.7] 7.2.2 Character Set
-    token char_delimiter {<[ ( ) < > \[ \] { } / % \# ]>}
+    token char-delimiter {<[ ( ) < > \[ \] { } / % \# ]>}
 
     proto token name-bytes {*}
     token name-bytes:sym<number-symbol> {'##'}
     token name-bytes:sym<escaped>       {'#'<hex-char> }
-    token name-bytes:sym<regular>       {<[\! .. \~] -char_delimiter>+}
+    token name-bytes:sym<regular>       {<[\! .. \~] -char-delimiter>+}
 
     rule name { '/'<name-bytes>+ }
 
@@ -78,13 +78,6 @@ grammar PDF::Grammar {
     rule object:sym<array>   { <array> }
     rule object:sym<dict>    { <dict> }
     rule object:sym<null>    { <sym> }
-
-    method parsefile( $pdf-file, :$rule = 'TOP', :$actions ) {
-        use nqp;
-        my $pdf-body = slurp( $pdf-file, :enc<latin1> );
-        my $result = $.parse($pdf-body, :$rule, :$actions );
-        nqp::getlexcaller('$/') = $result;
-    }
 
 }
 

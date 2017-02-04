@@ -1,3 +1,6 @@
+    Release 0.0.8
+    - Renamed tokens char_delimiter -> char-delimiter, literal_delimiter -> literal-delimiter
+
     Release 0.0.7
     - Optimized stream and image tokens
     - Added PDF::Grammar::Content::Fast. A faster, more forgiving
