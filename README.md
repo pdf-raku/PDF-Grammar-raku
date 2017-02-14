@@ -143,5 +143,5 @@ version | Rat | The PDF / FDF version number, parsed from the header
 
 ## See also
 
-- [PDF::IO](https://github.com/p6-pdf/perl6-PDF-Tools) - extends this module, providing additional functions for PDF manipulation, including compression and the reading and writing of PDF data.
+- [PDF](https://github.com/p6-pdf/perl6-PDF-Tools) - for PDF manipulation, including compression, encryption and reading and writing of PDF data.
 
