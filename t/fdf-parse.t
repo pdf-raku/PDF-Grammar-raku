@@ -79,7 +79,7 @@ for (
     ) -> % ( :$test!, :$input!, :$rule='TOP', *%expected ) {
     %expected<ast> //= Mu;
 
-    PDF::Grammar::Test::parse-tests(PDF::Grammar::FDF, %expected<input>, :$actions, :$rule, :suite("fdf $test"), :%expected );
+    PDF::Grammar::Test::parse-tests(PDF::Grammar::FDF, $input, :$actions, :$rule, :suite("fdf $test"), :%expected );
 }
 
 done-testing;
