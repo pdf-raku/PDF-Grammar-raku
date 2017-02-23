@@ -1,5 +1,6 @@
     Release 0.0.8
     - Renamed tokens char_delimiter -> char-delimiter, literal_delimiter -> literal-delimiter
+    - remove custom PDF::Grammar.parsefile method. Not needed in latest rakudo
 
     Release 0.0.7
     - Optimized stream and image tokens

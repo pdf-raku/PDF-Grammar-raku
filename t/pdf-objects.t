@@ -168,29 +168,27 @@ my $body-input = [~] ($body, "\n", $xref, $trailer,  $startxref);
 my $index-ast = {:trailer($trailer-ast), :xref($xref-ast) };
 
 for (
-      header => { :input($header),     :ast($header-ast)},
-      ind-ref => { :input($ind-ref1),  :ast($ind-ref1-ast)},
-      ind-obj => { :input($ind-obj-dict),  :ast($ind-obj-dict-ast)},
-      ind-obj => { :input($ind-obj-stream),  :ast($ind-obj-stream-ast)},
-      ind-obj-nibble => { :input($ind-obj-dict),  :ast($ind-obj-dict-ast)},
-      ind-obj-nibble => { :input($ind-obj-stream-nibble),  :ast($ind-obj-stream-nibble-ast)},
-      trailer => { :input($trailer),    ast => :trailer($trailer-ast)},
-      startxref => { :input($startxref),     :ast($startxref-ast)},
-      xref => { :input($xref),          ast => :xref($xref-ast)},
-      xref => { :input($xref-multiple), ast => :xref($xref-multiple-ast)},
-      xref => { :input($xref-empty), ast => :xref($xref-empty-ast)},
-      xref-first => { :input($xref-first), ast => :xref($xref-multiple-ast)},
-      body => { :input($body-input),  :ast($body-ast)},
-      index => { :input($xref ~ "\n" ~ $trailer), :ast($index-ast) },
-      pdf => { :input($pdf), ast => Any},
-      object-stream-index => { :input($object-stream-index),  :ast($object-stream-index-ast)},
-    ) {
-     my $rule = .key;
-     my %expected = %( .value );
+      { :rule<header>,  :input($header),     :ast($header-ast)},
+      { :rule<ind-ref>,  :input($ind-ref1),  :ast($ind-ref1-ast)},
+      { :rule<ind-obj>,  :input($ind-obj-dict),  :ast($ind-obj-dict-ast)},
+      { :rule<ind-obj>,  :input($ind-obj-stream),  :ast($ind-obj-stream-ast)},
+      { :rule<ind-obj-nibble>,  :input($ind-obj-dict),  :ast($ind-obj-dict-ast)},
+      { :rule<ind-obj-nibble>,  :input($ind-obj-stream-nibble),  :ast($ind-obj-stream-nibble-ast)},
+      { :rule<trailer>,  :input($trailer),    ast => :trailer($trailer-ast)},
+      { :rule<startxref>,  :input($startxref),     :ast($startxref-ast)},
+      { :rule<xref>,  :input($xref),          ast => :xref($xref-ast)},
+      { :rule<xref>,  :input($xref-multiple), ast => :xref($xref-multiple-ast)},
+      { :rule<xref>,  :input($xref-empty), ast => :xref($xref-empty-ast)},
+      { :rule<xref-first>,  :input($xref-first), ast => :xref($xref-multiple-ast)},
+      { :rule<body>,  :input($body-input),  :ast($body-ast)},
+      { :rule<index>,  :input($xref ~ "\n" ~ $trailer), :ast($index-ast) },
+      { :rule<pdf>,  :input($pdf), ast => Any},
+      { :rule<object-stream-index>,  :input($object-stream-index),  :ast($object-stream-index-ast)},
+    ) -> % ( :$rule!, :$input, *%expected ) {
      # normalise lines for Win platforms
-     my $input = %expected<input>.subst(/\n/, "\n", :g);
+     my $in = $input.subst(/\n/, "\n", :g);
 
-     PDF::Grammar::Test::parse-tests(PDF::Grammar::PDF, $input, :$rule, :$actions, :suite('pdf doc'), :%expected );
+     PDF::Grammar::Test::parse-tests(PDF::Grammar::PDF, $in, :$rule, :$actions, :suite('pdf doc'), :%expected );
 }
 
 done-testing;

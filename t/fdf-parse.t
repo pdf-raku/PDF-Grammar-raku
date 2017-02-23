@@ -69,21 +69,17 @@ trailer
 my $actions = PDF::Grammar::FDF::Actions.new;
 
 for (
-    tiny => { :input($fdf-tiny) },
-    header => { :input<%FDF-1.2>, :ast{type => 'FDF', version => 1.2}, :rule<header> },
-    trailer => { :input("trailer\n<</Root 1 0 R>>\n"), :ast{ :trailer{ :dict{ :Root{ :ind-ref[1, 0]}}} }, :rule<trailer> },
-    body => { :input($fdf-body), :rule<body> },
-    small => { :input($fdf-small), :ast($fdf-small-ast) },
-    medium => { :input($fdf-medium)},
-    large => { :input($fdf-large)},
-    ) {
-    my $test-name = .key;	
-    my %expected = %( .value );
+    { :test<tiny>,  :input($fdf-tiny) },
+    { :test<header>,  :input<%FDF-1.2>, :ast{type => 'FDF', version => 1.2}, :rule<header> },
+    { :test<trailer>,  :input("trailer\n<</Root 1 0 R>>\n"), :ast{ :trailer{ :dict{ :Root{ :ind-ref[1, 0]}}} }, :rule<trailer> },
+    { :test<body>,  :input($fdf-body), :rule<body> },
+    { :test<small>,  :input($fdf-small), :ast($fdf-small-ast) },
+    { :test<medium>,  :input($fdf-medium)},
+    { :test<large>,  :input($fdf-large)},
+    ) -> % ( :$test!, :$input!, :$rule='TOP', *%expected ) {
     %expected<ast> //= Mu;
 
-    my $rule = %expected<rule> // 'TOP';
-
-    PDF::Grammar::Test::parse-tests(PDF::Grammar::FDF, %expected<input>, :$actions, :$rule, :suite("fdf {$test-name}"), :%expected );
+    PDF::Grammar::Test::parse-tests(PDF::Grammar::FDF, %expected<input>, :$actions, :$rule, :suite("fdf $test"), :%expected );
 }
 
 done-testing;
