@@ -35,12 +35,12 @@ reason **`latin1` encoding is recommended **. For example:
 
    ```% perl6 -MPDF::Grammar::PDF -e"say PDF::Grammar::PDF.parse( slurp($f, :enc<latin1>) )"```
 
-- `pdftk` is a useful utility for preprocessing pdfs, including uncompression and decryption:
+- This module is put to work by the down-stream [PDF](https://github.com/p6-pdf/perl6-PDF-Tools) module. E.g.
+  to uncompress a PDF, using the installed `pdf-rewriter` script:
 
-    ```
-    % pdftk flyer.pdf output flyer.unc.pdf uncompress
-    % perl6 -MPDF::Grammar::PDF -e"say PDF::Grammar::PDF.parsefile( 'flyer.unc.pdf' )"
-    ```
+  ```
+  % pdf-rewriter.pl --uncompress flyer.pdf
+  ```
 
 Examples
 --------
