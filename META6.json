@@ -1,5 +1,6 @@
 {   "perl"        : "6.*",
     "name"        : "PDF::Grammar",
+    "license"     : "Artistic 2.0",
     "api"         : "PDF-1.7",
     "auth"        : "github:p6-pdf",
     "version"     : "0.0.8",
