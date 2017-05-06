@@ -36,15 +36,8 @@ module PDF::Grammar::Test {
 	return False;
     }
 
-    use Test;
-    sub is-json-equiv($got, $expected, Str $test = '') is export(:is-json-equiv) {
-        my $ok = True;
-        unless ok(json-eqv($got, $expected), $test) {
-                diag "expected: " ~ to-json($expected);
-                diag "got     : " ~ to-json($got);
-                $ok = False;
-            };
-        $ok;
+    sub is-json-equiv(\a, |c) is export(:is-json-equiv) {
+	cmp-ok(a, &json-eqv, |c);
     }
 
     our sub parse-tests($class, $input, :$parse is copy, :$actions,

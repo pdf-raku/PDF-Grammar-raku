@@ -5,7 +5,6 @@ use Test;
 use PDF::Grammar::Content;
 use PDF::Grammar::Content::Fast;
 use PDF::Grammar::Content::Actions;
-use PDF::Grammar::Test :is-json-equiv;
 
 my $sample_content1 = '/RGB CS';
 my $ast1 = [ :CS[ :name<RGB> ]];
@@ -143,7 +142,7 @@ for (trivial => [$sample_content1, $ast1],
             or do {diag ("unable to parse: $str"); next};
 
         if $expected-ast {
-            is-json-equiv($p.ast, $expected-ast, "$test $speed - result as expected");
+            cmp-ok $p.ast, 'eqv', $expected-ast, "$test $speed - result as expected";
         }
     }
 }
