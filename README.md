@@ -72,7 +72,7 @@ Examples
     }
     ```
 
-Ast Reference
+AST Reference
 -------------
 The action methods in this module return AST trees. Each node in the
 tree consists of a key, value pair, where the key is the AST Tag,
@@ -110,7 +110,7 @@ This AST representation is used extensively throughout the PDF tool-chain. For e
 For reference, here is a list of all AST node types:
 
 *AST Tag* | Perl Type | Description
---- | --- | --- | --- |
+--- | --- | --- |
 array | Array[Any] | Array object type, e.g. `[ 0 0 612 792 ]`
 body | Array[Hash] | The FDF/PDF body. A PDF with revisions has multiple body segments
 bool | Bool | Boolean object type, e.g. `true`
