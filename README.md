@@ -143,5 +143,5 @@ version | Rat | The PDF / FDF version number, parsed from the header
 
 ## See also
 
-- [PDF](https://github.com/p6-pdf/perl6-PDF-Tools) - for PDF manipulation, including compression, encryption and reading and writing of PDF data.
+- [PDF](https://github.com/p6-pdf/PDF-p6) - for PDF manipulation, including compression, encryption and reading and writing of PDF data.
 

@@ -7,7 +7,7 @@ grammar PDF::Grammar {
     # PDF::Grammar::PDF      - Overall PDF Document Structure
     # PDF::Grammar::Function - Postscript calculator functions
     # 
-    BEGIN constant AST-Types is export(:AST-Types) = set < array body bool
+    enum AST-Types is export(:AST-Types) < array body bool
 	dict encoded end entries decoded fdf gen-num header hex-string
 	ind-ref ind-obj int obj-count obj-first-num offset literal
 	name null pdf real start startxref stream trailer type version >;
