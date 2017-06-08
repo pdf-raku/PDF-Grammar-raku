@@ -45,7 +45,7 @@ grammar PDF::Grammar::Content::Fast
     proto rule op {*}
     rule op:sym<unary>  { (b\*?|B[T|\*]?|EMC|ET|F|f\*?|h|n|s|S|W\*?|T\*|Q|q) }
     rule op:sym<num>    { <number> [ (G|g|i|M|Tc|TL|Ts|Tw|Tz|w)
-                                   | <number> [ (d0|l|m|Td|TD )
+                                   | <number> [ (d0|l|m|Td|TD)
                                               | <string> (\")
                                               | <number> [ (rg|RG)
                                                          | <number> [ (k|K|re|SC|sc|v|y)
