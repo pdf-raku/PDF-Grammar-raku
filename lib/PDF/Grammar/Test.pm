@@ -3,7 +3,6 @@ use v6;
 module PDF::Grammar::Test {
 
     use Test;
-    use JSON::Fast;
 
     # allow only json compatible data
     multi sub json-eqv (Hash:D $a, Hash:D $b) {
@@ -22,6 +21,10 @@ module PDF::Grammar::Test {
 		unless (json-eqv($a[$k], $b[$k]));
 	}
 	return True;
+    }
+    multi sub json-eqv (array:D $a, $b) {
+        # somewhat lax to accomodate shaped arrays
+        $a.Str eq $b.Str;
     }
     multi sub json-eqv (Numeric:D $a, Numeric:D $b) { $a == $b }
     multi sub json-eqv (Stringy $a, Stringy $b) { $a eq $b }

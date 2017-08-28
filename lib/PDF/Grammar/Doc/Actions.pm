@@ -97,18 +97,18 @@ class PDF::Grammar::Doc::Actions
     }
 
     method xref-section($/) {
-        my @entries = $<xref-entry>».ast;
-        my $obj-first-num = $<obj-first-num>.ast.value;
-        my $obj-count = $<obj-count>.ast.value;
+        my UInt $obj-count = $<obj-count>.ast.value;
+        my UInt $obj-first-num = $<obj-first-num>.ast.value;
+        # RT131965 - rakudo doesn't like shaped arrays of length 0
+        constant DummyEntry = array[uint64].new(0, 65535, 0);
+        my $n = $obj-count || 1;
+        my uint64 @entries[$n;3] = $<xref-entry>».ast.List || (DummyEntry,);
         make { :$obj-first-num, :$obj-count, :@entries };
     }
 
     method xref-entry($/) {
-        make {
-            type   => $<obj-status>.ast,
-            offset => $<byte-offset>.ast.value,
-            gen-num  => $<gen-number>.ast.value,
-            };
+        my uint64 @entry = $<byte-offset>.ast.value, $<gen-number>.ast.value, $<obj-status>.ast;
+        make @entry;
     }
 
     method obj-status:sym<free>($/)  { make 0 }

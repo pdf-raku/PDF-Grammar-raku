@@ -84,14 +84,14 @@ my $xref = "xref
 my $xref-ast = [
                 {:obj-first-num(0),
                  :obj-count(8),
-                 :entries[{:offset(0), :gen-num(65535),  :type(0)},
-                          {:offset(9), :gen-num(0), :type(1)},
-                          {:offset(74), :gen-num(0), :type(1)},
-                          {:offset(120), :gen-num(0), :type(1)},
-                          {:offset(179), :gen-num(0), :type(1)},
-                          {:offset(322), :gen-num(0), :type(1)},
-                          {:offset(415), :gen-num(0), :type(1)},
-                          {:offset(445), :gen-num(0), :type(1)}]
+                 :entries[[0, 65535,  0],
+                          [9, 0, 1],
+                          [74, 0, 1],
+                          [120, 0, 1],
+                          [179, 0, 1],
+                          [322, 0, 1],
+                          [415, 0, 1],
+                          [445, 0, 1]]
                },
               ];
 
@@ -109,15 +109,15 @@ my $xref-multiple = "xref
 my $xref-multiple-ast = [
                 {:obj-first-num(0),
                  :obj-count(2),
-                 :entries[{:offset(0), :gen-num(65535),  :type(0)},
-                          {:offset(18), :gen-num(0), :type(1)},
+                 :entries[[0, 65535,  0],
+                          [18, 0, 1],
                          ]
                },
 
                 {:obj-first-num(2), :obj-count(3),
-                 entries => [{:offset(77), :gen-num(0), :type(1)},
-                             {:offset(178), :gen-num(0), :type(1)},
-                             {:offset(457), :gen-num(0), :type(1)},
+                 :entries[[77, 0, 1],
+                          [178, 0, 1],
+                          [457, 0, 1],
                             ]
                },
               ];
@@ -129,7 +129,7 @@ my $xref-empty = "xref
 my $xref-empty-ast = [
     {:obj-first-num(0),
      :obj-count(0),
-     :entries[],
+     :entries[[0, 65535, 0]],
     },
 ];
 
@@ -187,7 +187,6 @@ for (
     ) -> % ( :$rule!, :$input, *%expected ) {
      # normalise lines for Win platforms
      my $in = $input.subst(/\n/, "\n", :g);
-
      PDF::Grammar::Test::parse-tests(PDF::Grammar::PDF, $in, :$rule, :$actions, :suite('pdf doc'), :%expected );
 }
 

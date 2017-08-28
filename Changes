@@ -1,5 +1,8 @@
+    Release 0.1.1
+    - PDF::Grammar::Doc::Actions now produces compact uint64 shaped indexes
+    - Change PDF::Grammar :AST-Types from a Set to an Enum.
     Release 0.1.0
-    = Change PDF::Grammar :AST-Types from a Set to an Enum.
+    - Changed xref entries AST from a hash to a uint32 @array[3]
 
     Release 0.0.8
     - Renamed tokens char_delimiter -> char-delimiter, literal_delimiter -> literal-delimiter

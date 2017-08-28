@@ -90,7 +90,7 @@ grammar PDF::Grammar::Content
 
     rule op:sym<ClosePath>           { (h) }
 
-    rule op:sym<SetFlat>             { <number> (i) }
+    rule op:sym<SetFlatness>         { <number> (i) }
 
     rule op:sym<SetLineJoin>         { <int> (j) }
     rule op:sym<SetLineCap>          { <int> (J) }
