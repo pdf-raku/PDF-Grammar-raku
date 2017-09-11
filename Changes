@@ -1,6 +1,7 @@
     Release 0.1.1
     - PDF::Grammar::Doc::Actions now produces compact uint64 shaped indexes
     - Change PDF::Grammar :AST-Types from a Set to an Enum.
+    - Allow whitespace between trailer dict and 'startxref'
     Release 0.1.0
     - Changed xref entries AST from a hash to a uint32 @array[3]
 

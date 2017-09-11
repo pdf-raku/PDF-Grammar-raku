@@ -54,7 +54,7 @@ grammar PDF::Grammar::Doc
     # table plus the file trailer dictionary
     rule trailer {
         trailer
-        <dict>\n
+        <dict>
     }
 
     rule startxref {
