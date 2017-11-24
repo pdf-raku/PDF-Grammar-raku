@@ -48,7 +48,6 @@ grammar PDF::Grammar {
     token literal-string { '(' <literal>* ')' }
 
     # hex strings
-    token hex-char   {<xdigit>**1..2}
     token hex-string {'<' [ <xdigit> | <.ws-char> ]* '>'}
 
     token string {<string=.hex-string>|<string=.literal-string>}
@@ -58,7 +57,7 @@ grammar PDF::Grammar {
 
     proto token name-bytes {*}
     token name-bytes:sym<number-symbol> {'##'}
-    token name-bytes:sym<escaped>       {'#'<hex-char> }
+    token name-bytes:sym<escaped>       {'#'<xdigit>**2 }
     token name-bytes:sym<regular>       {<[\! .. \~] -char-delimiter>+}
 
     rule name { '/'<name-bytes>+ }

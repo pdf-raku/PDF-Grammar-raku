@@ -16,15 +16,11 @@ class PDF::Grammar::Actions {
         make ($<real> // $<int>).ast;
     }
 
-    method hex-char($/) {
-        make _hex-pair(~$/);
-    }
-
     method name-bytes:sym<number-symbol>($/) {
         make '#'.ord;
     }
     method name-bytes:sym<escaped>($/) {
-        make $<hex-char>.ast;
+        make :16( $/.substr(1) )
     }
     method name-bytes:sym<regular>($/) {
         make $/.ords.Slip;
@@ -37,7 +33,7 @@ class PDF::Grammar::Actions {
 
     method hex-string ($/) {
         my $xdigits = [~] $<xdigit>».Str;
-        my @hex-codes = $xdigits.comb(/..?/).map({ _hex-pair($_) });
+        my @hex-codes = $xdigits.comb.map: -> $a, $b = '0' { :16($a ~ $b) };
         my $hex-string = [~] @hex-codes.map({ chr($_) });
 
         make (:$hex-string);
@@ -96,12 +92,4 @@ class PDF::Grammar::Actions {
     method object:sym<dict>($/)    { make $<dict>.ast }
     method object:sym<null>($/)    { make 'null' => Any }
 
-    # utility subs
-
-    sub _hex-pair($hex --> UInt) {
-        my $num = :16($hex);
-        $hex.chars %% 2
-          ?? $num
-          !! $num * 16
-    }
 }

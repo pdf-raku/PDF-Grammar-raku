@@ -8,7 +8,7 @@ description; there are areas where these can be put to use, including:
 - The operands that make up content streams. These are used to markup text, forms,
 images and graphical elements.
 
-PDF::Grammar is an experimental set of Perl 6 grammars for parsing and validation of real-world PDF examples. There are
+PDF::Grammar is a set of Perl 6 grammars for parsing and validation of real-world PDF examples. There are
 four grammars:
 
 `PDF::Grammar::Content` - describes the text and graphics operators that are used to produce page layout.
@@ -33,9 +33,9 @@ Usage Notes
 - PDF input files typically contain a mixture of ASCII directives and binary data, plus byte-orientated addressing. For this
 reason **`latin1` encoding is recommended **. For example:
 
-   ```% perl6 -MPDF::Grammar::PDF -e"say PDF::Grammar::PDF.parse( slurp($f, :enc<latin1>) )"```
+   ```% perl6 -MPDF::Grammar::PDF -e"say PDF::Grammar::PDF.parse: slurp($f, :enc<latin1>)"```
 
-- This module is put to work by the down-stream [PDF](https://github.com/p6-pdf/perl6-PDF-Tools) module. E.g.
+- This module is put to work by the down-stream [PDF](https://github.com/p6-pdf/PDF-p6) module. E.g.
   to uncompress a PDF, using the installed `pdf-rewriter` script:
 
   ```
