@@ -1,5 +1,7 @@
     Release 0.1.2
     - Optimized hex string parsing. Hex codes in names must have 2-digits
+    - Avoid shape errors in xref sections, when actual entries and
+      object count don't match (let PDF::Reader detect and handle this).
 
     Release 0.1.1
     - PDF::Grammar::Doc::Actions now produces compact uint64 shaped indexes

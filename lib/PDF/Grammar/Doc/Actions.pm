@@ -6,7 +6,7 @@ use PDF::Grammar::Actions;
 
 class PDF::Grammar::Doc::Actions
     is PDF::Grammar::Actions {
- 
+
     has Bool $.get-offsets is rw = False; #| return ind-obj byte offsets in AST
 
     method TOP($/) { make $<pdf>.ast.value }
@@ -101,8 +101,8 @@ class PDF::Grammar::Doc::Actions
         my UInt $obj-first-num = $<obj-first-num>.ast.value;
         # RT131965 - rakudo doesn't like shaped arrays of length 0
         constant DummyEntry = array[uint64].new(0, 65535, 0);
-        my $n = $obj-count || 1;
-        my uint64 @entries[$n;3] = $<xref-entry>».ast.List || (DummyEntry,);
+        my List $rows = $<xref-entry>».ast.List || (DummyEntry,);
+        my uint64 @entries[+$rows; 3] = $rows;
         make { :$obj-first-num, :$obj-count, :@entries };
     }
 
