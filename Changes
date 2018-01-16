@@ -2,7 +2,7 @@
     - Optimized hex string parsing. Hex codes in names must have 2-digits
     - Avoid shape errors in xref sections, when actual entries and
       object count don't match (let PDF::Reader detect and handle this).
-
+    - Regen META6.json via mi6
     Release 0.1.1
     - PDF::Grammar::Doc::Actions now produces compact uint64 shaped indexes
     - Change PDF::Grammar :AST-Types from a Set to an Enum.
