@@ -31,13 +31,13 @@ class PDF::Grammar::Function::Actions
 
     method conditional:sym<if>($/) {
 	my $if = $<if-expr>.ast;
-	make 'expr' => { :$if }
+	make 'cond' => { :$if }
     }
 
     method conditional:sym<ifelse>($/) {
 	my $if = $<if-expr>.ast;
 	my $else = $<else-expr>.ast;
-	make 'expr' => { :$if, :$else }
+	make 'cond' => { :$if, :$else }
     }
 
 }

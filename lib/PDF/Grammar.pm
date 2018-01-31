@@ -1,6 +1,6 @@
 use v6;
 
-grammar PDF::Grammar:ver<0.1.2> {
+grammar PDF::Grammar:ver<0.1.3> {
     # abstract base grammar for PDF Elements, see instances:
     # PDF::Grammar::Content  - Text and Graphics Content
     # PDF::Grammar::FDF      - Describes FDF (Form Data) files
@@ -10,7 +10,7 @@ grammar PDF::Grammar:ver<0.1.2> {
     enum AST-Types is export(:AST-Types) < array body bool
 	dict encoded end entries decoded fdf gen-num header hex-string
 	ind-ref ind-obj int obj-count obj-first-num offset literal
-	name null pdf real start startxref stream trailer type version >;
+	name null pdf real start startxref stream trailer type version cond>;
 
     # [PDF 1.7] 7.2.2 Character Set + 7.2.3 Comment characters
     # ---------------

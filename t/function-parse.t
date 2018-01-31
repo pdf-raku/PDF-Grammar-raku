@@ -19,11 +19,11 @@ my $example-expr = '{ 360 mul sin
 my $example-ast = (:expr[ :int(360), :op<mul>, :op<sin>, :int(2), :op<div>, :op<exch>, :int(360), :op<mul>, :op<sin>, :int(2), :op<div>, :op<add>]);
 
 my $if-expr = '{ 1 1 add 3 eq ' ~ $example-expr ~' if }';
-my $if-ast = ( :expr[ :int(1), :int(1), :op<add>, :int(3), :op<eq>, :expr{if => :expr[ :int(360), :op<mul>, :op<sin>, :int(2), :op<div>, :op<exch>, :int(360), :op<mul>, :op<sin>, :int(2), :op<div>, :op<add>]}]);
+my $if-ast = ( :expr[ :int(1), :int(1), :op<add>, :int(3), :op<eq>, :cond{if => :expr[ :int(360), :op<mul>, :op<sin>, :int(2), :op<div>, :op<exch>, :int(360), :op<mul>, :op<sin>, :int(2), :op<div>, :op<add>]}]);
 
-my $if-else-expr = '{2 1 1 add eq {7 6 mul} {(booya!)} ifelse}';
+my $if-else-expr = '{2 1 1 add eq {7 6 mul} {42} ifelse}';
 my $if-else-ast = ( :expr[:int(2), :int(1), :int(1), :op<add>, :op<eq>,
-			  :expr{ if => :expr[ :int(7), :int(6), :op<mul>], else => :expr[ :literal<booya!> ]}]);
+			  :cond{ if => :expr[ :int(7), :int(6), :op<mul>], else => :expr[ :int(42) ]}]);
 
 my $restricted-ops = '{ 360 sin <</x [exch]>> def }';
 my $restricted-ast = :expr[ :int(360), :op<sin>, "??" => :dict{x => :array[ :op<exch> ]}, "??" => "def"];

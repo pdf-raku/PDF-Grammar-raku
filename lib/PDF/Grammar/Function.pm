@@ -19,6 +19,7 @@ grammar PDF::Grammar::Function
     rule illegal-object:sym<dict>  { <dict> }
     rule illegal-object:sym<array> { <array> }
     rule illegal-object:sym<name>  { <name> }
+    rule illegal-object:sym<string> { <string> }
     rule illegal-object:sym<null>  { <sym> }
 
     # extend <object> add <ps-op>
