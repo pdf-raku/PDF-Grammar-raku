@@ -5,6 +5,8 @@ use PDF::Grammar::Actions;
 class PDF::Grammar::Content::Actions
     is PDF::Grammar::Actions {
 
+    has Bool $.strict;
+
     method TOP($/) {
         my @result = $/<op>».ast;
         make @result;
@@ -58,7 +60,7 @@ class PDF::Grammar::Content::Actions
         make _op-ast($<op>);
     }
 
-    method imageDict ($/) {
+    method imageDict($/) {
         my @names = @<name>.map: *.ast.value;
         my @objects = @<object>».ast;
 
@@ -66,11 +68,13 @@ class PDF::Grammar::Content::Actions
         make %atts;
     }
 
-    method guff ($/) {
+    method guff($/) {
         make ~$/;
     }
 
-    method unknown ($/) {
+    method unknown($/) {
+        die "unrecognised content at or after byte position {$/.to}: $/"
+            if $!strict;
         my @u =  $/.caps.map: *.value.ast;
         make '??' => @u
     }
