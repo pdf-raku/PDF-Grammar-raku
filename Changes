@@ -1,14 +1,15 @@
    Release 0.1.3
-    - Allow Zero length name '/'. Found in the wild. Nothing
-      in the spec which prohibits it.
+    - Allow Zero length name '/'. Can occur in empty AcromForm fields.
     - Changed AST for PostScript 'if' and 'ifelse'. Now returns a 'cond' node.
     - Added :strict option to PDF::Grammar::Content::Actions. Will cause parser
       to abort whith an error when unrecognised content is encountered.
+
    Release 0.1.2
     - Optimized hex string parsing. Hex codes in names must have 2-digits
     - Avoid shape errors in xref sections, when actual entries and
       object count don't match (let PDF::Reader detect and handle this).
-    - Regen META6.json via mi6
+    - Regen META6.json via mi6.
+
     Release 0.1.1
     - PDF::Grammar::Doc::Actions now produces compact uint64 shaped indexes
     - Change PDF::Grammar :AST-Types from a Set to an Enum.

@@ -109,6 +109,7 @@ for (
      '/A#42',
       # a few picked up in the field
      '/Times-Roman',
+     '/', # empty
     ) {
     ok $_ ~~ /^<PDF::Grammar::PDF::name>$/, "name: $_";
 }
