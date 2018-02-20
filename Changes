@@ -1,4 +1,6 @@
    Release 0.1.3
+    - Allow Zero length name '/'. Found in the wild. Nothing
+      in the spec which prohibits it.
     - Changed AST for PostScript 'if' and 'ifelse'. Now returns a 'cond' node.
     - Added :strict option to PDF::Grammar::Content::Actions. Will cause parser
       to abort whith an error when unrecognised content is encountered.

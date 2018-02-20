@@ -15,8 +15,7 @@ four grammars:
 
 `PDF::Grammar::Content::Fast` - is an optimized version of PDF::Grammar::Content.
 
-`PDF::Grammar::FDF` - this describes the file structure of FDF (Form Data)
-exchange files.
+`PDF::Grammar::FDF` - this describes the file structure of FDF (Form Data) exchange files.
 
 `PDF::Grammar::PDF` - this  describes the file structure of PDF documents,
 including headers, trailers, top-level objects and the cross-reference table.

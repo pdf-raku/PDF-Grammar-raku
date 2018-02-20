@@ -60,7 +60,7 @@ grammar PDF::Grammar:ver<0.1.3> {
     token name-bytes:sym<escaped>       {'#'<xdigit>**2 }
     token name-bytes:sym<regular>       {<[\! .. \~] -char-delimiter>+}
 
-    rule name { '/'<name-bytes>+ }
+    rule name { '/'<name-bytes>* }
 
     # [PDF 1.7] 7.3.2  Boolean objects + Null object
     # ---------------
