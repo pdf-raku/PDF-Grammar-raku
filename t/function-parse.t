@@ -4,7 +4,7 @@ use Test;
 
 use PDF::Grammar::Function;
 use PDF::Grammar::Function::Actions;
-use PDF::Grammar::Test;
+use PDF::Grammar::Test :parse-tests;
 
 my $trivial-expr = '{6 7 mul}';
 my $trivial-ast = (expr => [ :int(6), :int(7), :op<mul> ]);
@@ -37,11 +37,11 @@ for ([ :$trivial-expr, $trivial-ast],
     ) {
     my $name = .[0].key;
     my %expected = input => .[0].value, ast => .[1];
-    
+
     my $input = %expected<input> // die "malformed test";
 
-    PDF::Grammar::Test::parse-tests(PDF::Grammar::Function, $input, :$actions, :rule('TOP'),
-                                    :suite("functions - $name"), :%expected );
+    parse-tests(PDF::Grammar::Function, $input, :$actions, :rule('TOP'),
+                :suite("functions - $name"), :%expected );
 }
 
 done-testing;

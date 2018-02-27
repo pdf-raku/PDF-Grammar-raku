@@ -44,7 +44,7 @@ module PDF::Grammar::Test {
     }
 
     our sub parse-tests($class, $input, :$parse is copy, :$actions,
-			:$rule = 'TOP', :$suite, :%expected) {
+			:$rule = 'TOP', :$suite, :%expected) is export(:parse-tests) {
 
         $parse //= $class.subparse( $input, :$rule, :$actions);
         my $parsed = %expected<parse> // $input;
