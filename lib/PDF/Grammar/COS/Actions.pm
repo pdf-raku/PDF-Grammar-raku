@@ -4,7 +4,7 @@ use PDF::Grammar::Actions;
 
 # rules for constructing PDF::Grammar::PDF AST
 
-class PDF::Grammar::Doc::Actions
+class PDF::Grammar::COS::Actions
     is PDF::Grammar::Actions {
 
     has Bool $.get-offsets is rw = False; #| return ind-obj byte offsets in AST
@@ -20,7 +20,7 @@ class PDF::Grammar::Doc::Actions
         }
     }
     method doc-type($/) {
-        make $/.uc
+        make $/.Str
     }
 
     method header($/)    {

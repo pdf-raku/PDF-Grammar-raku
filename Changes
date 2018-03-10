@@ -1,3 +1,7 @@
+   Release 0.1.4
+    - Renamed base class PDF::Grammar::Doc -> PDF::Grammar::COS
+      (Carousel Object System). After finding this blog
+      http://jimpravetz.com/blog/2012/12/in-defense-of-cos/
    Release 0.1.3
     - Allow Zero length name '/'. Can occur in empty AcromForm fields.
     - Changed AST for PostScript 'if' and 'ifelse'. Now returns a 'cond' node.

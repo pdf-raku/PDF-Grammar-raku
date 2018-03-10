@@ -18,8 +18,8 @@
     "PDF::Grammar::Content" : "lib/PDF/Grammar/Content.pm",
     "PDF::Grammar::Content::Actions" : "lib/PDF/Grammar/Content/Actions.pm",
     "PDF::Grammar::Content::Fast" : "lib/PDF/Grammar/Content/Fast.pm",
-    "PDF::Grammar::Doc" : "lib/PDF/Grammar/Doc.pm",
-    "PDF::Grammar::Doc::Actions" : "lib/PDF/Grammar/Doc/Actions.pm",
+    "PDF::Grammar::COS" : "lib/PDF/Grammar/COS.pm",
+    "PDF::Grammar::COS::Actions" : "lib/PDF/Grammar/COS/Actions.pm",
     "PDF::Grammar::FDF" : "lib/PDF/Grammar/FDF.pm",
     "PDF::Grammar::FDF::Actions" : "lib/PDF/Grammar/FDF/Actions.pm",
     "PDF::Grammar::Function" : "lib/PDF/Grammar/Function.pm",
@@ -32,5 +32,5 @@
   "source-url" : "git://github.com/p6-pdf/PDF-Grammar-p6.git",
   "tags" : [ ],
   "test-depends" : [ ],
-  "version" : "0.1.3"
+  "version" : "0.1.4"
 }

@@ -2,9 +2,8 @@ use v6;
 
 use PDF::Grammar;
 
-# a generalized PDF document. PDF, FDF, Something else?
-# see PDF::Grammar::PDF, PDF::Grammar::FDF
-grammar PDF::Grammar::Doc
+# Abstract Grammar for COS (Carousel Object System). This is the serialization format that underpins PDF, and FDF.
+grammar PDF::Grammar::COS
     is PDF::Grammar {
     #
     # An experimental Perl6  grammar for describing the basic block
@@ -16,7 +15,7 @@ grammar PDF::Grammar::Doc
     # [PDF 1.7] 7.5.2 File Header
     # ---------------
     token header   {'%'<doc-type>'-'$<version>=[\d'.'\d]}
-    token doc-type { <alpha> ** 3 }
+    token doc-type { <alnum>+ }
 
     # index section is optional - document could have a cross reference stream
     # quite likely if linearized [PDF 1.7] 7.5.8 & Annex F (Linearized PDF)

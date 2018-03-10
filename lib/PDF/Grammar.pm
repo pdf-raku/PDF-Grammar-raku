@@ -1,12 +1,12 @@
 use v6;
 
-grammar PDF::Grammar:ver<0.1.3> {
+grammar PDF::Grammar:ver<0.1.4> {
     # abstract base grammar for PDF Elements, see instances:
     # PDF::Grammar::Content  - Text and Graphics Content
     # PDF::Grammar::FDF      - Describes FDF (Form Data) files
     # PDF::Grammar::PDF      - Overall PDF Document Structure
     # PDF::Grammar::Function - Postscript calculator functions
-    # 
+    #
     enum AST-Types is export(:AST-Types) < array body bool
 	dict encoded end entries decoded fdf gen-num header hex-string
 	ind-ref ind-obj int obj-count obj-first-num offset literal
