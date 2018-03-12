@@ -121,4 +121,18 @@ class PDF::Grammar::COS::Actions
         make $/.substr($start, $len)
     }
 
+    method ind-obj-nibble($/) {
+        my $object = $<object>.ast;
+        if $<stream-head> {
+            # locate the start of the stream data following the 'stream' token. The
+            # invokee can deterime the length using the /Length entry in the dictionary
+	    my $start = (~$/).codes;
+            $object = :stream( %( %$object, :$start, ));
+        }
+        make (:ind-obj[ $<obj-num>.ast.value, $<gen-num>.ast.value, $object ]);
+    }
+
+    method object-stream-indice($/) { make [$<obj-num>.ast.value, $<byte-offset>.ast.value] }
+    method object-stream-index($/)  { make [ $<object-stream-indice>>>.ast ] }
+
 }
