@@ -19,6 +19,7 @@
     "PDF::Grammar::Content::Actions" : "lib/PDF/Grammar/Content/Actions.pm",
     "PDF::Grammar::Content::Fast" : "lib/PDF/Grammar/Content/Fast.pm",
     "PDF::Grammar::COS" : "lib/PDF/Grammar/COS.pm",
+    "PDF::Grammar::Doc" : "lib/PDF/Grammar/Doc.pm",
     "PDF::Grammar::COS::Actions" : "lib/PDF/Grammar/COS/Actions.pm",
     "PDF::Grammar::FDF" : "lib/PDF/Grammar/FDF.pm",
     "PDF::Grammar::FDF::Actions" : "lib/PDF/Grammar/FDF/Actions.pm",
