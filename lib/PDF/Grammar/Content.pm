@@ -31,10 +31,6 @@ grammar PDF::Grammar::Content
     rule opImageData           { (ID) }
     rule opEndImage            { (EI) }
 
-    # ignored blocks BX .. EX (nestable)
-    rule opBeginIgnore         { (BX) }
-    rule opEndIgnore           { (EX) }
-
     # blocks have limited nesting capability and aren't fully recursive.
     # So theoretically, we only have to deal with a few combinations...
 
@@ -50,14 +46,9 @@ grammar PDF::Grammar::Content
                       $<start>=<opImageData>.*?$<end>=\n<opEndImage>
     }
 
-    rule ignored-block { <opBeginIgnore> <ignored>*? <opEndIgnore> }
-
     proto rule ignored {*}
-    rule ignored:sym<block> { <ignored-block> }
     rule ignored:sym<guff>  { <guff> }
     rule ignored:sym<char>  { . }
-
-    rule block:sym<ignore> { <ignored-block> }
 
     # ------------------------
     # Operators and Objects
@@ -65,6 +56,7 @@ grammar PDF::Grammar::Content
 
     # operator names courtersy of xpdf / Gfx.cc (http://foolabs.com/xdf/)
     proto rule op {*}
+    rule op:sym<BeginExtended>       { (BX) }
     rule op:sym<CloseEOFillStroke>   { (b\*) }
     rule op:sym<CloseFillStroke>     { (b) } 
     rule op:sym<EOFillStroke>        { (B\*) }
@@ -80,6 +72,8 @@ grammar PDF::Grammar::Content
     rule op:sym<SetCharWidthBBox>    { <number>**6 (d1) }
     rule op:sym<XObject>             { <name> (Do) }
     rule op:sym<MarkPointDict>       { <name> [<name> | <dict>] (DP) }
+
+    rule op:sym<EndExtended>         { (EX) }
 
     rule op:sym<EOFill>              { (f\*) }
     rule op:sym<Fill>                { (F|f) }

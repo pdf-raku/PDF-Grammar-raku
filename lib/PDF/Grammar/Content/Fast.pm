@@ -17,10 +17,6 @@ grammar PDF::Grammar::Content::Fast
     rule opImageData           { (ID) }
     rule opEndImage            { (EI) }
 
-    # ignored blocks BX .. EX (nestable)
-    rule opBeginIgnore         { (BX) }
-    rule opEndIgnore           { (EX) }
-
     proto rule block {*}
     rule imageDict { [<name> <object>]* }
     rule block:sym<image> {
@@ -29,21 +25,17 @@ grammar PDF::Grammar::Content::Fast
                       $<start>=<opImageData>.*?$<end>=\n<opEndImage>
     }
 
-    rule ignored-block { <opBeginIgnore> <ignored>*? <opEndIgnore> }
 
     proto rule ignored {*}
-    rule ignored:sym<block> { <ignored-block> }
     rule ignored:sym<guff>  { <guff> }
     rule ignored:sym<char>  { . }
-
-    rule block:sym<ignore> { <ignored-block> }
 
     # ------------------------
     # Operators and Objects
     # ------------------------
 
     proto rule op {*}
-    rule op:sym<unary>  { (b\*?|B[T|\*]?|EMC|ET|F|f\*?|h|n|s|S|W\*?|T\*|Q|q) }
+    rule op:sym<unary>  { (b\*?|B[T|X|\*]?|E[MC|T|X]|F|f\*?|h|n|s|S|W\*?|T\*|Q|q) }
     rule op:sym<num>    { <number> [ (G|g|i|M|Tc|TL|Ts|Tw|Tz|w)
                                    | <number> [ (d0|l|m|Td|TD)
                                               | <string> (\")

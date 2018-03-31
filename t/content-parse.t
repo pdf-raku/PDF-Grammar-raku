@@ -102,6 +102,18 @@ END5
 my $dud_content = '10 10 Td 42 dud';
 my $dud_expected = ["Td" => ["int" => 10, "int" => 10], "??" => ["int" => 42], "??" => ["dud"]];
 
+my $sample_content_bx = 'q
+0.0648041 0 0 -0.0590057 38.1269989 736.3480072 cm
+BX /Sh0 sh EX Q';
+
+my $ast_bx = [
+:q[], :cm[ :real(0.0648041), :int(0), :int(0), :real(-0.0590057), :real(38.1269989), :real(736.3480072)],
+:BX[],
+:sh[ :name<Sh0> ],
+:EX[],
+:Q[],
+];
+
 my $test_image_block = 'BI                  % Begin inline image object
     /W 17           % Width in samples
     /H 17           % Height in samples
@@ -127,6 +139,7 @@ for (trivial => [$sample_content1, $ast1],
      basic-array => [$sample_content2a, $ast2a],
      toc-entry => [$sample_content3],
      text-block => [$sample_content4, $ast4],
+     extended => [$sample_content_bx, $ast_bx],
      image-block => [$test_image_block, $test_image_expected],
      invalid => [$dud_content, $dud_expected],
      pdf-ref-example => [$sample_content6],
