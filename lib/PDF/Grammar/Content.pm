@@ -110,8 +110,8 @@ grammar PDF::Grammar::Content
 
     rule op:sym<CloseStroke>         { (s) }
     rule op:sym<Stroke>              { (S) }
-    rule op:sym<SetStrokeColor>      { <number>**4 (SC) }
-    rule op:sym<SetFillColor>        { <number>**4 (sc) }
+    rule op:sym<SetStrokeColor>      { <number>+ (SC) }
+    rule op:sym<SetFillColor>        { <number>+ (sc) }
     rule op:sym<SetFillColorN>       { <object>+ (scn) }
     rule op:sym<SetStrokeColorN>     { <object>+ (SCN) }
     rule op:sym<ShFill>              { <name> (sh) }

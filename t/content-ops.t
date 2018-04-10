@@ -87,7 +87,7 @@ for (
     SetFillColor => '.2 .35 .7 .9 sc',
     SetFillColorN => '0.30 0.75 0.21 /P2 scn',
     Stroke => 'S',
-    SetStrokeColor => '.1  0.2  0.30  .400  SC',
+    SetStrokeColor => '.1  0.2  0.30 SC',
     SetStrokeColorN => '0.30 0.75 0.21 /P2 SCN',
     shFill => '/bar sh',
 

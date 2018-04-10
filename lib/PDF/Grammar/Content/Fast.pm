@@ -40,11 +40,11 @@ grammar PDF::Grammar::Content::Fast
                                    | <number> [ (d0|l|m|Td|TD)
                                               | <string> (\")
                                               | <number> [ (rg|RG)
-                                                         | <number> [ (k|K|re|SC|sc|v|y)
+                                                         | <number> [ (k|K|re|v|y)
                                                                     | <number> <number> (c|cm|d1|Tm) ] ] ] ] }
     rule op:sym<name>   { <name> [ (BMC|cs|CS|Do|gs|MP|ri|sh) | [<name> | <dict>] (BDC|DP) | <number> (Tf) ]}
     rule op:sym<int>    { <int> (J|j|Tr) }
-    rule op:sym<obj>    { <object>+ (scn|SCN) }
+    rule op:sym<obj>    { <object>+ (scn?|SCN?) }
     rule op:sym<string> { <string> (Tj|\') }
     rule op:sym<array>  { <array> [ (TJ) | <number> (d) ] }
 
