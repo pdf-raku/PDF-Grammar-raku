@@ -128,7 +128,7 @@ my $xref-empty = "xref
 
 my $xref-empty-ast = [
     {:obj-first-num(0),
-     :obj-count(0),
+     :obj-count(1),
      :entries[[0, 65535, 0]],
     },
 ];

@@ -99,9 +99,13 @@ class PDF::Grammar::COS::Actions
     method xref-section($/) {
         my UInt $obj-count = $<obj-count>.ast.value;
         my UInt $obj-first-num = $<obj-first-num>.ast.value;
-        # RT131965 - rakudo doesn't like shaped arrays of length 0
-        constant DummyEntry = array[uint64].new(0, 65535, 0);
-        my List $rows = $<xref-entry>».ast.List || (DummyEntry,);
+        my List $rows = $<xref-entry>».ast.List;
+
+        unless $rows {
+            # RT131965 - rakudo doesn't like shaped arrays of length 0
+            $rows = (array[uint64].new(0, 65535, 0), );
+            $obj-count++ unless $obj-count;
+        }
         my uint64 @entries[+$rows; 3] = $rows;
         make { :$obj-first-num, :$obj-count, :@entries };
     }
