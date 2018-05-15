@@ -182,7 +182,7 @@ for (
       { :rule<xref-first>,  :input($xref-first), ast => :xref($xref-multiple-ast)},
       { :rule<body>,  :input($body-input),  :ast($body-ast)},
       { :rule<index>,  :input($xref ~ "\n" ~ $trailer), :ast($index-ast) },
-      { :rule<pdf>,  :input($pdf), ast => Any},
+      { :rule<cos>,  :input($pdf), ast => Any},
       { :rule<object-stream-index>,  :input($object-stream-index),  :ast($object-stream-index-ast)},
     ) -> % ( :$rule!, :$input, *%expected ) {
      # normalise lines for Win platforms

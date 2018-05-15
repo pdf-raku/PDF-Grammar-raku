@@ -9,12 +9,12 @@ class PDF::Grammar::COS::Actions
 
     has Bool $.get-offsets is rw = False; #| return ind-obj byte offsets in AST
 
-    method TOP($/) { make $<pdf>.ast.value }
+    method TOP($/) { make $<cos>.ast.value }
 
-    method pdf($/) {
+    method cos($/) {
         my $header = $<header>.ast;
 	my $body = [ $<body>>>.ast.map({ .value }) ];
-        make 'pdf' => {
+        make 'cos' => {
 	    :$header,
 	    :$body,
         }

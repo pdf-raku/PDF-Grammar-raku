@@ -5,12 +5,8 @@ use PDF::Grammar;
 # Abstract Grammar for COS (Carousel Object System). This is the serialization format that underpins PDF, and FDF.
 grammar PDF::Grammar::COS
     is PDF::Grammar {
-    #
-    # An experimental Perl6  grammar for describing the basic block
-    # structure of PDF documents.
-    #
-    rule TOP {^<pdf>$}
-    rule pdf {<header> [<body>+] }
+    rule TOP {^<cos>$}
+    rule cos {<header> [<body>+] }
 
     # [PDF 1.7] 7.5.2 File Header
     # ---------------

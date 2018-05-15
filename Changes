@@ -1,3 +1,6 @@
+Release 0.1.6
+- Changed PDF::Grammar::COS penultimate token and AST
+  element from 'pdf' to 'cos'
 Release 0.1.5
 - Changed handling of BX .. EX extended blocks. These are
   now parsed, rather than being skipped.
