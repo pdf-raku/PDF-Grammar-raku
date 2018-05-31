@@ -100,7 +100,7 @@ b                                       % Close, fill, and stroke path
 END5
 
 my $dud_content = '10 10 Td 42 dud';
-my $dud_expected = ["Td" => ["int" => 10, "int" => 10], "??" => ["int" => 42], "??" => ["dud"]];
+my $dud_ast = ["Td" => ["int" => 10, "int" => 10], "??" => ["int" => 42], "??" => ["dud"]];
 
 my $sample_content_bx = 'q
 0.0648041 0 0 -0.0590057 38.1269989 736.3480072 cm
@@ -124,14 +124,26 @@ ID                  % Begin image data
 J1/gKA>.]AN&J?]-<HW]aRVcg*bb.\eKAdVV%/PcZ
 %R.s(4KE3&d&7hb*7[%Ct2HCqC~>
 EI';
-my $test_image_expected = [:BI[ :dict{BPC => :int(8),
+my $test_image_ast = [:BI[ :dict{BPC => :int(8),
                                       F => :array[ :name<A85>, :name<LZW> ],
                                       H => :int(17),
                                       W => :int(17),
                                       CS => :name<RGB>}],
                             :ID[:encoded("J1/gKA>.]AN\&J?]-<HW]aRVcg*bb.\\eKAdVV\%/PcZ\n\%R.s(4KE3\&d\&7hb*7[\%Ct2HCqC~>")],
                             :EI[]];
+my $test_image_null = "
+BI
+/IM true/W 1/H 1/BPC 1
+ID \c0
+EI";
 
+my $test_image_null_ast = [:BI[ :dict{BPC => :int(1),
+                                      IM => :bool,
+                                      H => :int(1),
+                                      W => :int(1),
+                                      }],
+                            :ID[:encoded("")],
+                            :EI[]];
 my $actions = PDF::Grammar::Content::Actions.new;
 
 for (trivial => [$sample_content1, $ast1],
@@ -140,8 +152,9 @@ for (trivial => [$sample_content1, $ast1],
      toc-entry => [$sample_content3],
      text-block => [$sample_content4, $ast4],
      extended => [$sample_content_bx, $ast_bx],
-     image-block => [$test_image_block, $test_image_expected],
-     invalid => [$dud_content, $dud_expected],
+     image-block => [$test_image_block, $test_image_ast],
+     image-null => [$test_image_null, $test_image_null_ast],
+     invalid => [$dud_content, $dud_ast],
      pdf-ref-example => [$sample_content6],
      real-word-example => [$sample_content5],
      ) {
