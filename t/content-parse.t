@@ -142,7 +142,7 @@ my $test_image_null_ast = [:BI[ :dict{BPC => :int(1),
                                       H => :int(1),
                                       W => :int(1),
                                       }],
-                            :ID[:encoded("")],
+                            :ID[:encoded("\c0")],
                             :EI[]];
 my $actions = PDF::Grammar::Content::Actions.new;
 

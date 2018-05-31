@@ -14,18 +14,17 @@ grammar PDF::Grammar::Content::Fast
 
     # image blocks BI ... ID ... EI
     rule opBeginImage          { (BI) }
-    rule opImageData           { (ID) }
-    rule opEndImage            { (EI) }
+    token opImageData          { (ID)[\n|' '|<.comment>]* }
+    token opEndImage           { (EI) }
 
     proto rule block {*}
     rule imageDict { [<name> <object>]* }
     rule block:sym<image> {
                       <opBeginImage>
                       <imageDict>
-                      [$<start>=<opImageData>.*?$<end>=\n?<opEndImage>
+                      [  $<start>=<opImageData>.*?$<end>=[\n|' ']<opEndImage>
                       || $<start>=<opImageData>.*?$<end>=<opEndImage>] # more forgiving fallback
     }
-
 
     proto rule ignored {*}
     rule ignored:sym<guff>  { <guff> }

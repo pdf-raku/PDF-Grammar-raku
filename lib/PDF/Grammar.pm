@@ -2,9 +2,10 @@ use v6;
 
 grammar PDF::Grammar:ver<0.1.6> {
     # abstract base grammar for PDF Elements, see instances:
+    # PDF::Grammar::COS      - Base class for FDF and PDF
+    # -- PDF::Grammar::FDF      - Describes FDF (Form Data) files
+    # -- PDF::Grammar::PDF      - Overall PDF Document Structure
     # PDF::Grammar::Content  - Text and Graphics Content
-    # PDF::Grammar::FDF      - Describes FDF (Form Data) files
-    # PDF::Grammar::PDF      - Overall PDF Document Structure
     # PDF::Grammar::Function - Postscript calculator functions
     #
     enum AST-Types is export(:AST-Types) < array body bool cos

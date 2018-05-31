@@ -28,8 +28,8 @@ grammar PDF::Grammar::Content
 
     # image blocks BI ... ID ... EI
     rule opBeginImage          { (BI) }
-    rule opImageData           { (ID) }
-    rule opEndImage            { (EI) }
+    token opImageData          { (ID)[\n|' '|<.comment>]* }
+    token opEndImage           { (EI) }
 
     # blocks have limited nesting capability and aren't fully recursive.
     # So theoretically, we only have to deal with a few combinations...
@@ -43,7 +43,7 @@ grammar PDF::Grammar::Content
     rule block:sym<image> {
                       <opBeginImage>
                       <imageDict>
-                      [$<start>=<opImageData>.*?$<end>=\n?<opEndImage>
+                      [  $<start>=<opImageData>.*?$<end>=[\n|' ']<opEndImage>
                       || $<start>=<opImageData>.*?$<end>=<opEndImage>] # more forgiving fallback
     }
 
