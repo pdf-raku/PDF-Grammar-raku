@@ -76,7 +76,7 @@ grammar PDF::Grammar::COS
         .*?
         startxref\n
         <byte-offset=.int>\n
-        '%%EOF'\n?
+        '%%EOF'<.ws-char>*
         $
     }
 

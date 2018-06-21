@@ -113,11 +113,11 @@ For reference, here is a list of all AST node types:
 array | Array[Any] | Array object type, e.g. `[ 0 0 612 792 ]`
 body | Array[Hash] | The FDF/PDF body. A PDF with revisions has multiple body segments
 bool | Bool | Boolean object type, e.g. `true`
+cos | Hash | A PDF or FDF document, consisting of a `header` and `body` array
 dict | Hash | Dictionary object type, e.g. `<< /Type /Catalog /Pages 3 0 R >>`
 encoded | Str | Raw encoded stream data. This is returned as a latin-1 byte-string.
 entries | Array[Hash] | A list of entries in a cross reference segment
 decoded | Str | Uncompressed/unencrypted stream data
-fdf | Hash | An FDF document
 gen-num | UInt | Object generation number
 header | Hash | PDF or FDF header, e.g. `%PDF1.4`
 hex-string | Str | A hex-string, e.g. `<736e6f6f7079>`
@@ -131,13 +131,12 @@ offset | UInt | byte offset of an indirect object in the file.
 literal | Str | A literal string, e.g. `(Hello, World!)`
 name | Str | String object type, e.g. `/Fred`
 null | Mu | Null object type, e.g. `null`
-pdf | Hash | A PDF document, consisting of a `header` and `body` array
 real | Real | Real object type, e.g. `42.0`
 start | UInt | Start position of stream data (returned by `ind-obj-nibble` rule)
 startxref | UInt | byte offset from the start of the file to the start of the trailer
 stream | Hash | Stream object type. A dictionary indirect object followed by stream data
 trailer | Hash | Trailer. This typically contains the trailer `dict` entry.
-type | UInt | Index entry type: 0 - free, 1 - inuse, 2 - stream object
+type | Str | Document type; 'pdf', or 'fdf'
 version | Rat | The PDF / FDF version number, parsed from the header
 
 ## See also
