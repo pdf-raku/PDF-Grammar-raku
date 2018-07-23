@@ -130,7 +130,7 @@ $xref$trailer$footer%\%EOF";
 # changes byte offsets and corrupts the xref table
 (my $ms-dos-formatted = $unix)  ~~ s:g/\n/\r\n/;
 
-my $actions = PDF::Grammar::PDF::Actions.new;
+my PDF::Grammar::PDF::Actions $actions .= new;
 
 for (:$unix, :$bin-comments, :$edit-history-small,
      :$edit-history, :$mac-osx-formatted, :$ms-dos-formatted,

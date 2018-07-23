@@ -17,7 +17,7 @@ my %escapes = (
     '\10'  => "\b",
     );
 
-my $actions = PDF::Grammar::Actions.new;
+my PDF::Grammar::Actions $actions .= new;
 
 for %escapes.kv -> $escape_seq, $expected_result {
     my $p = PDF::Grammar.parse($escape_seq, :rule('literal'), :actions($actions));

@@ -66,7 +66,7 @@ trailer
 %%EOF
 --END--
 
-my $actions = PDF::Grammar::FDF::Actions.new;
+my PDF::Grammar::FDF::Actions $actions .= new;
 
 for (
     { :test<tiny>,  :input($fdf-tiny) },

@@ -158,7 +158,7 @@ my $pdf = "$header
 $body
 $xref$trailer$startxref%\%EOF";
 
-my $actions = PDF::Grammar::PDF::Actions.new;
+my PDF::Grammar::PDF::Actions $actions .= new;
 
 my $object-stream-index = "125 0 126 28 127 81 128 109 ";
 my $object-stream-index-ast = [[125, 0], [126 ,28], [127, 81], [128, 109]];

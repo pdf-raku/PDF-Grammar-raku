@@ -27,7 +27,7 @@ my $if-else-ast = ( :expr[:int(2), :int(1), :int(1), :op<add>, :op<eq>,
 
 my $restricted-ops = '{ 360 sin <</x [exch]>> def }';
 my $restricted-ast = :expr[ :int(360), :op<sin>, "??" => :dict{x => :array[ :op<exch> ]}, "??" => "def"];
-my $actions = PDF::Grammar::Function::Actions.new;
+my PDF::Grammar::Function::Actions $actions .= new;
 
 for ([ :$trivial-expr, $trivial-ast],
      [ :$example-expr, $example-ast],

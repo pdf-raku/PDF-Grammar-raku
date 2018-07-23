@@ -56,7 +56,7 @@ BT
   (Contents)Tj
   12 0 0 12 108 641.2 Tm
   0 Tc
-  [(Using this Guide)-13.5( . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .)-257.1( xiii)]TJ
+  [(Using this Guide)-13.5( . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .)-257.1( xiii)]TJ
   /TT8 1 Tf
   .0909 Tw
   [( ...almost there)]TJ
@@ -144,23 +144,23 @@ my $test_image_null_ast = [:BI[ :dict{BPC => :int(1),
                                       }],
                             :ID[:encoded("\c0")],
                             :EI[]];
-my $actions = PDF::Grammar::Content::Actions.new;
+my PDF::Grammar::Content::Actions $actions .= new;
 
-for (trivial => [$sample_content1, $ast1],
-     basic => [$sample_content2, $ast2],
-     basic-array => [$sample_content2a, $ast2a],
-     toc-entry => [$sample_content3],
-     text-block => [$sample_content4, $ast4],
-     extended => [$sample_content_bx, $ast_bx],
-     image-block => [$test_image_block, $test_image_ast],
-     image-null => [$test_image_null, $test_image_null_ast],
-     invalid => [$dud_content, $dud_ast],
-     pdf-ref-example => [$sample_content6],
-     real-word-example => [$sample_content5],
+for (:trivial[$sample_content1, $ast1],
+     :basic[$sample_content2, $ast2],
+     :basic-array[$sample_content2a, $ast2a],
+     :toc-entry[$sample_content3],
+     :text-block[$sample_content4, $ast4],
+     :extended[$sample_content_bx, $ast_bx],
+     :image-block[$test_image_block, $test_image_ast],
+     :image-null[$test_image_null, $test_image_null_ast],
+     :invalid[$dud_content, $dud_ast],
+     :pdf-ref-example[$sample_content6],
+     :real-word-example[$sample_content5],
      ) {
     my ($test, $spec) = $_.kv;
     my ($str, $expected-ast) = @$spec;
-    for :normal( PDF::Grammar::Content), :fast( PDF::Grammar::Content::Fast) {
+    for :normal(PDF::Grammar::Content), :fast(PDF::Grammar::Content::Fast) {
         my $speed = .key;
         my $grammar = .value;
         my $p = $grammar.parse($str, :$actions);
