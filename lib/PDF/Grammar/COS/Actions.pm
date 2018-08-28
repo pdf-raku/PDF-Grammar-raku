@@ -66,15 +66,13 @@ class PDF::Grammar::COS::Actions
     method object:sym<ind-ref>($/)  { make $<ind-ref>.ast }
 
     method object:sym<dict>($/) {
+        my $object = $<dict>.ast;
         with $<stream> {
-            # <dict> is a just a header the following <stream>
-            my %stream = $<dict>.ast;
+            my %stream = $object;
 	    %stream<encoded> = .ast;
-            make (:%stream)
+            $object = :%stream;
         }
-        else {
-            make $<dict>.ast;
-        }
+        make $object;
     }
 
     method body($/) {
@@ -130,13 +128,14 @@ class PDF::Grammar::COS::Actions
         if $<stream-head> {
             # locate the start of the stream data following the 'stream' token. The
             # invokee can deterime the length using the /Length entry in the dictionary
-	    my $start = (~$/).codes;
-            $object = :stream( %( %$object, :$start, ));
+            my %stream = $object;
+            %stream.push: 'start' => (~$/).codes;
+            $object = :%stream;
         }
         make (:ind-obj[ $<obj-num>.ast.value, $<gen-num>.ast.value, $object ]);
     }
 
-    method object-stream-indice($/) { make [$<obj-num>.ast.value, $<byte-offset>.ast.value] }
+    method object-stream-indice($/) { make [ $<obj-num>.ast.value, $<byte-offset>.ast.value ] }
     method object-stream-index($/)  { make [ $<object-stream-indice>>>.ast ] }
 
 }
