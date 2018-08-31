@@ -44,10 +44,10 @@ class PDF::Grammar::Content::Actions
 
     multi sub _block-ast($block) is default {
         ($block.caps.map: -> $token {
-            given $token.key {
-                when /^op/          { _op-ast( $token.value )    }
-                when /inner.*block/ { _block-ast( $token.value ) }
-                default {'tba: ' ~ $token.key ~ ' = '  ~ $token.value};
+            given $token.key.substr(0,2) {
+                when 'op' { _op-ast( $token.value )    }
+                when 'in' { _block-ast( $token.value ) }
+                default   {'tba: ' ~ $token.key ~ ' = '  ~ $token.value};
             };
         }).Slip;
     }
