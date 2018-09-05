@@ -7,20 +7,20 @@ module PDF::Grammar::Test {
     # allow only json compatible data
     multi sub json-eqv (Hash:D $a, Hash:D $b) {
         if +$a != +$b { return False }
-	for $a.keys -> $k {
-            unless $b{$k}:exists && json-eqv($a{$k}, $b{$k}) {
+	for $a.kv -> $k, $v {
+            unless $b{$k}:exists && json-eqv($v, $b{$k}) {
                 return False;
             }
 	}
-	return True;
+	True;
     }
     multi sub json-eqv (List:D $a, List:D $b) {
         if +$a != +$b { return False }
-	for $a.keys -> $k {
+	for $a.kv -> $k, $v {
 	    return False
-		unless (json-eqv($a[$k], $b[$k]));
+		unless (json-eqv($v, $b[$k]));
 	}
-	return True;
+	True;
     }
     multi sub json-eqv (array:D $a, $b) {
         # somewhat lax to accomodate shaped arrays
@@ -28,7 +28,6 @@ module PDF::Grammar::Test {
     }
     multi sub json-eqv (Numeric:D $a, Numeric:D $b) { $a == $b }
     multi sub json-eqv (Stringy $a, Stringy $b) { $a eq $b }
-    multi sub json-eqv (Bool $a, Bool $b) { $a == $b }
     multi sub json-eqv (Mu $a, Mu $b) {
         return json-eqv( %$a, $b) if $a.isa(Pair);
         return json-eqv( $a, %$b) if $b.isa(Pair);
@@ -36,7 +35,7 @@ module PDF::Grammar::Test {
 	diag("data type mismatch"
 	     ~ "\n  - expected: {$b.perl}"
 	     ~ "\n  -      got: {$a.perl}");
-	return False;
+	False;
     }
 
     sub is-json-equiv(\a, |c) is export(:is-json-equiv) {
