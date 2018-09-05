@@ -29,9 +29,9 @@ class PDF::Grammar::Content::Actions
      }
 
     sub _image-ast($/) {
-        my $dict = $<imageDict>.ast;
-        my $start = $<start>.to;
-        my $len = $<end>.from - $start;
+        my Hash $dict = $<imageDict>.ast;
+        my UInt $start = $<start>.to;
+        my UInt $len = $<end>.from - $start;
         $start -= $/.from;
         my $encoded = $/.substr($start, $len);
 

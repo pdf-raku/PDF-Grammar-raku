@@ -13,7 +13,7 @@ else {
     diag "loading $pdf-file (set \$TEST_PDF to override)";
 }
 
-my $p = PDF::Grammar::PDF.parse($pdf-file.IO.slurp(:enc<latin-1>));
+my $p = PDF::Grammar::PDF.parse: slurp($pdf-file, :bin).decode("latin-1");
 
 ok $p, "parsed pdf content ($pdf-file)";
 

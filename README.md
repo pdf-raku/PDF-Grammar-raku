@@ -30,9 +30,12 @@ Usage Notes
 -----------
 
 - PDF input files typically contain a mixture of ASCII directives and binary data, plus byte-orientated addressing. For this
-reason **`latin1` encoding is recommended **. For example:
+reason:
 
-   ```% perl6 -MPDF::Grammar::PDF -e"say PDF::Grammar::PDF.parse: slurp($f, :enc<latin1>)"```
+  - files should be read as binary (avoid encoding layers)
+  - strings should be decoded as `latin1`
+
+   ```% perl6 -MPDF::Grammar::PDF -e"say PDF::Grammar::PDF.parse: slurp($f, :bin).decode('latin-1')"```
 
 - This module is put to work by the down-stream [PDF](https://github.com/p6-pdf/PDF-p6) module. E.g.
   to uncompress a PDF, using the installed `pdf-rewriter` script:

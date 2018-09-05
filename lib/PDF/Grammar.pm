@@ -79,5 +79,10 @@ grammar PDF::Grammar:ver<0.1.6> {
     rule object:sym<dict>    { <dict> }
     rule object:sym<null>    { <sym> }
 
+    # ensure we load and decode the file appropriately
+    method parsefile(Str $file, |c) {
+        self.parse( slurp($file, :bin).decode("latin-1"), |c);
+    }
+
 }
 
