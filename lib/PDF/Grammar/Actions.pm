@@ -47,17 +47,18 @@ class PDF::Grammar::Actions {
         make '(' ~ $<literal-string>.ast.value ~ ')'
     }
     method literal:sym<regular>($/)      { make ~$/ }
+    method literal:sym<escaped>($/)      { make $<literal-esc>.ast }
     # literal escape sequences
-    method literal:sym<esc-octal>($/)  {
+    method literal-esc:sym<octal>($/)  {
         make chr( :8(~$<octal-code>) )
     }
-    method literal:sym<esc-delim>($/)        { make ~$<delim> }
-    method literal:sym<esc-backspace>($/)    { make "\b" }
-    method literal:sym<esc-formfeed>($/)     { make "\f" }
-    method literal:sym<esc-newline>($/)      { make "\n" }
-    method literal:sym<esc-cr>($/)           { make "\r" }
-    method literal:sym<esc-tab>($/)          { make "\t" }
-    method literal:sym<esc-continuation>($/) { make '' }
+    method literal-esc:sym<delim>($/)        { make ~$/ }
+    method literal-esc:sym<backspace>($/)    { make "\b" }
+    method literal-esc:sym<formfeed>($/)     { make "\f" }
+    method literal-esc:sym<newline>($/)      { make "\n" }
+    method literal-esc:sym<cr>($/)           { make "\r" }
+    method literal-esc:sym<tab>($/)          { make "\t" }
+    method literal-esc:sym<continuation>($/) { make '' }
 
     method literal-string($/) {
         my $literal = [~] $<literal>».ast;

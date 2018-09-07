@@ -36,15 +36,17 @@ grammar PDF::Grammar:ver<0.1.6> {
     token literal:sym<regular>          {<-literal-delimiter>+}
     token literal:sym<eol>              {\n}
     token literal:sym<substring>        {<literal-string>}
+    token literal:sym<escaped>          {\\ <literal-esc>}
     # literal string escape sequences
-    token literal:sym<esc-octal>        {\\ <octal-code>}
-    token literal:sym<esc-delim>        {\\ $<delim>=<[ ( ) \\ ]>}
-    token literal:sym<esc-backspace>    {\\ b}
-    token literal:sym<esc-formfeed>     {\\ f}
-    token literal:sym<esc-newline>      {\\ n}
-    token literal:sym<esc-cr>           {\\ r}
-    token literal:sym<esc-tab>          {\\ t}
-    token literal:sym<esc-continuation> {\\ \n?}
+    proto token literal-esc {*}
+    token literal-esc:sym<octal>        {<octal-code>}
+    token literal-esc:sym<delim>        {<[ ( ) \\ ]>}
+    token literal-esc:sym<backspace>    {b}
+    token literal-esc:sym<formfeed>     {f}
+    token literal-esc:sym<newline>      {n}
+    token literal-esc:sym<cr>           {r}
+    token literal-esc:sym<tab>          {t}
+    token literal-esc:sym<continuation> {\n?}
 
     token literal-string { '(' <literal>* ')' }
 
