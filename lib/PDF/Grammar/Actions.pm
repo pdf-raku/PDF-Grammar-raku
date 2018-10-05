@@ -27,14 +27,15 @@ class PDF::Grammar::Actions {
     }
 
     method name($/) {
+        # names are utf-8 encoded
         my Str $name = Buf.new( $<name-bytes>».ast ).decode;
         make (:$name);
     }
 
     method hex-string ($/) {
         my $xdigits = [~] $<xdigit>».Str;
-        my @hex-codes = $xdigits.comb.map: -> $a, $b = '0' { :16($a ~ $b) };
-        my $hex-string = [~] @hex-codes.map({ chr($_) });
+        my uint8 @hex-codes = $xdigits.comb.map: -> $a, $b = '0' { :16($a ~ $b) };
+        my $hex-string = [~] @hex-codes».chr;
 
         make (:$hex-string);
     }
@@ -84,8 +85,8 @@ class PDF::Grammar::Actions {
     }
 
     method object:sym<number>($/)  { make $<number>.ast }
-    method object:sym<true>($/)    { make (:bool(True)) }
-    method object:sym<false>($/)   { make (:bool(False)) }
+    method object:sym<true>($/)    { make (:bool) }
+    method object:sym<false>($/)   { make (:!bool) }
     method object:sym<bool>($/)    { make $<bool>.ast }
     method object:sym<string>($/)  { make $<string>.ast }
     method object:sym<name>($/)    { make $<name>.ast }

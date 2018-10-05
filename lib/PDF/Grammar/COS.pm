@@ -10,12 +10,12 @@ grammar PDF::Grammar::COS
 
     # [PDF 1.7] 7.5.2 File Header
     # ---------------
-    token header   {'%'<doc-type>'-'$<version>=[\d'.'\d]}
+    token header   { '%' <doc-type> '-' $<version>=[\d'.'\d] }
     token doc-type { <alnum>+ }
 
     # index section is optional - document could have a cross reference stream
     # quite likely if linearized [PDF 1.7] 7.5.8 & Annex F (Linearized PDF)
-    rule body     { <ind-obj>+ <index>? <startxref>?}
+    rule body     { [<ind-obj>+ <index>? | <index>] <startxref>? }
 
     rule index    { <xref>? <trailer> }
 
