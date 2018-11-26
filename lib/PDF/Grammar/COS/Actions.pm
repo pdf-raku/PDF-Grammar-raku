@@ -13,7 +13,7 @@ class PDF::Grammar::COS::Actions
 
     method cos($/) {
         my $header = $<header>.ast;
-	my $body = [ $<body>>>.ast.map({ .value }) ];
+	my $body = [ $<body>».ast.map({ .value }) ];
         make 'cos' => {
 	    :$header,
 	    :$body,
@@ -76,7 +76,7 @@ class PDF::Grammar::COS::Actions
     }
 
     method body($/) {
-        my $objects = [ $<ind-obj>>>.ast ];
+        my $objects = [ $<ind-obj>».ast ];
         my %body = :$objects;
         %body.push: .ast with $<startxref>;
         %body.push: .ast with $<index>;
@@ -90,7 +90,7 @@ class PDF::Grammar::COS::Actions
     }
 
     method xref($/) {
-	my $xref = [ $<xref-section>>>.ast ];
+	my $xref = [ $<xref-section>».ast ];
 	make (:$xref);
     }
 
@@ -109,12 +109,11 @@ class PDF::Grammar::COS::Actions
     }
 
     method xref-entry($/) {
-        my uint64 @entry = $<byte-offset>.ast.value, $<gen-number>.ast.value, $<obj-status>.ast;
+        constant Free = 0;
+        constant Inuse = 1;
+        my uint64 @entry = $<byte-offset>.Int, $<gen-num>.Int, ($<status> ~~ 'f' ?? Free !! Inuse);
         make @entry;
     }
-
-    method obj-status:sym<free>($/)  { make 0 }
-    method obj-status:sym<inuse>($/) { make 1 }
 
     method stream($/) {
         my $start = $<stream-head>.to;
@@ -136,6 +135,6 @@ class PDF::Grammar::COS::Actions
     }
 
     method object-stream-indice($/) { make [ $<obj-num>.ast.value, $<byte-offset>.ast.value ] }
-    method object-stream-index($/)  { make [ $<object-stream-indice>>>.ast ] }
+    method object-stream-index($/)  { make [ $<object-stream-indice>».ast ] }
 
 }
