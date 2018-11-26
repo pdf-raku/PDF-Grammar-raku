@@ -5,10 +5,10 @@ module PDF::Grammar::Test {
     use Test;
 
     # allow only json compatible data
-    multi sub json-eqv (Hash:D $a, Hash:D $b) {
-        if +$a != +$b { return False }
-	for $a.kv -> $k, $v {
-            unless $b{$k}:exists && json-eqv($v, $b{$k}) {
+    multi sub json-eqv (%a, %b) {
+        if %a.elems != %b.elems { return False }
+	for %a.kv -> $k, $v {
+            unless %b{$k}:exists && json-eqv($v, %b{$k}) {
                 return False;
             }
 	}
@@ -29,8 +29,6 @@ module PDF::Grammar::Test {
     multi sub json-eqv (Numeric:D $a, Numeric:D $b) { $a == $b }
     multi sub json-eqv (Stringy $a, Stringy $b) { $a eq $b }
     multi sub json-eqv (Mu $a, Mu $b) {
-        return json-eqv( %$a, $b) if $a.isa(Pair);
-        return json-eqv( $a, %$b) if $b.isa(Pair);
         return True if !$a.defined && !$b.defined;
 	diag("data type mismatch"
 	     ~ "\n  - expected: {$b.perl}"
