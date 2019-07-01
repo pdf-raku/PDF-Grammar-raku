@@ -4,8 +4,13 @@ PDF-Grammar
 Although PDF documents do not lend themselves to an overall BNF style grammar
 description; there are areas where these can be put to use, including:
 
-- The overall file structure (headers, objects, cross-reference tables and footers).
-- The operands that make up content streams. These are used to markup text, forms,
+- PDF file header and trailer/xref parsing
+- Parsing of objects fetched via the xref index. Top level objects commomly include:
+  dictionarys , streams, arrays or numbers.
+- The overall file structure for FDF files (which are not indexed), or for
+  full-scan recovery of PDF files (headers, objects, cross-reference tables
+  and footers).
+- Parsing the operands that make up content streams. These are used to markup text, forms,
 images and graphical elements.
 
 PDF::Grammar is a set of Perl 6 grammars for parsing and validation of real-world PDF examples. There are
@@ -114,8 +119,9 @@ For reference, here is a list of all AST node types:
 *AST Tag* | Perl Type | Description
 --- | --- | --- |
 array | Array[Any] | Array object type, e.g. `[ 0 0 612 792 ]`
-body | Array[Hash] | The FDF/PDF body. A PDF with revisions has multiple body segments
+body | Array[Hash] | The FDF/PDF body consisting of `ind-obj` and `comment` entries. A PDF with revisions has multiple body segments
 bool | Bool | Boolean object type, e.g. `true`
+comment | Str | (Write only) a comment string
 cos | Hash | A PDF or FDF document, consisting of a `header` and `body` array
 dict | Hash | Dictionary object type, e.g. `<< /Type /Catalog /Pages 3 0 R >>`
 encoded | Str | Raw encoded stream data. This is returned as a latin-1 byte-string.
@@ -132,7 +138,7 @@ obj-first-num | UInt | object first number in a  cross reference segment
 obj-num | UInt | Object number
 offset | UInt | byte offset of an indirect object in the file.
 literal | Str | A literal string, e.g. `(Hello, World!)`
-name | Str | String object type, e.g. `/Fred`
+name | Str | Name string, e.g. `/Fred`
 null | Mu | Null object type, e.g. `null`
 real | Real | Real object type, e.g. `42.0`
 start | UInt | Start position of stream data (returned by `ind-obj-nibble` rule)
