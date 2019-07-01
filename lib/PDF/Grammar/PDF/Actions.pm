@@ -6,16 +6,14 @@ class PDF::Grammar::PDF::Actions
     is PDF::Grammar::COS::Actions {
 
     method xref-first($/) {
+        my $xref = [ $<xref-section>».ast ];
 	my @entries = $<xref-entry>».ast;
-        my $first-section = {
+        $xref.unshift: {
 	    :obj-first-num(0),
 	    :obj-count(+@entries),
 	    :@entries,
         };
 
-	my @xref = [$first-section, ];
-	@xref.append: $<xref-section>>>.ast;
-
-	make (:@xref);
+	make (:$xref);
     }
 }
