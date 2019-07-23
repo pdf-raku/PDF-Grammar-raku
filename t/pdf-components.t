@@ -7,7 +7,7 @@ use PDF::Grammar::PDF::Actions;
 my $pdf-header-version = 1.5;
 my $header = "%PDF-{$pdf-header-version}";
 
-for ('%PDF-1.0', $header) {
+for ('%PDF-1.0', $header, "\n$header") {
      ok($_ ~~ /^<PDF::Grammar::PDF::header>$/, "pdf header: $_");
 }
 

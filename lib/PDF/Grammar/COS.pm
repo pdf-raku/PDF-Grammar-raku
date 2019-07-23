@@ -6,11 +6,11 @@ use PDF::Grammar;
 grammar PDF::Grammar::COS
     is PDF::Grammar {
     rule TOP {^<cos>$}
-    rule cos {<header> [<body>+] }
+    rule cos { <header> [<body>+] }
 
     # [PDF 1.7] 7.5.2 File Header
     # ---------------
-    token header   { '%' <doc-type> '-' $<version>=[\d'.'\d] }
+    token header   { .*? '%' <doc-type> '-' $<version>=[\d'.'\d] }
     token doc-type { <alnum>+ }
 
     # index section is optional - document could have a cross reference stream
