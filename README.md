@@ -13,7 +13,7 @@ description; there are areas where these can be put to use, including:
 - Parsing the operands that make up content streams. These are used to markup text, forms,
 images and graphical elements.
 
-PDF::Grammar is a set of Perl 6 grammars for parsing and validation of real-world PDF examples. There are
+PDF::Grammar is a set of Raku grammars for parsing and validation of real-world PDF examples. There are
 four grammars:
 
 `PDF::Grammar::Content` - describes the text and graphics operators that are used to produce page layout.
@@ -40,7 +40,7 @@ reason:
   - files should be read as binary (avoid encoding layers)
   - strings should be decoded as `latin1`
 
-   ```% perl6 -MPDF::Grammar::PDF -e"say PDF::Grammar::PDF.parse: slurp($f, :bin).decode('latin-1')"```
+   ```% rakudo -MPDF::Grammar::PDF -e"say PDF::Grammar::PDF.parse: slurp($f, :bin).decode('latin-1')"```
 
 - This module is put to work by the down-stream [PDF](https://github.com/p6-pdf/PDF-p6) module. E.g.
   to uncompress a PDF, using the installed `pdf-rewriter` script:
@@ -54,11 +54,11 @@ Examples
 
 - parse some markup content:
 
-    ```% perl6 -MPDF::Grammar::Content -e"say PDF::Grammar::Content.parse('(Hello, world\041) Tj')"```
+    ```% rakudo -MPDF::Grammar::Content -e"say PDF::Grammar::Content.parse('(Hello, world\041) Tj')"```
 
 - parse a PDF file:
 
-   ```% perl6 -MPDF::Grammar::PDF -e"say PDF::Grammar::PDF.parsefile( $f )"```
+   ```% rakudo -MPDF::Grammar::PDF -e"say PDF::Grammar::PDF.parsefile( $f )"```
 
 - dump the contents of a PDF
 
@@ -71,7 +71,7 @@ Examples
         my $actions = PDF::Grammar::PDF::Actions.new;
 
         if PDF::Grammar::PDF.parsefile( $pdf-file, :$actions ) {
-            say $/.ast.perl;
+            say $/.ast.raku;
         }
         else {
             say "failed to parse PDF: $pdf-file";
@@ -101,7 +101,7 @@ PDF::Grammar::PDF.parse( q:to"--END-DOC--", :rule<ind-obj>, :$actions);
 endobj
 --END-DOC--
 
-say '# ' ~ $/.ast.perl;
+say '# ' ~ $/.ast.raku;
 # :ind-obj($[3, 0, :dict({:Count(:int(1)), :Kids(:array([:ind-ref($[4, 0])])), :Type(:name("Pages"))})])
 ```
 
@@ -116,7 +116,7 @@ This AST representation is used extensively throughout the PDF tool-chain. For e
 
 For reference, here is a list of all AST node types:
 
-*AST Tag* | Perl Type | Description
+*AST Tag* | Raku Type | Description
 --- | --- | --- |
 array | Array[Any] | Array object type, e.g. `[ 0 0 612 792 ]`
 body | Array[Hash] | The FDF/PDF body consisting of `ind-obj` and `comment` entries. A PDF with revisions has multiple body segments
