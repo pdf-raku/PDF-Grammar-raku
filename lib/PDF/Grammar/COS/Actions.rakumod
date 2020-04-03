@@ -96,22 +96,24 @@ class PDF::Grammar::COS::Actions
 
     method xref-section($/) {
         my UInt $obj-count = $<obj-count>.ast.value;
-        my UInt $obj-first-num = $<obj-first-num>.ast.value;
+        my UInt $obj-num = $<obj-first-num>.ast.value;
         my List $rows = $<xref-entry>».ast.List;
 
         unless $rows {
             # RT131965 - rakudo doesn't like shaped arrays of length 0
-            $rows = (array[uint64].new(0, 65535, 0), );
+            $rows = (array[uint64].new(0, 0, 0, 65535), );
             $obj-count++ unless $obj-count;
         }
-        my uint64 @entries[+$rows; 3] = $rows;
-        make { :$obj-first-num, :$obj-count, :@entries };
+        my uint64 @entries[+$rows; 4] = $rows;
+        @entries[$_;0] = $obj-num++
+            for 0 ..^ +$rows;
+        make { :$obj-count, :@entries };
     }
 
     method xref-entry($/) {
         constant Free = 0;
         constant Inuse = 1;
-        my uint64 @entry = $<byte-offset>.Int, $<gen-num>.Int, ($<status> ~~ 'f' ?? Free !! Inuse);
+        my uint64 @entry = 0, ($<status> ~~ 'f' ?? Free !! Inuse), $<byte-offset>.Int, $<gen-num>.Int;
         make @entry;
     }
 
