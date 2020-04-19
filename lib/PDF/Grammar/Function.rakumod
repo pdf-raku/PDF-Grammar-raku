@@ -15,14 +15,18 @@ grammar PDF::Grammar::Function
     rule statement:sym<conditional> { <conditional> }
     rule statement:sym<object>      { <object=.illegal-object>||<object> }
 
+    # illegal in the postscript function subset
     proto rule illegal-object {*}
-    rule illegal-object:sym<dict>  { <dict> }
-    rule illegal-object:sym<array> { <array> }
-    rule illegal-object:sym<name>  { <name> }
+    rule illegal-object:sym<dict>   { <dict> }
+    rule illegal-object:sym<array>  { <array> }
+    rule illegal-object:sym<name>   { <name> }
     rule illegal-object:sym<string> { <string> }
-    rule illegal-object:sym<null>  { <sym> }
+    rule illegal-object:sym<null>   { <sym> }
 
-    # extend <object> add <ps-op>
+    # postscript integers can be in radix notation
+    # - redefine <int>
+    token int { $<int>=[< + - >?<digit>+]['#'$<radix-num>=<[0..9 a..z A..Z]>+]? }
+    # - postscript operators
     rule object:sym<ps-op> {<ps-op>}
 
     proto token ps-op {*}

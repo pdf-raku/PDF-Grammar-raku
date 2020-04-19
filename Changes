@@ -1,5 +1,9 @@
+Release 0.2.2
+- Support postscript radix numbers in postscript functions, e.g.
+  '16#AE'. These are not ruled out by the spec
 Release 0.2.1
-- Changed xref AST. See 
+- Changed xref AST; now builds a contigous native shaped array
+  with explicit object numbers.
 Release 0.2.0
 - Renamed module sources *.pm -> *.rakumod
 Release 0.1.6

@@ -12,12 +12,12 @@ class PDF::Grammar::Actions {
         make (:int($/.Int));
     }
 
-    method number ($/) {
+    method number($/) {
         make ($<real> // $<int>).ast;
     }
 
     method name-bytes:sym<number-symbol>($/) {
-        make '#'.ord;
+        make '#'.ord; 
     }
     method name-bytes:sym<escaped>($/) {
         make :16( $/.substr(1) )

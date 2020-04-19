@@ -27,6 +27,10 @@ my $if-else-ast = ( :expr[:int(2), :int(1), :int(1), :op<add>, :op<eq>,
 
 my $restricted-ops = '{ 360 sin <</x [exch]>> def }';
 my $restricted-ast = :expr[ :int(360), :op<sin>, "??" => :dict{x => :array[ :op<exch> ]}, "??" => "def"];
+
+my $radix-numbers = '{2#101010 4#222 8#52 16#2a 32#1A}';
+my $radix-ast = :expr[ :int(42) xx 5 ];
+
 my PDF::Grammar::Function::Actions $actions .= new;
 
 for ([ :$trivial-expr, $trivial-ast],
@@ -34,6 +38,7 @@ for ([ :$trivial-expr, $trivial-ast],
      [ :$if-expr, $if-ast ],
      [ :$if-else-expr, $if-else-ast ],
      [ :$restricted-ops, $restricted-ast],
+     [ :$radix-numbers, $radix-ast],
     ) {
     my $name = .[0].key;
     my %expected = input => .[0].value, ast => .[1];
