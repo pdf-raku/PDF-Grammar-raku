@@ -42,11 +42,11 @@ reason:
 
    ```% rakudo -MPDF::Grammar::PDF -e"say PDF::Grammar::PDF.parse: slurp($f, :bin).decode('latin-1')"```
 
-- This module is put to work by the down-stream [PDF](https://github.com/p6-pdf/PDF-p6) module. E.g.
+- This module is put to work by the down-stream [PDF](https://github.com/pdf-raku/PDF-raku) module. E.g.
   to uncompress a PDF, using the installed `pdf-rewriter` script:
 
   ```
-  % pdf-rewriter.pl --uncompress flyer.pdf
+  % pdf-rewriter.raku --uncompress flyer.pdf
   ```
 
 Examples
@@ -54,7 +54,7 @@ Examples
 
 - parse some markup content:
 
-    ```% rakudo -MPDF::Grammar::Content -e"say PDF::Grammar::Content.parse('(Hello, world\041) Tj')"```
+    ```% raku -M PDF::Grammar::Content -e"say PDF::Grammar::Content.parse('(Hello, world\041) Tj')"```
 
 - parse a PDF file:
 
@@ -150,5 +150,5 @@ version | Rat | The PDF / FDF version number, parsed from the header
 
 ## See also
 
-- [PDF](https://github.com/p6-pdf/PDF-p6) - for PDF manipulation, including compression, encryption and reading and writing of PDF data.
+- [PDF](https://github.com/pdf-raku/PDF-raku) - Raku module for PDF manipulation, including compression, encryption and reading and writing of PDF data.
 

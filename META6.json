@@ -1,6 +1,6 @@
 {
   "api": "PDF-1.7",
-  "auth": "github:p6-pdf",
+  "auth": "github:pdf-raku",
   "authors": [
     "David Warring"
   ],
@@ -9,7 +9,7 @@
   "depends": [
     "JSON::Fast"
   ],
-  "description": "Perl 6 grammars for parsing PDF Content Streams and File Structure",
+  "description": "Raku grammars for parsing PDF Content Streams and File Structure",
   "license": "Artistic-2.0",
   "name": "PDF::Grammar",
   "perl": "6.*",
@@ -32,7 +32,7 @@
   },
   "resources": [
   ],
-  "source-url": "git://github.com/p6-pdf/PDF-Grammar-p6.git",
+  "source-url": "git://github.com/pdf-raku/PDF-Grammar-raku.git",
   "tags": [
     "pdf"
   ],
