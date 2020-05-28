@@ -1,10 +1,10 @@
 use v6;
 
-grammar PDF::Grammar:ver<0.2.2> {
+grammar PDF::Grammar:ver<0.2.3> {
     # abstract base grammar for PDF Elements, see derivatives:
     # - PDF::Grammar::COS      - Base class for FDF and PDF
-    # -- PDF::Grammar::FDF      - Describes FDF (Form Data) files
-    # -- PDF::Grammar::PDF      - Overall PDF Document Structure
+    #   -- PDF::Grammar::FDF      - Describes FDF (Form Data) files
+    #   -- PDF::Grammar::PDF      - Overall PDF Document Structure
     # - PDF::Grammar::Content  - Text and Graphics Content
     # - PDF::Grammar::Function - Postscript calculator functions
     #
@@ -24,9 +24,11 @@ grammar PDF::Grammar:ver<0.2.2> {
     # ---------------
     token int { < + - >? \d+ }
     # reals must have a decimal point and some digits before or after it.
-    token real { < + - >? [\d+\.\d* | \.\d+] }
-
-    rule number { <real> | <int> }
+    token frac { \.\d+ }
+    proto token numeric {*}
+    token numeric:sym<real> { <int> [<frac>|'.']? }
+    token numeric:sym<frac> { < + - >? <frac> }
+    rule number { <numeric> }
 
     token octal-code {<[0..7]> ** 1..3}
     token literal-delimiter {<[ ( ) \\ \n \r ]>}

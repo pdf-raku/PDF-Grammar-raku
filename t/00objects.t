@@ -61,8 +61,8 @@ my @tests = (
     { :rule<string>, input => "<6\n869>",         ast => :hex-string<hi>},
     { :rule<string>, input => "<68\n7>",          ast => :hex-string<hp>},
 
-    { :rule<int>, input => '42',               ast => :int(42)},
-    { :rule<real>, input => '12.5',             ast => :real(12.5e0)},
+    { :rule<int>, input => '42',                  ast => :int(42)},
+    { :rule<number>, input => '12.5',             ast => :real(12.5e0)},
     { :rule<number>, input => '42',               ast => :int(42)},
     { :rule<number>, input => '12.5',             ast => :real(12.5e0)},
 
@@ -72,18 +72,19 @@ my @tests = (
 
     { :rule<object>, input => '(hi)',             ast => :literal<hi>},
 
-    { :rule<object>, input => '<6869>',                    ast => :hex-string<hi>},
+    { :rule<object>, input => '<6869>',           ast => :hex-string<hi>},
 
-    { :rule<object>, input => '-042',                      ast => int => -42},
+    { :rule<object>, input => '-042',             ast => int => -42},
+    { :rule<object>, input => '-042.',            ast => int => -42},
 
-    { :rule<object>, input => '+3.50',                     ast => real => 3.5e0},
+    { :rule<object>, input => '+3.50',            ast => real => 3.5e0},
 
-    { :rule<object>, input => 'true',              ast => :bool},
-    { :rule<object>, input => 'false',             ast => :!bool},
+    { :rule<object>, input => 'true',             ast => :bool},
+    { :rule<object>, input => 'false',            ast => :!bool},
 
-    { :rule<object>, input => '<</Length 42>>',    ast => :dict{ Length => :int(42)}},
+    { :rule<object>, input => '<</Length 42>>',   ast => :dict{ Length => :int(42)}},
     { :rule<object>, input => '[/Apples(oranges)]', ast => :array[ :name<Apples>, :literal<oranges> ]},
-    { :rule<object>, input => '<</MoL 42>>',        ast => :dict{ :MoL( :int(42) )} },
+    { :rule<object>, input => '<</MoL 42>>',      ast => :dict{ :MoL( :int(42) )} },
     { :rule<object>, input => '[ 42 (snoopy) <</foo (bar)>>]', ast => :array[:int(42), :literal<snoopy>, :dict{foo => :literal<bar>}]},
     );
 

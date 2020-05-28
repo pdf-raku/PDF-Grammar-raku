@@ -12,9 +12,13 @@ class PDF::Grammar::Actions {
         make (:int($/.Int));
     }
 
-    method number($/) {
-        make ($<real> // $<int>).ast;
+    method numeric:sym<real>($/) {
+        make $<frac> ?? :real($/.Rat) !! $<int>.ast;
     }
+    method numeric:sym<frac>($/) {
+        make (:real($/.Rat));
+    }
+    method number($/) { make $<numeric>.ast }
 
     method name-bytes:sym<number-symbol>($/) {
         make '#'.ord; 
