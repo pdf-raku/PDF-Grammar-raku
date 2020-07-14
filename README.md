@@ -1,3 +1,6 @@
+[[Raku PDF Project]](https://pdf-raku.github.io)
+ / [PDF::Grammar](https://pdf-raku.github.io/PDF-Grammar-raku)
+
 PDF-Grammar
 ===========
 
@@ -42,7 +45,7 @@ reason:
 
    ```% rakudo -MPDF::Grammar::PDF -e"say PDF::Grammar::PDF.parse: slurp($f, :bin).decode('latin-1')"```
 
-- This module is put to work by the down-stream [PDF](https://github.com/pdf-raku/PDF-raku) module. E.g.
+- This module is put to work by the down-stream [PDF](https://pdf-raku.github.io/PDF-raku) module. E.g.
   to uncompress a PDF, using the installed `pdf-rewriter` script:
 
   ```
@@ -150,5 +153,5 @@ version | Rat | The PDF / FDF version number, parsed from the header
 
 ## See also
 
-- [PDF](https://github.com/pdf-raku/PDF-raku) - Raku module for PDF manipulation, including compression, encryption and reading and writing of PDF data.
+- [PDF](https://pdf-raku.github.io/PDF-raku) - Raku module for PDF manipulation, including compression, encryption and reading and writing of PDF data.
 
