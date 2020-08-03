@@ -7,7 +7,7 @@ grammar PDF::Grammar::Content
     #
     # A Simple PDF grammar for parsing PDF content, i.e. Graphics and
     # Text operations as described in sections 8 and 9 of [PDF 1.7].
-    rule TOP {^ [<op=.instruction>||<op=.unknown>]* $}
+    rule TOP {^ [<op=.instruction>||<op=.suspect>]* $}
 
     proto rule instruction {*}
     rule instruction:sym<block> {<block>}
@@ -46,10 +46,6 @@ grammar PDF::Grammar::Content
                       [  $<start>=<opImageData>.*?$<end>=[\n|' ']<opEndImage>
                       || $<start>=<opImageData>.*?$<end>=<opEndImage>] # more forgiving fallback
     }
-
-    proto rule ignored {*}
-    rule ignored:sym<guff>  { <guff> }
-    rule ignored:sym<char>  { . }
 
     # ------------------------
     # Operators and Objects
@@ -143,6 +139,6 @@ grammar PDF::Grammar::Content
     rule op:sym<MoveShowText>        { <string> (\') }
 
     # catchall for unknown opcodes and arguments
-    token guff { <[a..zA..Z\*\"\']><[\w\*\"\']>* }
-    rule unknown               { <object> || <guff> } 
+    token op-like { <[a..zA..Z\*\"\']><[\w\*\"\']>* }
+    rule suspect  { <object>* (<.op-like>) } 
 }

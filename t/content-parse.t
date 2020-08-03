@@ -99,8 +99,17 @@ B                                       % Fill and Stroke path
 b                                       % Close, fill, and stroke path
 END5
 
-my $dud_content = '10 10 Td 42 dud';
-my $dud_ast = ["Td" => ["int" => 10, "int" => 10], "??" => ["int" => 42], "??" => ["dud"]];
+my $unknown_op_content = '10 10 Td 42 dud';
+my $unknown_op_ast = ["Td" => ["int" => 10, "int" => 10], "??" => :dud["int" => 42] ];
+
+my $wrong_arg_type_content = '10 (blah) Td';
+my $wrong_arg_type_ast = ['??' => :Td["int" => 10, "literal" => 'blah'] ];
+
+my $missing_arg_content = '10 Td';
+my $missing_arg_ast = ['??' => :Td["int" => 10] ];
+
+my $extra_arg_content = '10 10 42 Td';
+my $extra_arg_ast = ['??' => :Td["int" => 10, int => 10, int => 42] ];
 
 my $sample_content_bx = 'q
 0.0648041 0 0 -0.0590057 38.1269989 736.3480072 cm
@@ -154,7 +163,9 @@ for (:trivial[$sample_content1, $ast1],
      :extended[$sample_content_bx, $ast_bx],
      :image-block[$test_image_block, $test_image_ast],
      :image-null[$test_image_null, $test_image_null_ast],
-     :invalid[$dud_content, $dud_ast],
+     :unknown-op[$unknown_op_content, $unknown_op_ast],
+     :missing-arg[$missing_arg_content, $missing_arg_ast],
+     :extra-arg[$extra_arg_content, $extra_arg_ast],
      :pdf-ref-example[$sample_content6],
      :real-word-example[$sample_content5],
      ) {

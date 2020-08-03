@@ -5,8 +5,6 @@ use PDF::Grammar::Actions;
 class PDF::Grammar::Content::Actions
     is PDF::Grammar::Actions {
 
-    has Bool $.strict;
-
     method TOP($/) {
         my @result = $/<op>».ast;
         make @result;
@@ -68,15 +66,8 @@ class PDF::Grammar::Content::Actions
         make %atts;
     }
 
-    method guff($/) {
-        make ~$/;
-    }
-
-    method unknown($/) {
-        die "unrecognised content at or after byte position {$/.to}: $/"
-            if $!strict;
-        my @u =  $/.caps.map: *.value.ast;
-        make '??' => @u
+    method suspect($/) {
+        make '??' => _op-ast($/);
     }
 
 }

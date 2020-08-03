@@ -1,6 +1,6 @@
 use v6;
 
-grammar PDF::Grammar:ver<0.2.3> {
+grammar PDF::Grammar:ver<0.2.4> {
     # abstract base grammar for PDF Elements, see derivatives:
     # - PDF::Grammar::COS      - Base class for FDF and PDF
     #   -- PDF::Grammar::FDF      - Describes FDF (Form Data) files
@@ -8,7 +8,7 @@ grammar PDF::Grammar:ver<0.2.3> {
     # - PDF::Grammar::Content  - Text and Graphics Content
     # - PDF::Grammar::Function - Postscript calculator functions
     #
-    enum AST-Types is export(:AST-Types) < array body bool cos
+    enum AST-Types is export(:AST-Types) <array body bool cos
 	dict encoded end entries decoded fdf gen-num header hex-string
 	ind-ref ind-obj int obj-count obj-first-num offset literal
 	name null real start startxref stream trailer type version cond>;

@@ -6,7 +6,7 @@ grammar PDF::Grammar::Content::Fast
     is PDF::Grammar {
     # Manually optimised version of PDF::Grammar::Content. Also
     # more forgiving; doesn't enforce text or marked content blocks
-    rule TOP {^ [<op=.instruction>||<op=.unknown>]* $}
+    rule TOP {^ [<op=.instruction>||<op=.suspect>]* $}
 
     proto rule instruction {*}
     rule instruction:sym<op>    {<op>}
@@ -25,10 +25,6 @@ grammar PDF::Grammar::Content::Fast
                       [  $<start>=<opImageData>.*?$<end>=[\n|' ']<opEndImage>
                       || $<start>=<opImageData>.*?$<end>=<opEndImage>] # more forgiving fallback
     }
-
-    proto rule ignored {*}
-    rule ignored:sym<guff>  { <guff> }
-    rule ignored:sym<char>  { . }
 
     # ------------------------
     # Operators and Objects
@@ -50,7 +46,7 @@ grammar PDF::Grammar::Content::Fast
     rule op:sym<string> { <string> (Tj|\') }
     rule op:sym<array>  { <array> [ (TJ) | <number> (d) ] }
 
-    # catchall for unknown opcodes and arguments
-    token guff    { <[a..zA..Z\*\"\']><[\w\*\"\']>* }
-    rule unknown  { <object> || <guff> } 
+    # catchall for unknown opcodes and mismatched arguments
+    token op-like { <[a..zA..Z\*\"\']><[\w\*\"\']>* }
+    rule suspect  { <object>* (<.op-like>) } 
 }
