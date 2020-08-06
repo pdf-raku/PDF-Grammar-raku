@@ -147,7 +147,7 @@ for (
     'Marked content - incorrect text nesting' =>'/foo BMC BT EMC ET',     
     'Marked content - nested' =>'/bar BMC /baz BMC B* EMC EMC',  
     'Marked content - extra end' =>'/foo BMC BT ET EMC EMC',   
-    'Marked content - mising arg' =>'/BMC BT B* ET EMC',        
+    'Marked content - missing arg' =>'/BMC BT B* ET EMC',
     'Marked content - incomplete contents' =>'/baz BMC (hi) EMC',        
     'BX ... EX incorrect nesting (extra BX)' => 'BX BX EX',
     'BX ... EX incorrect nesting (extra EX)' =>'BX EX EX',                 
@@ -155,7 +155,7 @@ for (
     # test our parser's resilience
     ok .value !~~ /^<PDF::Grammar::Content::instruction>$/, "invalid instruction: " ~ .key
         or diag .value;
-    ok $_ ~~ /<PDF::Grammar::Content::unknown>/, "parsed as unknown: " ~ .key;
+    ok $_ ~~ /<PDF::Grammar::Content::suspect>/, "parsed as suspect: " ~ .key;
 }
 
 done-testing;
