@@ -2,10 +2,7 @@ use v6;
 
 use PDF::Grammar::COS;
 
-#
-# An experimental Perl6 grammar for scanning the basic outer block
-# structure of FDF form data exchange files.
-#
+#| A Raku grammar for scaning the out block structure of PDF files
 grammar PDF::Grammar::PDF
     is PDF::Grammar::COS {
 

@@ -31,8 +31,8 @@ module PDF::Grammar::Test {
     multi sub json-eqv (Mu $a, Mu $b) {
         return True if !$a.defined && !$b.defined;
 	diag("data type mismatch"
-	     ~ "\n  - expected: {$b.perl}"
-	     ~ "\n  -      got: {$a.perl}");
+	     ~ "\n  - expected: {$b.raku}"
+	     ~ "\n  -      got: {$a.raku}");
 	False;
     }
 
@@ -62,7 +62,7 @@ module PDF::Grammar::Test {
         }
         else {
             with $parse.ast {
-                note {untested_ast => $_}.perl
+                note {untested_ast => $_}.raku
                     unless %expected<ast>:exists;
             }
         }
