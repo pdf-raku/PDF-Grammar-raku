@@ -80,7 +80,7 @@ class PDF::Grammar::Actions {
     }
 
     method dict($/) {
-        my @names = @<name>».ast.map: *.value;
+        my @names = @<name>.map: *.ast.value;
         my @objects = @<object>».ast;
 
         my %dict = @names Z=> @objects;

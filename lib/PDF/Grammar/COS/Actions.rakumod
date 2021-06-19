@@ -13,7 +13,7 @@ class PDF::Grammar::COS::Actions
 
     method cos($/) {
         my $header = $<header>.ast;
-	my $body = [ $<body>».ast.map({ .value }) ];
+	my $body = [ $<body>.map: *.ast.value ];
         make 'cos' => {
 	    :$header,
 	    :$body,

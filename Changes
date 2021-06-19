@@ -1,5 +1,8 @@
 {{$NEXT}}
 
+0.2.6  2021-06-20T11:38:09+12:00
+  - Remove api from META6
+
 0.2.5  2021-01-12T05:41:35+13:00
   - Release via CPAN
 Release 0.2.4
