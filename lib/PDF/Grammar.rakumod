@@ -1,6 +1,6 @@
 use v6;
 
-grammar PDF::Grammar:ver<0.2.6> {
+grammar PDF::Grammar:ver<0.2.7> {
     # abstract base grammar for PDF Elements, see derivatives:
     # - PDF::Grammar::COS      - Base class for FDF and PDF
     #   -- PDF::Grammar::FDF      - Describes FDF (Form Data) files

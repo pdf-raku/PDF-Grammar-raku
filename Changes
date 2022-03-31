@@ -1,5 +1,8 @@
 {{$NEXT}}
 
+0.2.7  2022-04-01T07:34:09+13:00
+  - Release via zef
+
 0.2.6  2021-06-20T11:38:09+12:00
   - Remove api from META6
 
