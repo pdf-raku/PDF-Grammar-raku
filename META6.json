@@ -20,7 +20,6 @@
     "PDF::Grammar::Content": "lib/PDF/Grammar/Content.rakumod",
     "PDF::Grammar::Content::Actions": "lib/PDF/Grammar/Content/Actions.rakumod",
     "PDF::Grammar::Content::Fast": "lib/PDF/Grammar/Content/Fast.rakumod",
-    "PDF::Grammar::Doc": "lib/PDF/Grammar/Doc.rakumod",
     "PDF::Grammar::FDF": "lib/PDF/Grammar/FDF.rakumod",
     "PDF::Grammar::FDF::Actions": "lib/PDF/Grammar/FDF/Actions.rakumod",
     "PDF::Grammar::Function": "lib/PDF/Grammar/Function.rakumod",

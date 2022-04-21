@@ -1,4 +1,8 @@
 {{$NEXT}}
+  - 2022 modernization
+    -- enable github testing; retire travis
+    -- remove 'use v6' from sources
+    -- retire deprecated PDF::Grammar::Doc
 
 0.2.7  2022-04-01T07:34:09+13:00
   - Release via zef

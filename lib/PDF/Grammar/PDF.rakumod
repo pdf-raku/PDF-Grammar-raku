@@ -1,8 +1,6 @@
-use v6;
-
 use PDF::Grammar::COS;
 
-#| A Raku grammar for scaning the out block structure of PDF files
+#| A Raku grammar for scaning the outer block structure of PDF files
 grammar PDF::Grammar::PDF
     is PDF::Grammar::COS {
 

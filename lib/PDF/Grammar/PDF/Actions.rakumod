@@ -1,5 +1,3 @@
-use v6;
-
 use PDF::Grammar::COS::Actions;
 
 class PDF::Grammar::PDF::Actions

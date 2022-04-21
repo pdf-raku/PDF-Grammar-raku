@@ -1,9 +1,6 @@
-use v6;
-
 use PDF::Grammar::Actions;
 
 # rules for constructing PDF::Grammar::PDF AST
-
 class PDF::Grammar::COS::Actions
     is PDF::Grammar::Actions {
 
@@ -57,10 +54,10 @@ class PDF::Grammar::COS::Actions
     method ind-obj($/) {
         my $obj-num = $<obj-num>.ast.value;
         my $gen-num = $<gen-num>.ast.value;
-        my $ind-obj = [ $obj-num, $gen-num, $<object>.ast ];
-        $ind-obj.push: $/.from
+        my @ind-obj = [ $obj-num, $gen-num, $<object>.ast ];
+        @ind-obj.push: $/.from
             if self.get-offsets;
-        make (:$ind-obj)
+        make (:@ind-obj)
     }
 
     method object:sym<ind-ref>($/)  { make $<ind-ref>.ast }
@@ -76,8 +73,8 @@ class PDF::Grammar::COS::Actions
     }
 
     method body($/) {
-        my $objects = [ $<ind-obj>».ast ];
-        my %body = :$objects;
+        my @objects = $<ind-obj>».ast;
+        my %body = :@objects;
         %body.push: .ast with $<startxref>;
         %body.push: .ast with $<index>;
         make (:%body);
@@ -90,8 +87,8 @@ class PDF::Grammar::COS::Actions
     }
 
     method xref($/) {
-	my $xref = [ $<xref-section>».ast ];
-	make (:$xref);
+	my @xref = $<xref-section>».ast;
+	make (:@xref);
     }
 
     method xref-section($/) {
@@ -138,5 +135,4 @@ class PDF::Grammar::COS::Actions
 
     method object-stream-indice($/) { make [ $<obj-num>.ast.value, $<byte-offset>.ast.value ] }
     method object-stream-index($/)  { make [ $<object-stream-indice>».ast ] }
-
 }

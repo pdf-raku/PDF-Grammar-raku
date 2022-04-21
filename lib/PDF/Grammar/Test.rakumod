@@ -1,5 +1,3 @@
-use v6;
-
 module PDF::Grammar::Test {
 
     use Test;

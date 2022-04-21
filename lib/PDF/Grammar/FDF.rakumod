@@ -1,5 +1,3 @@
-use v6;
-
 use PDF::Grammar::COS;
 
 # A Raku grammar for scanning the outer block

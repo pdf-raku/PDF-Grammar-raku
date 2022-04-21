@@ -1,5 +1,3 @@
-use v6;
-
 use PDF::Grammar::COS::Actions;
 
 # rules for constructing PDF::Grammar::FDF AST

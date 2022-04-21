@@ -1,5 +1,3 @@
-use v6;
-
 use PDF::Grammar;
 
 # Abstract Grammar for COS (Carousel Object System). This is the serialization format that underpins PDF, and FDF.
@@ -24,7 +22,7 @@ grammar PDF::Grammar::COS
     rule ind-ref   { <obj-num=.int> <gen-num=.int> R }
 
     # Object extensions:
-    # modify <dict> - allow trailing stream anywhere
+    # extend <dict> - allow trailing stream anywhere
     rule object:sym<dict>  { <dict> <stream>? }
     # add <indirect-ref> to the list of permitted objects
     rule object:sym<ind-ref>  { <ind-ref> }

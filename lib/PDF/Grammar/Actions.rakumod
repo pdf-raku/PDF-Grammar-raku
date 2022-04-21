@@ -1,7 +1,4 @@
-use v6;
-
 # base rules for constructing AST from PDF::Grammar.
-
 class PDF::Grammar::Actions {
 
     method real($/) {

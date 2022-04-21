@@ -1,7 +1,5 @@
-use v6;
-
 grammar PDF::Grammar:ver<0.2.7> {
-    # abstract base grammar for PDF Elements, see derivatives:
+    # abstract base grammar for PDF components, see derivatives:
     # - PDF::Grammar::COS      - Base class for FDF and PDF
     #   -- PDF::Grammar::FDF      - Describes FDF (Form Data) files
     #   -- PDF::Grammar::PDF      - Overall PDF Document Structure
@@ -85,7 +83,7 @@ grammar PDF::Grammar:ver<0.2.7> {
 
     # ensure we load and decode the file appropriately
     method parsefile(Str $file, |c) {
-        self.parse( slurp($file, :bin).decode("latin-1"), |c);
+        self.parse: slurp($file, :bin).decode("latin-1"), |c;
     }
 
 }

@@ -1,5 +1,3 @@
-use v6;
-
 use PDF::Grammar::Actions;
 
 class PDF::Grammar::Function::Actions
@@ -35,11 +33,11 @@ class PDF::Grammar::Function::Actions
             make (:int($/.Int));
         }
     }
-    method object:sym<ps-op>($/)     {make 'op' => $<ps-op>.ast }
+    method object:sym<ps-op>($/)     { make 'op' => $<ps-op>.ast }
     # extended postcript operators
-    method ps-op:sym<arithmetic>($/) {make ~$<op> }
-    method ps-op:sym<bitwise>($/)    {make ~$<op> }
-    method ps-op:sym<stack>($/)      {make ~$<op> }
+    method ps-op:sym<arithmetic>($/) { make ~$<op> }
+    method ps-op:sym<bitwise>($/)    { make ~$<op> }
+    method ps-op:sym<stack>($/)      { make ~$<op> }
 
     method conditional:sym<if>($/) {
 	my $if = $<if-expr>.ast;
