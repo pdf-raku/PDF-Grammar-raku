@@ -5,6 +5,7 @@ class PDF::Grammar::COS::Actions
     is PDF::Grammar::Actions {
 
     has Bool $.get-offsets is rw = False; #| return ind-obj byte offsets in AST
+    method !val($v) { $.lite ?? $v !! $v.value }
 
     method TOP($/) { make $<cos>.ast.value }
 
@@ -28,7 +29,7 @@ class PDF::Grammar::COS::Actions
 
     method postamble($/) {
         my %postamble;
-        %postamble<startxref> = .ast.value
+        %postamble<startxref> = self!val: .ast
             with $<byte-offset>;
         %postamble.push: .ast
             with $<trailer>;
@@ -41,19 +42,19 @@ class PDF::Grammar::COS::Actions
     }
 
     method startxref($/)   {
-	make (:startxref($<byte-offset>.ast.value))
+	make (:startxref(self!val: $<byte-offset>.ast))
     }
 
     method ind-ref($/) {
-        my $obj-num = $<obj-num>.ast.value;
-        my $gen-num = $<gen-num>.ast.value;
+        my $obj-num = self!val: $<obj-num>.ast;
+        my $gen-num = self!val: $<gen-num>.ast;
         my $ind-ref = [ $obj-num, $gen-num ];
         make (:$ind-ref);
     }
 
     method ind-obj($/) {
-        my $obj-num = $<obj-num>.ast.value;
-        my $gen-num = $<gen-num>.ast.value;
+        my $obj-num = self!val: $<obj-num>.ast;
+        my $gen-num = self!val: $<gen-num>.ast;
         my @ind-obj = [ $obj-num, $gen-num, $<object>.ast ];
         @ind-obj.push: $/.from
             if self.get-offsets;
@@ -92,8 +93,8 @@ class PDF::Grammar::COS::Actions
     }
 
     method xref-section($/) {
-        my UInt $obj-count = $<obj-count>.ast.value;
-        my UInt $obj-num = $<obj-first-num>.ast.value;
+        my UInt $obj-count = self!val: $<obj-count>.ast;
+        my UInt $obj-num = self!val: $<obj-first-num>.ast;
         my List $rows = $<xref-entry>».ast.List;
 
         unless $rows {
@@ -130,9 +131,9 @@ class PDF::Grammar::COS::Actions
             %stream.push: 'start' => (~$/).codes;
             $object = :%stream;
         }
-        make (:ind-obj[ $<obj-num>.ast.value, $<gen-num>.ast.value, $object ]);
+        make (:ind-obj[ self!val($<obj-num>.ast), self!val($<gen-num>.ast), $object ]);
     }
 
-    method object-stream-indice($/) { make [ $<obj-num>.ast.value, $<byte-offset>.ast.value ] }
+    method object-stream-indice($/) { make [ self!val($<obj-num>.ast), self!val($<byte-offset>.ast) ] }
     method object-stream-index($/)  { make [ $<object-stream-indice>».ast ] }
 }

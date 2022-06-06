@@ -1,19 +1,21 @@
 # base rules for constructing AST from PDF::Grammar.
 class PDF::Grammar::Actions {
 
+    has Bool $.lite;
+
     method real($/) {
-        make (:real($/.Rat));
+        make $!lite ?? $/.Rat !! :real($/.Rat);
     }
 
     method int($/) {
-        make (:int($/.Int));
+        make $!lite ?? $/.Int !! (:int($/.Int));
     }
 
     method numeric:sym<real>($/) {
-        make $<frac> ?? :real($/.Rat) !! $<int>.ast;
+        make $<frac> ?? ($!lite ?? $/.Rat !! :real($/.Rat)) !! $<int>.ast;
     }
     method numeric:sym<frac>($/) {
-        make (:real($/.Rat));
+        make $!lite ?? $/.Rat !! (:real($/.Rat));
     }
     method number($/) { make $<numeric>.ast }
 
@@ -86,8 +88,8 @@ class PDF::Grammar::Actions {
     }
 
     method object:sym<number>($/)  { make $<number>.ast }
-    method object:sym<true>($/)    { make (:bool) }
-    method object:sym<false>($/)   { make (:!bool) }
+    method object:sym<true>($/)    { make ($!lite ?? True !! :bool) }
+    method object:sym<false>($/)   { make ($!lite ?? False !! :!bool) }
     method object:sym<bool>($/)    { make $<bool>.ast }
     method object:sym<string>($/)  { make $<string>.ast }
     method object:sym<name>($/)    { make $<name>.ast }
