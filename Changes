@@ -1,6 +1,9 @@
 {{$NEXT}}
+
+0.2.9  2022-06-07T12:10:45+12:00
   - Add PDF::Grammar::Actions :$lite mode. This produces a more succinct,
-    and easier to read, AST with numerics not wrapped in Pair objects.
+    and easier to read, AST with numerics not wrapped in Pair objects. See
+    also https://github.com/pdf-raku/PDF-raku/issues/34
 
 0.2.8  2022-04-22T08:13:54+12:00
   - 2022 modernization
