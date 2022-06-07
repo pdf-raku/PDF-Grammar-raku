@@ -11,6 +11,7 @@ my $ast1 = [ :CS[ :name<RGB> ]];
 
 my $sample_content2 = '100 125 m 9 0 0 9 476.48 750 Tm';
 my $ast2 = [ :m[ :int(100), :int(125) ], :Tm[ :int(9), :int(0), :int(0), :int(9), :real(476.48), :int(750)]];
+my $ast2-lite = [ :m[ 100, 125 ], :Tm[ 9, 0, 0, 9, 476.48, 750]];
 
 my $sample_content2a = '[(Hello)(World)]TJ';
 my $ast2a = [ :TJ[ :array[ :literal<Hello>, :literal<World> ]] ];
@@ -104,6 +105,7 @@ my $unknown_op_ast = ["Td" => ["int" => 10, "int" => 10], "??" => :dud["int" => 
 
 my $wrong_arg_type_content = '10 (blah) Td';
 my $wrong_arg_type_ast = ['??' => :Td["int" => 10, "literal" => 'blah'] ];
+my $wrong_arg_type_ast-lite = ['??' => :Td[10, "literal" => 'blah'] ];
 
 my $missing_arg_content = '10 Td';
 my $missing_arg_ast = ['??' => :Td["int" => 10] ];
@@ -153,11 +155,13 @@ my $test_image_null_ast = [:BI[ :dict{BPC => :int(1),
                                       }],
                             :ID[:encoded("\c0")],
                             :EI[]];
+
 my PDF::Grammar::Content::Actions $actions .= new;
+my PDF::Grammar::Content::Actions $lite-actions .= new: :lite;
 
 for (:trivial[$sample_content1, $ast1],
-     :basic[$sample_content2, $ast2],
-     :basic-array[$sample_content2a, $ast2a],
+     :basic[$sample_content2, $ast2, $ast2-lite],
+     :basic-array[$sample_content2a, $ast2a, $ast2a],
      :toc-entry[$sample_content3],
      :text-block[$sample_content4, $ast4],
      :extended[$sample_content_bx, $ast_bx],
@@ -165,12 +169,13 @@ for (:trivial[$sample_content1, $ast1],
      :image-null[$test_image_null, $test_image_null_ast],
      :unknown-op[$unknown_op_content, $unknown_op_ast],
      :missing-arg[$missing_arg_content, $missing_arg_ast],
+     :wrong-arg[$wrong_arg_type_content, $wrong_arg_type_ast, $wrong_arg_type_ast-lite],
      :extra-arg[$extra_arg_content, $extra_arg_ast],
      :pdf-ref-example[$sample_content6],
      :real-word-example[$sample_content5],
      ) {
     my ($test, $spec) = $_.kv;
-    my ($str, $expected-ast) = @$spec;
+    my ($str, $expected-ast, $lite-ast) = @$spec;
     for :normal(PDF::Grammar::Content), :fast(PDF::Grammar::Content::Fast) {
         my $speed = .key;
         my $grammar = .value;
@@ -180,6 +185,10 @@ for (:trivial[$sample_content1, $ast1],
 
         if $expected-ast {
             cmp-ok $p.ast, 'eqv', $expected-ast, "$test $speed - result as expected";
+        }
+        if $lite-ast {
+            $p = $grammar.parse($str, :actions($lite-actions));
+            cmp-ok $p.ast, 'eqv', $lite-ast, "$test $speed (lite) - result as expected";
         }
     }
 }
