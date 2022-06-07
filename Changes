@@ -1,4 +1,5 @@
 {{$NEXT}}
+  - Fix PDF::Grammar::Function::Actions to work consistently in :lite mode
 
 0.2.9  2022-06-07T12:10:45+12:00
   - Add PDF::Grammar::Actions :$lite mode. This produces a more succinct,

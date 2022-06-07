@@ -22,16 +22,17 @@ class PDF::Grammar::Function::Actions
     method illegal-object:sym<null>($/)  { make '??' => Any }
 
     method int($/)  {
-        with $<radix-num> {
+        my $int = do with $<radix-num> {
             # radix notation
             my $radix = $<int>.Int;
             my $sign = $radix < 0 ?? -1 !! 1;
-            make (:int($sign * .Str.parse-base($radix.abs)))
+            $sign * .Str.parse-base($radix.abs);
         }
         else {
             # simple integer
-            make (:int($/.Int));
+            $/.Int;
         }
+        make $.lite ?? $int !! :$int;
     }
     method object:sym<ps-op>($/)     { make 'op' => $<ps-op>.ast }
     # extended postcript operators
