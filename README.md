@@ -108,6 +108,16 @@ say '# ' ~ $/.ast.raku;
 # :ind-obj($[3, 0, :dict({:Count(:int(1)), :Kids(:array([:ind-ref($[4, 0])])), :Type(:name("Pages"))})])
 ```
 
+Note that there's also a C<lite> mode which skips types `bool`, `int`, `real` and `null`:
+
+    $actions .= new: :lite;
+    PDF::Grammar::PDF.parse( q:to"--END-", :rule<ind-obj>, :$actions);
+    3 0 obj << /Count 1 >> endobj
+    --END--
+    say '# ' ~ $/.ast.raku;
+    # :ind-obj($[3, 0, :dict({:Count(1)})])
+
+
 This is an indirect object (`ind-obj`), it contains a dictionary object (`dict`). Entries in the dictionary are:
 - `Count` with integer value (`int`) of 1.
 - `Kids`, and array (`array`) containing one indirect reference (`ind-ref`).
@@ -123,7 +133,7 @@ For reference, here is a list of all AST node types:
 --- | --- | --- |
 array | Array[Any] | Array object type, e.g. `[ 0 0 612 792 ]`
 body | Array[Hash] | The FDF/PDF body consisting of `ind-obj` and `comment` entries. A PDF with revisions has multiple body segments
-bool | Bool | Boolean object type, e.g. `true`
+bool | Bool | Boolean object type, e.g. `true` [1]
 comment | Str | (Write only) a comment string
 cos | Hash | A PDF or FDF document, consisting of a `header` and `body` array
 dict | Hash | Dictionary object type, e.g. `<< /Type /Catalog /Pages 3 0 R >>`
@@ -135,21 +145,23 @@ header | Hash | PDF or FDF header, e.g. `%PDF1.4`
 hex-string | Str | A hex-string, e.g. `<736e6f6f7079>`
 ind-ref | Array[UInt] | An indirect reference, .e.g. `23 2 R`
 ind-obj | Any | An indirect object. This is a three element array that contains an object number, generation number and the object
-int | Int | Integer object type, e.g. `42`
+int | Int | Integer object type, e.g. `42` [1]
 obj-count | UInt | object count/number of entries in a cross reference segment
 obj-first-num | UInt | object first number in a  cross reference segment
 obj-num | UInt | Object number
 offset | UInt | byte offset of an indirect object in the file.
 literal | Str | A literal string, e.g. `(Hello, World!)`
 name | Str | Name string, e.g. `/Fred`
-null | Mu | Null object type, e.g. `null`
-real | Real | Real object type, e.g. `42.0`
+null | Mu | Null object type, e.g. `null` [1]
+real | Real | Real object type, e.g. `42.0` [1]
 start | UInt | Start position of stream data (returned by `ind-obj-nibble` rule)
 startxref | UInt | byte offset from the start of the file to the start of the trailer
 stream | Hash | Stream object type. A dictionary indirect object followed by stream data
 trailer | Hash | Trailer. This typically contains the trailer `dict` entry.
 type | Str | Document type; 'pdf', or 'fdf'
 version | Rat | The PDF / FDF version number, parsed from the header
+
+Note [1] Types `bool`, `int`, `real`, and `null` don't appear in C<lite> mode.
 
 ## See also
 
