@@ -108,7 +108,7 @@ say '# ' ~ $/.ast.raku;
 # :ind-obj($[3, 0, :dict({:Count(:int(1)), :Kids(:array([:ind-ref($[4, 0])])), :Type(:name("Pages"))})])
 ```
 
-Note that there's also a C<lite> mode which skips types `bool`, `int`, `real` and `null`:
+Note that there's also a `lite` mode which skips types `bool`, `int`, `real` and `null`:
 
     $actions .= new: :lite;
     PDF::Grammar::PDF.parse( q:to"--END-", :rule<ind-obj>, :$actions);
@@ -161,7 +161,7 @@ trailer | Hash | Trailer. This typically contains the trailer `dict` entry.
 type | Str | Document type; 'pdf', or 'fdf'
 version | Rat | The PDF / FDF version number, parsed from the header
 
-Note [1] Types `bool`, `int`, `real`, and `null` don't appear in C<lite> mode.
+Note [1] Types `bool`, `int`, `real`, and `null` don't appear in `lite` mode.
 
 ## See also
 

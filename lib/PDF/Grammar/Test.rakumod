@@ -38,8 +38,8 @@ module PDF::Grammar::Test {
 	cmp-ok(a, &json-eqv, |c);
     }
 
-    our sub parse-tests($class, $input, :$parse is copy, :$actions,
-			:$rule = 'TOP', :$suite, :%expected) is export(:parse-tests) {
+    our sub parse-tests($class, Str:D $input, :$parse is copy, :$actions,
+			Str :$rule = 'TOP', Str:D :$suite, :%expected) is export(:parse-tests) {
 
         $parse //= $class.subparse( $input, :$rule, :$actions);
         my $parsed = %expected<parse> // $input;
