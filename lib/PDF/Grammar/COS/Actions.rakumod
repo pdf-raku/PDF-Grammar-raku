@@ -104,7 +104,7 @@ class PDF::Grammar::COS::Actions
         }
         my uint64 @entries[+$rows; 4] = $rows;
         @entries[$_;0] = $obj-num++
-            for 0 ..^ +$rows;
+            for ^$rows;
         make { :$obj-count, :@entries };
     }
 

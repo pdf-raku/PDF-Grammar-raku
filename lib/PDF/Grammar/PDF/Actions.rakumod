@@ -7,7 +7,7 @@ class PDF::Grammar::PDF::Actions
 	my @entries = $<xref-entry>».ast;
         my $obj-num = 0;
         @entries[$_;0] = $obj-num++
-            for 0 ..^ +@entries;
+            for ^@entries;
         my @xref = {
 	    :obj-count(+@entries),
 	    :@entries,
