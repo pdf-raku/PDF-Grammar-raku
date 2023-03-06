@@ -45,7 +45,7 @@ class PDF::Grammar::Actions {
 
     method literal:sym<eol>($/) {
         my Str $ch = ~$/;
-        make $ch.ords.grep(10)  ?? "\n" !! $ch
+        make $ch.ords.first(10)  ?? "\n" !! $ch
     }
     method literal:sym<substring>($/)    {
         make '(' ~ $<literal-string>.ast.value ~ ')'

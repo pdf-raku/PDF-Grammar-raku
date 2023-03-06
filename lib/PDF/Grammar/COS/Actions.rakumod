@@ -28,12 +28,9 @@ class PDF::Grammar::COS::Actions
     }
 
     method postamble($/) {
-        my %postamble;
+        my %postamble = .ast with $<trailer>;
         %postamble<startxref> = self!val: .ast
             with $<byte-offset>;
-        %postamble.push: .ast
-            with $<trailer>;
-
         make %postamble;
     }
 
@@ -48,14 +45,14 @@ class PDF::Grammar::COS::Actions
     method ind-ref($/) {
         my $obj-num = self!val: $<obj-num>.ast;
         my $gen-num = self!val: $<gen-num>.ast;
-        my $ind-ref = [ $obj-num, $gen-num ];
-        make (:$ind-ref);
+        my @ind-ref := [ $obj-num, $gen-num ];
+        make (:@ind-ref);
     }
 
     method ind-obj($/) {
         my $obj-num = self!val: $<obj-num>.ast;
         my $gen-num = self!val: $<gen-num>.ast;
-        my @ind-obj = [ $obj-num, $gen-num, $<object>.ast ];
+        my @ind-obj := [ $obj-num, $gen-num, $<object>.ast ];
         @ind-obj.push: $/.from
             if self.get-offsets;
         make (:@ind-obj)

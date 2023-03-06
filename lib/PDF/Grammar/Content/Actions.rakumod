@@ -24,7 +24,7 @@ class PDF::Grammar::Content::Actions
         return $operator => @objects;
      }
 
-    sub _image-ast($/) {
+    multi sub _block-ast($/ where $<opBeginImage>) {
         my Hash $dict = $<imageDict>.ast;
         my UInt $start = $<start>.to;
         my UInt $len = $<end>.from - $start;
@@ -34,12 +34,8 @@ class PDF::Grammar::Content::Actions
         (:BI[:$dict], :ID[:$encoded], :EI[]).Slip;
     }
 
-    multi sub _block-ast($/ where $<opBeginImage>) {
-        _image-ast($/)
-    }
-
-    multi sub _block-ast($block) is default {
-        ($block.caps.map: -> $token {
+    multi sub _block-ast($/) {
+        ($/.caps.map: -> $token {
             given $token.key.substr(0,2) {
                 when 'op' { _op-ast( $token.value )    }
                 when 'in' { _block-ast( $token.value ) }

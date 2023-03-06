@@ -39,10 +39,10 @@ grammar PDF::Grammar::Content
     rule block:sym<markedContent> { <opBeginMarkedContent> [ <inner-text-block> | <op> ]* <opEndMarkedContent> }
     rule imageDict { [<name> <object>]* }
     rule block:sym<image> {
-                      <opBeginImage>
-                      <imageDict>
-                      [  $<start>=<opImageData>.*?$<end>=[\n|' ']<opEndImage>
-                      || $<start>=<opImageData>.*?$<end>=<opEndImage>] # more forgiving fallback
+        <opBeginImage>
+        <imageDict>
+        [  $<start>=<opImageData>.*?$<end>=[\n|' ']<opEndImage>
+        || $<start>=<opImageData>.*?$<end>=<opEndImage>] # more forgiving fallback
     }
 
     # ------------------------
