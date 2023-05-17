@@ -34,7 +34,7 @@ my $ind-obj-stream-nibble = "5 0 obj
 stream
 ";
 
-my $ind-obj-stream = $$ind-obj-stream-nibble ~ $stream-content ~ "
+my $ind-obj-stream = $ind-obj-stream-nibble ~ $stream-content ~ "
 endstream
 endobj
 ";
@@ -42,6 +42,13 @@ endobj
 my $ind-obj-stream-nibble-ast = :ind-obj[ 5, 0,
                              :stream{
                                  :dict{Length => :int(68)}, :start(32),
+                             }];
+
+my $ind-obj-stream-nibble-ms = ' ' ~ $ind-obj-stream-nibble;
+
+my $ind-obj-stream-nibble-ast-ms = :ind-obj[ 5, 0,
+                             :stream{
+                                 :dict{Length => :int(68)}, :start(33),
                              }];
 
 my $ind-obj-stream-ast = :ind-obj[ 5, 0,
@@ -174,6 +181,7 @@ for (
       { :rule<ind-obj>,        :input($ind-obj-stream),         :ast($ind-obj-stream-ast)},
       { :rule<ind-obj-nibble>, :input($ind-obj-dict),           :ast($ind-obj-dict-ast)},
       { :rule<ind-obj-nibble>, :input($ind-obj-stream-nibble),  :ast($ind-obj-stream-nibble-ast)},
+      { :rule<ind-obj-nibble>, :input($ind-obj-stream-nibble-ms),  :ast($ind-obj-stream-nibble-ast-ms)},
       { :rule<trailer>,        :input($trailer),                :ast(:trailer($trailer-ast))},
       { :rule<startxref>,      :input($startxref),              :ast($startxref-ast)},
       { :rule<xref>,           :input($xref),                   :ast(:xref($xref-ast))},

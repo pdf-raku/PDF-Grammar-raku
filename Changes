@@ -1,4 +1,5 @@
 {{$NEXT}}
+  - Fix PDF::Grammar::COS xref-nibble rule to handle leading whitespace
 
 0.3.0  2022-06-08T08:05:44+12:00
   - Fix PDF::Grammar::Function::Actions to work consistently in :lite mode

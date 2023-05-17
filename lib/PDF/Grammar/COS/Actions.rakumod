@@ -123,7 +123,7 @@ class PDF::Grammar::COS::Actions
         my $object = $<object>.ast;
         if $<stream-head> {
             # locate the start of the stream data following the 'stream' token. The
-            # invokee can deterime the length using the /Length entry in the dictionary
+            # invokee can determine the length using the /Length entry in the dictionary
             my %stream = $object;
             %stream.push: 'start' => (~$/).codes;
             $object = :%stream;
