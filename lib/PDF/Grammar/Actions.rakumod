@@ -3,16 +3,16 @@ class PDF::Grammar::Actions {
 
     has Bool $.lite;
 
-    method real($/) {
-        make $!lite ?? $/.Rat !! :real($/.Rat);
-    }
-
     method int($/) {
         make $!lite ?? $/.Int !! (:int($/.Int));
     }
 
+    method frac($/) {
+        make $!lite ?? $/.Rat !! (:real($/.Rat));
+    }
+
     method numeric:sym<real>($/) {
-        make $<frac> ?? ($!lite ?? $/.Rat !! :real($/.Rat)) !! $<int>.ast;
+        $<frac> ?? $.numeric:sym<frac>($/) !! make $<int>.ast;
     }
     method numeric:sym<frac>($/) {
         make $!lite ?? $/.Rat !! (:real($/.Rat));
@@ -20,7 +20,7 @@ class PDF::Grammar::Actions {
     method number($/) { make $<numeric>.ast }
 
     method name-bytes:sym<number-symbol>($/) {
-        make '#'.ord; 
+        make '#'.ord;
     }
     method name-bytes:sym<escaped>($/) {
         make :16( $/.substr(1) )
@@ -31,11 +31,11 @@ class PDF::Grammar::Actions {
 
     method name($/) {
         # names are utf-8 encoded
-        my Str $name = Buf.new( $<name-bytes>».ast ).decode;
+        my Str $name = Buf.new( $<name-bytes>».ast ).decode: 'utf8-c8';
         make (:$name);
     }
 
-    method hex-string ($/) {
+    method hex-string($/) {
         my $xdigits = [~] $<xdigit>».Str;
         my uint8 @hex-codes = $xdigits.comb.map: -> $a, $b = '0' { :16($a ~ $b) };
         my $hex-string = [~] @hex-codes».chr;
