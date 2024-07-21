@@ -24,14 +24,19 @@ class PDF::Grammar::Content::Actions
         return $operator => @objects;
      }
 
+    multi sub _val(Pair:D $_) { .value }
+    multi sub _val($_) { $_ }
+
     multi sub _block-ast($/ where $<opBeginImage>) {
         my Hash $dict = $<imageDict>.ast;
         my UInt $start = $<start>.to;
-        my UInt $len = $<end>.from - $start;
+        # [ISO_32000-2 Section 8.9.7 - PDF 2.0 Inline images must have a /L or /Length entry ]
+        my UInt $len = .&_val() with $dict<L> // $dict<Length>;
+        $len //= $<end>.from - $start;
         $start -= $/.from;
         my $encoded = $/.substr($start, $len);
 
-        (:BI[:$dict], :ID[:$encoded], :EI[]).Slip;
+        (:BI[], :ID[:$dict, :$encoded], :EI[]).Slip;
     }
 
     multi sub _block-ast($/) {

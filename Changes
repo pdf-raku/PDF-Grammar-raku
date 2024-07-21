@@ -1,4 +1,6 @@
 {{$NEXT}}
+  - Refactor inline image AST. Move dict from ID to ID to match
+    PDF::Native.
 
 0.3.1  2023-05-18T06:36:46+12:00
   - Fix PDF::Grammar::COS xref-nibble rule to handle leading whitespace

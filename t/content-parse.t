@@ -125,6 +125,9 @@ my $ast_bx = [
 :Q[],
 ];
 
+my $encoded = 'J1/gKA>.]AN&J?]-<HW]aRVcg*bb.\eKAdVV%/PcZ
+%R.s(4KE3&d&7hb*7[%Ct2HCqC~>';
+
 my $test_image_block = 'BI                  % Begin inline image object
     /W 17           % Width in samples
     /H 17           % Height in samples
@@ -132,29 +135,39 @@ my $test_image_block = 'BI                  % Begin inline image object
     /BPC 8          % Bits per component
     /F [/A85 /LZW]  % Filters
 ID                  % Begin image data
-J1/gKA>.]AN&J?]-<HW]aRVcg*bb.\eKAdVV%/PcZ
-%R.s(4KE3&d&7hb*7[%Ct2HCqC~>
+' ~ $encoded ~ '
 EI';
-my $test_image_ast = [:BI[ :dict{BPC => :int(8),
-                                      F => :array[ :name<A85>, :name<LZW> ],
-                                      H => :int(17),
-                                      W => :int(17),
-                                      CS => :name<RGB>}],
-                            :ID[:encoded("J1/gKA>.]AN\&J?]-<HW]aRVcg*bb.\\eKAdVV\%/PcZ\n\%R.s(4KE3\&d\&7hb*7[\%Ct2HCqC~>")],
-                            :EI[]];
+
+my $test_image_ast = [
+    :BI[],
+    :ID[ :dict{
+             BPC => :int(8),
+             F => :array[ :name<A85>, :name<LZW> ],
+             H => :int(17),
+             W => :int(17),
+             CS => :name<RGB>
+         },
+         :$encoded,
+       ],
+    :EI[],
+];
 my $test_image_null = "
 BI
 /IM true/W 1/H 1/BPC 1
 ID \c0
 EI";
 
-my $test_image_null_ast = [:BI[ :dict{BPC => :int(1),
-                                      IM => :bool,
-                                      H => :int(1),
-                                      W => :int(1),
-                                      }],
-                            :ID[:encoded("\c0")],
-                            :EI[]];
+my $test_image_null_ast = [
+    :BI[],
+    :ID[:dict{BPC => :int(1),
+                   IM => :bool,
+                   H => :int(1),
+                   W => :int(1),
+             },
+        :encoded("\c0"),
+       ],
+    :EI[],
+];
 
 my PDF::Grammar::Content::Actions $actions .= new;
 my PDF::Grammar::Content::Actions $lite-actions .= new: :lite;
