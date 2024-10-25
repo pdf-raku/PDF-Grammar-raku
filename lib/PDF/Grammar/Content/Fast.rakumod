@@ -17,7 +17,9 @@ grammar PDF::Grammar::Content::Fast
 
     proto rule block {*}
     rule imageDict {
-        [<name> <object> { $*Len = try $<object>.trim.Int if ~$<name>.trim eq '/L' } ]*
+        [<name> <object>
+         { $*Len = try $<object>.trim.Int if ~$<name>.trim eq '/L' }
+        ]*
     }
     rule block:sym<image> {
         :my $*Len;

@@ -32,7 +32,7 @@ including headers, trailers, top-level objects and the cross-reference table.
 
 PDF-Grammar has so far been tested against a number of sample of PDF documents and may still be subject to change.
 
-I have been working off the PDF 1.7 reference manual (http://www.adobe.com/content/dam/Adobe/en/devnet/acrobat/pdfs/pdf_reference_1-7.pdf). I've relaxed rules, when needed, to handle real-world examples.
+I have been working off the [PDF 32000-1:2008 1.7](https://opensource.adobe.com/dc-acrobat-sdk-docs/standards/pdfstandards/pdf/PDF32000_2008.pdf) specification. I've relaxed rules, when needed, to handle real-world examples.
 
 Usage Notes
 -----------

@@ -1,5 +1,8 @@
 {{$NEXT}}
 
+0.3.3  2024-10-26T09:57:28+13:00
+  - Implement PDF 2.0 
+
 0.3.2  2024-07-23T04:58:42+12:00
   - Refactor inline image AST. Move dict from BI to ID to match
     PDF::Native.
