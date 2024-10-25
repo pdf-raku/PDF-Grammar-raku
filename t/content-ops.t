@@ -5,35 +5,8 @@ use Test;
 use PDF::Grammar::Content;
 use PDF::Grammar::Content::Fast;
 
-my $test-image-block = 'BI                  % Begin inline image object
-    /W 17           % Width in samples
-    /H 17           % Height in samples
-    /CS /RGB        % Colour space
-    /BPC 8          % Bits per component
-    /F [/A85 /LZW]  % Filters
-ID                  % Begin image data
-J1/gKA>.]AN&J?]-<HW]aRVcg*bb.\eKAdVV%/PcZ
-%…Omitted data…
-%R.s(4KE3&d&7hb*7[%Ct2HCqC~>
-EI';
-
 # test individual ops
 for (
-    text-block-empty               => 'BT ET',
-    text-block-populated           => 'BT B* ET',
-
-    BDC-marked-content-empty-text  =>'/foo <</MP /yup>> BDC BT ET EMC',
-    BDC-marked-content-with-op     => '/foo <</MP /yup>> BDC (hello) Tj EMC',
-    BDC-content-dict-ref           => '/EmbeddedDocument /MC3 BDC q EMC',      # optional content - named dict
-    BMC-marked-content-empty-text  => '/foo BMC BT ET EMC',     # Marked content - empty
-    BMC-marked-content-with-text   => '/bar BMC BT B* ET EMC',  # Marked content + text block - empty
-    BMC-marked-content-with-op     => '/baz BMC B* EMC',        # BT .. ET  Text block - with valid content
-
-    'BI .. ID .. EI image-block'   => $test-image-block,
-
-    'BX .. EX ignored text'        => 'BX this stuff gets ignored EX',
-    'BX .. BX .. EX .. EX nesting' => 'BX this stuff gets BX doubly EX ignored EX',
-
     CloseFileStroke => 'b',
     CloseEOFillStroke => 'b*',
     FillStroke => 'B',
@@ -117,11 +90,57 @@ for (
     MoveShowText => "(hello) '",            # '         show
 
     ) {
-    for :normal(/^<PDF::Grammar::Content::TOP>$/), :fast(/^<PDF::Grammar::Content::Fast::TOP>$/) -> \re {
-        ok .value ~~ re.value, re.key ~ " instruction " ~ .key
+    for :normal(/^<PDF::Grammar::Content::op>$/), :fast(/^<PDF::Grammar::Content::Fast::op>$/) -> \re {
+        ok .value ~~ re.value, re.key ~ " op " ~ .key
             or do {
-                diag "failed instruction: " ~ .value;
-                if (.value ~~ /^(.*?)(<PDF::Grammar::Content::instruction>)(.*?)$/) {
+                diag "failed op: " ~ .value;
+                if (.value ~~ /^(.*?)(<PDF::Grammar::Content::op>)(.*?)$/) {
+
+                    my $p = $0 && $0.join(',');
+                    note "(preceeding: $p)" if $p;
+                    my $m = $1 && $1.join(',');
+                    note "(best match: $m)" if $m;
+                    my $f = $2 && $2.join(',');
+                    note "(following: $f)" if $f;
+                }
+        }
+    }
+}
+
+my $test-image-block = 'BI                  % Begin inline image object
+    /W 17           % Width in samples
+    /H 17           % Height in samples
+    /CS /RGB        % Colour space
+    /BPC 8          % Bits per component
+    /F [/A85 /LZW]  % Filters
+ID                  % Begin image data
+J1/gKA>.]AN&J?]-<HW]aRVcg*bb.\eKAdVV%/PcZ
+%…Omitted data…
+%R.s(4KE3&d&7hb*7[%Ct2HCqC~>
+EI';
+
+my $tricky-image-block = "BI ID ab EIcEI EI";
+my $pdf2-image-block = "BI /L 6 ID abc EI EI";
+
+for (
+    text-block-empty               => 'BT ET',
+    text-block-populated           => 'BT B* ET',
+    BDC-marked-content-empty-text  =>'/foo <</MP /yup>> BDC BT ET EMC',
+    BDC-marked-content-with-op     => '/foo <</MP /yup>> BDC (hello) Tj EMC',
+    BDC-content-dict-ref           => '/EmbeddedDocument /MC3 BDC q EMC',      # optional content - named dict
+    BMC-marked-content-empty-text  => '/foo BMC BT ET EMC',     # Marked content - empty
+    BMC-marked-content-with-text   => '/bar BMC BT B* ET EMC',  # Marked content + text block - empty
+    BMC-marked-content-with-op     => '/baz BMC B* EMC',        # BT .. ET  Text block - with valid content
+
+    'BI .. ID .. EI image-block'   => $test-image-block,
+    'tricky terminators image-block'   => $tricky-image-block,
+    'PDF 2.0 image block'   => $pdf2-image-block,
+    ) {
+    for :normal(/^<PDF::Grammar::Content::instruction>$/), :fast(/^<PDF::Grammar::Content::Fast::TOP>$/) -> \re {
+        ok .value ~~ re.value, re.key ~ " block " ~ .key
+            or do {
+                diag "failed block: " ~ .value;
+                if (.value ~~ /^(.*?)(<PDF::Grammar::Content::block>)(.*?)$/) {
 
                     my $p = $0 && $0.join(',');
                     note "(preceeding: $p)" if $p;

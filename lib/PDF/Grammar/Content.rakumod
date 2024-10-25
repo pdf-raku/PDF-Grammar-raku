@@ -37,14 +37,18 @@ grammar PDF::Grammar::Content
     proto rule block {*}
     rule block:sym<text> { <opBeginText> [ <inner-marked-content-block> | <op> ]* <opEndText> }
     rule block:sym<markedContent> { <opBeginMarkedContent> [ <inner-text-block> | <op> ]* <opEndMarkedContent> }
-    rule imageDict { [<name> <object>]* }
+    rule imageDict {
+        [<name> <object> { $*Len = try $<object>.trim.Int if ~$<name>.trim eq '/L' } ]*
+    }
     rule block:sym<image> {
+        :my $*Len;
         <opBeginImage>
         <imageDict>
-        [  $<start>=<opImageData>.*?$<end>=[\n|' ']<opEndImage>
-        || $<start>=<opImageData>.*?$<end>=<opEndImage>] # more forgiving fallback
+        $<start>=<opImageData>[
+        || <?{ $*Len.defined }> .**{ $*Len } <opEndImage>
+        || .*?$<end>=[\n|' ' ]<opEndImage>
+        || .*?$<end>=<opEndImage>] # more forgiving fallback
     }
-
     # ------------------------
     # Operators and Objects
     # ------------------------
