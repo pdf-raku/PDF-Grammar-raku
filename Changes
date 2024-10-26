@@ -1,4 +1,6 @@
 {{$NEXT}}
+
+0.3.4  2024-10-26T17:33:35+13:00
   - Fix parsing of content inline-images. Only strictly allow a single
     space or newline. The first character in the image-data could happen
     to also be a space, newline or comment and shouldn't be consumed as
