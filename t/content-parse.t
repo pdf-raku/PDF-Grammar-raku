@@ -134,7 +134,7 @@ my $test_image_block = 'BI                  % Begin inline image object
     /CS /RGB        % Colour space
     /BPC 8          % Bits per component
     /F [/A85 /LZW]  % Filters
-ID                  % Begin image data
+ID
 ' ~ $encoded ~ '
 EI';
 

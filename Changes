@@ -1,4 +1,8 @@
 {{$NEXT}}
+  - Fix parsing of content inline-images. Only strictly allow a single
+    space or newline. The first character in the image-data could happen
+    to also be a space, newline or comment and shouldn't be consumed as
+    white-space.
 
 0.3.3  2024-10-26T09:57:28+13:00
   - Implement PDF 2.0 /L (Length) entry in content inline-image

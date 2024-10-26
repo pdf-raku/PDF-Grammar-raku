@@ -120,7 +120,7 @@ J1/gKA>.]AN&J?]-<HW]aRVcg*bb.\eKAdVV%/PcZ
 EI';
 
 my $tricky-image-block = "BI ID ab EIcEI EI";
-my $pdf2-image-block = "BI /L 6 ID abc EI EI";
+my $pdf2-image-block = "BI /L 7 ID  abc EI EI";
 
 for (
     text-block-empty               => 'BT ET',

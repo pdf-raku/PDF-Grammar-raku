@@ -30,9 +30,7 @@ class PDF::Grammar::Content::Actions
     multi sub _block-ast($/ where $<opBeginImage>) {
         my Hash $dict = $<imageDict>.ast;
         my UInt $start = $<start>.to;
-        # [ISO_32000-2 Section 8.9.7 - PDF 2.0 Inline images must have a /L or /Length entry ]
-        my UInt $len = .&_val() with $dict<L> // $dict<Length>;
-        $len //= $<end>.from - $start;
+        my UInt $len = $<end>.from - $start;
         $start -= $/.from;
         my $encoded = $/.substr($start, $len);
 
