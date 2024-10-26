@@ -40,19 +40,19 @@ class PDF::Grammar::Content::Actions
     multi sub _block-ast($/) {
         ($/.caps.map: -> $token {
             given $token.key.substr(0,2) {
-                when 'op' { _op-ast( $token.value )    }
-                when 'in' { _block-ast( $token.value ) }
+                when 'op' { $token.value.&_op-ast    }
+                when 'in' { $token.value.&_block-ast }
                 default   {'tba: ' ~ $token.key ~ ' = '  ~ $token.value};
             };
         }).Slip;
     }
 
     method instruction:sym<block>($/) {
-        make _block-ast($<block>);
+        make $<block>.&_block-ast;
     }
 
     method instruction:sym<op>($/) {
-        make _op-ast($<op>);
+        make $<op>.&_op-ast;
     }
 
     method imageDict($/) {

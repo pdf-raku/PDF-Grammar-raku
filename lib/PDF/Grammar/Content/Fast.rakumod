@@ -21,13 +21,13 @@ grammar PDF::Grammar::Content::Fast
          { $*Len = try $<object>.trim.Int if ~$<name>.trim eq '/L' }
         ]*
     }
-    rule block:sym<image> {
+    token block:sym<image> {
         :my $*Len;
         <opBeginImage>
         <imageDict>
         $<start>=<opImageData>[
-        <?{ $*Len.defined }> .**{ $*Len }$<end>=[\n|' ']?<opEndImage>
-        || .*?$<end>=[\n|' ' ]<opEndImage>
+        <?{ $*Len.defined }>.**{ $*Len }$<end>=[\n|' ']?<opEndImage>
+        || .*?$<end>=[\n|' ']<opEndImage>
         || .*?$<end>=<opEndImage>] # more forgiving fallback
     }
 
