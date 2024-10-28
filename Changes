@@ -1,4 +1,6 @@
 {{$NEXT}}
+  - Revert PDF 2.0 /L (Length) parsing introduced in 0.3.3. The solution
+    doesn't allow for possible newline combiners in binary image data.
 
 0.3.4  2024-10-26T17:33:35+13:00
   - Fix parsing of content inline-images. Only strictly allow a single

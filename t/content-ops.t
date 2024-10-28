@@ -134,9 +134,10 @@ for (
 
     'BI .. ID .. EI image-block'   => $test-image-block,
     'tricky terminators image-block'   => $tricky-image-block,
-    'PDF 2.0 image block'   => $pdf2-image-block,
+    'PDF 2.0 image block - NYI'   => $pdf2-image-block,
     ) {
     for :normal(/^<PDF::Grammar::Content::instruction>$/), :fast(/^<PDF::Grammar::Content::Fast::TOP>$/) -> \re {
+        todo('NYI') if .key.contains('NYI');
         ok .value ~~ re.value, re.key ~ " block " ~ .key
             or do {
                 diag "failed block: " ~ .value;

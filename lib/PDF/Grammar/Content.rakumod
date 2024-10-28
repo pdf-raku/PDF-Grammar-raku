@@ -26,7 +26,7 @@ grammar PDF::Grammar::Content
 
     # image blocks BI ... ID ... EI
     rule opBeginImage          { (BI) }
-    token opImageData          { (ID)[\n|' '|<.comment>]* }
+    token opImageData          { (ID)[\n|' ']* }
     token opEndImage           { (EI) }
 
     # blocks have limited nesting capability and aren't fully recursive.
@@ -38,17 +38,14 @@ grammar PDF::Grammar::Content
     rule block:sym<text> { <opBeginText> [ <inner-marked-content-block> | <op> ]* <opEndText> }
     rule block:sym<markedContent> { <opBeginMarkedContent> [ <inner-text-block> | <op> ]* <opEndMarkedContent> }
     rule imageDict {
-        [<name> <object>
-         { $*Len = try $<object>.trim.Int if ~$<name>.trim eq '/L' }
-        ]*
+        [<name> <object>]*
     }
-    token block:sym<image> {
-        :my $*Len;
+    rule block:sym<image> {
         <opBeginImage>
         <imageDict>
         $<start>=<opImageData>[
-           (.*?)$<end>=[\n|' ']<opEndImage>
-        || .*?$<end>=<opEndImage>] # more forgiving fallback
+           .*?$<end>=[\n|' ']<opEndImage>
+        ]
     }
     # ------------------------
     # Operators and Objects
