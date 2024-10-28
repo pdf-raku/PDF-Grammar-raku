@@ -12,7 +12,7 @@ grammar PDF::Grammar::Content::Fast
 
     # image blocks BI ... ID ... EI
     rule opBeginImage          { (BI) }
-    token opImageData          { (ID)[\n|' '] }
+    token opImageData          { (ID)[\n|' '|<.comment>]* }
     token opEndImage           { (EI) }
 
     proto rule block {*}
@@ -26,8 +26,7 @@ grammar PDF::Grammar::Content::Fast
         <opBeginImage>
         <imageDict>
         $<start>=<opImageData>[
-        <?{ $*Len.defined }>.**{ $*Len }$<end>=[\n|' ']?<opEndImage>
-        || .*?$<end>=[\n|' ']<opEndImage>
+            (.*?)$<end>=[\n|' ']<opEndImage>
         || .*?$<end>=<opEndImage>] # more forgiving fallback
     }
 
