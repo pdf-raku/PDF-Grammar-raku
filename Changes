@@ -1,5 +1,8 @@
 {{$NEXT}}
 
+0.3.6  2024-10-29T07:40:04+13:00
+  - Further restore pre v0.3.3. inline image handling
+
 0.3.5  2024-10-29T07:18:45+13:00
   - Revert PDF 2.0 /L (Length) parsing introduced in 0.3.3. The solution
     doesn't allow for possible newline combiners in binary image data.

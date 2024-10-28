@@ -22,8 +22,8 @@ grammar PDF::Grammar::Content::Fast
     rule block:sym<image> {
         <opBeginImage>
         <imageDict>
-        $<start>=<opImageData>[
-            .*?$<end>=[\n|' ']<opEndImage>
+        $<start>=<opImageData>[.*?$<end>=[\n|' ']<opEndImage>
+           ||.*?$<end>=<opEndImage>
         ]
     }
 
