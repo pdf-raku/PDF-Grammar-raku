@@ -1,4 +1,4 @@
-grammar PDF::Grammar:ver<0.3.4> {
+grammar PDF::Grammar:ver<0.3.5> {
     # abstract base grammar for PDF components, see derivatives:
     # - PDF::Grammar::COS      - Base class for FDF and PDF
     #   -- PDF::Grammar::FDF      - Describes FDF (Form Data) files
