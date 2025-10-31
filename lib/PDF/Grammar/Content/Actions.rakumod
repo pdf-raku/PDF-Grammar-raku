@@ -27,7 +27,7 @@ sub op-ast(Capture $op) {
 multi sub val(Pair:D $_) { .value }
 multi sub val($_) { $_ }
 
-multi sub _block-ast(Capture $/ where $<opBeginImage>) {
+multi sub block-ast(Capture $/ where $<opBeginImage>) {
     my Hash $dict = $<imageDict>.ast;
     my UInt $start = $<start>.to;
     # [ISO_32000-2 Section 8.9.7 - PDF 2.0 Inline images must have a /L or /Length entry ]
@@ -39,18 +39,18 @@ multi sub _block-ast(Capture $/ where $<opBeginImage>) {
     (:BI[], :ID[:$dict, :$encoded], :EI[]).Slip;
 }
 
-multi sub _block-ast(Capture $/) {
+multi sub block-ast(Capture $/) {
     ($/.caps.map: -> $token {
         given $token.key.substr(0,2) {
             when 'op' { $token.value.&op-ast    }
-            when 'in' { $token.value.&_block-ast }
+            when 'in' { $token.value.&block-ast }
             default   {'tba: ' ~ $token.key ~ ' = '  ~ $token.value};
         };
     }).Slip;
 }
 
 method instruction:sym<block>($/) {
-    make $<block>.&_block-ast;
+    make $<block>.&block-ast;
 }
 
 method instruction:sym<op>($/) {
