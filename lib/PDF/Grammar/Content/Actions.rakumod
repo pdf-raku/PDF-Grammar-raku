@@ -8,7 +8,7 @@ method TOP($/) {
     make @result;
 }
 
-sub _op-ast($op) {
+sub op-ast(Capture $op) {
     my $operator;
     my @objects;
 
@@ -24,14 +24,14 @@ sub _op-ast($op) {
     return $operator => @objects;
  }
 
-multi sub _val(Pair:D $_) { .value }
-multi sub _val($_) { $_ }
+multi sub val(Pair:D $_) { .value }
+multi sub val($_) { $_ }
 
-multi sub _block-ast($/ where $<opBeginImage>) {
+multi sub _block-ast(Capture $/ where $<opBeginImage>) {
     my Hash $dict = $<imageDict>.ast;
     my UInt $start = $<start>.to;
     # [ISO_32000-2 Section 8.9.7 - PDF 2.0 Inline images must have a /L or /Length entry ]
-    my UInt $len = .&_val() with $dict<L> // $dict<Length>;
+    my UInt $len = .&val with $dict<L> // $dict<Length>;
     $len //= $<end>.from - $start;
     $start -= $/.from;
     my $encoded = $/.substr($start, $len);
@@ -39,10 +39,10 @@ multi sub _block-ast($/ where $<opBeginImage>) {
     (:BI[], :ID[:$dict, :$encoded], :EI[]).Slip;
 }
 
-multi sub _block-ast($/) {
+multi sub _block-ast(Capture $/) {
     ($/.caps.map: -> $token {
         given $token.key.substr(0,2) {
-            when 'op' { $token.value.&_op-ast    }
+            when 'op' { $token.value.&op-ast    }
             when 'in' { $token.value.&_block-ast }
             default   {'tba: ' ~ $token.key ~ ' = '  ~ $token.value};
         };
@@ -54,7 +54,7 @@ method instruction:sym<block>($/) {
 }
 
 method instruction:sym<op>($/) {
-    make $<op>.&_op-ast;
+    make $<op>.&op-ast;
 }
 
 method imageDict($/) {
@@ -66,6 +66,6 @@ method imageDict($/) {
 }
 
 method suspect($/) {
-    make '??' => _op-ast($/);
+    make '??' => $/.&op-ast;
 }
 

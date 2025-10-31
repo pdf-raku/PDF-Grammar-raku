@@ -166,5 +166,5 @@ Note [1] Types `bool`, `int`, `real`, and `null` don't appear in `lite` mode.
 ## See also
 
 - [PDF](https://pdf-raku.github.io/PDF-raku) - Raku module for PDF manipulation, including compression, encryption and reading and writing of PDF data.
-- [PDF::Native](https://pdf-raku.github.io/PDF-Native-raku) - This module contains alternate native C parsers for COS objects and content streams .
+- [PDF::Native::COS](https://pdf-raku.github.io/PDF-Native-raku/PDF::Native/COS) - Alternate native C parsers for COS objects and content streams .
 
